@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wildcat Watch - Register</title>
+  <link rel="stylesheet" href="{% static 'myapp/css/register.css' %}">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">
+        <div class="shield-icon">🛡️</div>
+        <h1>Wildcat Watch</h1>
+      </div>
+    </div>
+
+    <!-- Registration Card -->
+    <div class="registration-card">
+      <div class="card-header">
+        <h2>Create Account</h2>
+        <p>Join the Wildcat Watch security monitoring system</p>
+      </div>
+
+      <form class="registration-form">
+        <div class="form-group">
+          <label for="fullname">Full Name</label>
+          <input type="text" id="fullname" placeholder="Enter your full name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="Enter your email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="idnumber">ID Number</label>
+          <input type="text" id="idnumber" placeholder="Enter your ID number" required>
+        </div>
+
+        <div class="form-group">
+          <label for="role">Role</label>
+          <select id="role" required>
+            <option value="">Select your role</option>
+            <option value="security">Security Officer</option>
+            <option value="supervisor">Supervisor</option>
+            <option value="admin">Administrator</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-input">
+            <input type="password" id="password" placeholder="Create a password (min. 6 characters)" required>
+            <button type="button" class="toggle-password">👁️</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <div class="password-input">
+            <input type="password" id="confirm-password" placeholder="Confirm your password" required>
+            <button type="button" class="toggle-password">👁️</button>
+          </div>
+        </div>
+
+        <button type="submit" class="create-account-btn">Create Account</button>
+
+        <div class="form-footer">
+          <p>Already have an account? <a href="login.html">Sign in here</a></p>
+        </div>
+      </form>
+    </div>
+
+    <!-- Back to Home -->
+    <div class="back-link">
+      <a href="home_page.html">← Back to Home</a>
+    </div>
+  </div>
+</body>
+</html>

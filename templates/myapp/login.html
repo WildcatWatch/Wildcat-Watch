@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wildcat Watch - Login</title>
+  <link rel="stylesheet" href="{% static 'myapp/css/login.css' %}">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">
+        <div class="shield-icon">🛡️</div>
+        <h1>Wildcat Watch</h1>
+      </div>
+    </div>
+
+    <!-- Login Card -->
+    <div class="login-card">
+      <div class="card-header">
+        <h2>Welcome Back</h2>
+        <p>Sign in to your Wildcat Watch account</p>
+      </div>
+
+      <form class="login-form">
+        <div class="form-group">
+          <label for="role">Role</label>
+          <select id="role" required>
+            <option value="">Select your role</option>
+            <option value="administrator">Administrator</option>
+            <option value="security-guard">Security Guard</option>
+            <option value="janitor">Janitor</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="idnumber">ID Number</label>
+          <input type="text" id="idnumber" placeholder="Enter your ID number" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-input">
+            <input type="password" id="password" placeholder="Enter your password" required>
+            <button type="button" class="toggle-password">👁️</button>
+          </div>
+        </div>
+
+        <button type="submit" class="sign-in-btn">Sign In</button>
+
+        <div class="form-footer">
+          <p>Don't have an account? <a href="register.html">Register here</a></p>
+        </div>
+      </form>
+    </div>
+
+    <!-- Back to Home -->
+    <div class="back-link">
+      <a href="home_page.html">← Back to Home</a>
+    </div>
+  </div>
+</body>
+</html>
