@@ -51,14 +51,14 @@
         <button type="submit" class="sign-in-btn">Sign In</button>
 
         <div class="form-footer">
-          <p>Don't have an account? <a href="register.html">Register here</a></p>
+          <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
         </div>
       </form>
     </div>
 
     <!-- Back to Home -->
     <div class="back-link">
-      <a href="home_page.html">← Back to Home</a>
+      <a href="{% url 'home_page_root' %}">← Back to Home</a>
     </div>
   </div>
 </body>
