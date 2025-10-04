@@ -1,84 +1,46 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wildcat Watch - Register</title>
-  <link rel="stylesheet" href="{% static 'wildcatwatch/css/register.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Wildcat Watch</title>
+    {% load static %} 
+    <link rel="stylesheet" href="{% static 'wildcatwatch/css/register.css' %}">
 </head>
 <body>
-  <div class="container">
-    <!-- Header -->
-    <div class="header">
-      <div class="logo">
-        <div class="shield-icon">🛡️</div>
-        <h1>Wildcat Watch</h1>
-      </div>
+    <div class="container">
+        <h2>Create an Account</h2>
+
+        <form method="POST" action="">
+            {% csrf_token %}
+            
+            <label for="fullname">Full Name</label>
+            <input type="text" name="fullname" id="fullname" placeholder="Your full name" required>
+
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" placeholder="you@example.com" required>
+
+            <label for="idnumber">ID Number</label>
+            <input type="text" name="idnumber" id="idnumber" placeholder="Enter your ID number" required>
+
+            <label for="role">Role</label>
+            <select name="role" id="role" required>
+                <option value="">Select your role</option>
+                <option value="administrator">Administrator</option>
+                <option value="security-guard">Security Guard</option>
+                <option value="user">User</option>
+            </select>
+
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" placeholder="Enter password" required>
+
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm password" required>
+
+            <button type="submit">Create Account</button>
+        </form>
+
+        <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
     </div>
-
-    <!-- Registration Card -->
-    <div class="registration-card">
-      <div class="card-header">
-        <h2>Create Account</h2>
-        <p>Join the Wildcat Watch security monitoring system</p>
-      </div>
-
-      <form class="registration-form" method="post" action="#">
-        {% csrf_token %}
-        <div class="form-group">
-          <label for="fullname">Full Name</label>
-          <input type="text" id="fullname" placeholder="Enter your full name" required>
-        </div>
-
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" placeholder="Enter your email" required>
-        </div>
-
-        <div class="form-group">
-          <label for="idnumber">ID Number</label>
-          <input type="text" id="idnumber" placeholder="Enter your ID number" required>
-        </div>
-
-        <div class="form-group">
-          <label for="role">Role</label>
-          <select id="role" required>
-            <option value="">Select your role</option>
-            <option value="security">Security Officer</option>
-            <option value="supervisor">Supervisor</option>
-            <option value="admin">Administrator</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="password">Password</label>
-          <div class="password-input">
-            <input type="password" id="password" placeholder="Create a password (min. 6 characters)" required>
-            <button type="button" class="toggle-password">👁️</button>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="confirm-password">Confirm Password</label>
-          <div class="password-input">
-            <input type="password" id="confirm-password" placeholder="Confirm your password" required>
-            <button type="button" class="toggle-password">👁️</button>
-          </div>
-        </div>
-
-        <button type="submit" class="create-account-btn">Create Account</button>
-
-        <div class="form-footer">
-          <p>Already have an account? <a href="{% url 'login' %}">Sign in here</a></p>
-        </div>
-      </form>
-    </div>
-
-    <!-- Back to Home -->
-    <div class="back-link">
-      <a href="{% url 'home_page_root' %}">← Back to Home</a>
-    </div>
-  </div>
 </body>
 </html>
