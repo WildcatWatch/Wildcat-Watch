@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wildcat Watch - Campus Security Monitoring</title>
+  <link rel="stylesheet" href="{% static 'wildcatwatch/css/home_page.css' %}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <div class="shield-icon">🛡️</div>
+        <h1>Wildcat Watch</h1>
+      </div>
+      <div class="auth-buttons">
+        <a href="{% url 'login' %}" class="login-btn">Login</a>
+        <a href="{% url 'register' %}" class="register-btn">Register</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-container">
+      <h1 class="hero-title">Campus Security <span class="highlight">Monitoring</span></h1>
+      <p class="hero-description">
+        Real-time attendance and duty tracking for campus security guards and janitors. 
+        Ensuring accountability, efficiency, and safety across your campus.
+      </p>
+      <div class="hero-buttons">
+        <button class="get-started-btn">Get Started</button>
+        <button class="learn-more-btn">Learn More</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="features-container">
+      <h2 class="features-title">Comprehensive Security Management</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🕐</div>
+          <h3>Real-time Tracking</h3>
+          <p>Monitor attendance and duty completion in real-time with automated logging</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👥</div>
+          <h3>Staff Management</h3>
+          <p>Efficiently manage guards and janitors with role-based access and scheduling</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Analytics & Reports</h3>
+          <p>Generate comprehensive reports with attendance analytics and compliance tracking</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✅</div>
+          <h3>Duty Verification</h3>
+          <p>Verify task completion and ensure all assigned duties are properly logged</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👁️</div>
+          <h3>Live Monitoring</h3>
+          <p>Administrator dashboard for real-time oversight and instant notifications</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <h3>Secure Access</h3>
+          <p>Secure login system with role-based permissions and data protection</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

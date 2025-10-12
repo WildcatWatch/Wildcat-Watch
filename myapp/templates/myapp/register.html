@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wildcat Watch - Register</title>
+  <link rel="stylesheet" href="{% static 'wildcatwatch/css/register.css' %}">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <div class="shield-icon">🛡️</div>
+        <h1>Wildcat Watch</h1>
+      </div>
+    </div>
+
+    <div class="registration-card">
+      <div class="card-header">
+        <h2>Create Account</h2>
+        <p>Join the Wildcat Watch security monitoring system</p>
+      </div>
+
+      {% if messages %}
+        <script>
+          Swal.fire({
+            icon: "{% if 'error' in messages.last.tags %}error{% elif 'success' in messages.last.tags %}success{% else %}info{% endif %}",
+            title: "Notifications",
+            html: `
+              {% for message in messages %}
+                <p>{{ message|escapejs }}</p>
+              {% endfor %}
+            `
+          });
+        </script>
+      {% endif %}
+
+      <form class="registration-form" method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label for="fullname">Full Name</label>
+          <input type="text" id="fullname" name="fullname" 
+                 value="{{ request.POST.fullname|default:'' }}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" 
+                 value="{{ request.POST.email|default:'' }}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="idnumber">ID Number</label>
+          <input type="text" id="idnumber" name="id_no" 
+                 value="{{ request.POST.id_no|default:'' }}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="role">Role</label>
+          <select id="role" name="role" required>
+            <option value="">Select your role</option>
+            <option value="security" {% if request.POST.role == "security" %}selected{% endif %}>Security Officer</option>
+            <option value="supervisor" {% if request.POST.role == "supervisor" %}selected{% endif %}>Supervisor</option>
+            <option value="admin" {% if request.POST.role == "admin" %}selected{% endif %}>Administrator</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-input">
+            <input type="password" id="password" name="password" placeholder="Create a password" required>
+            <button type="button" class="toggle-password">👁️</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <div class="password-input">
+            <input type="password" id="confirm-password" name="confirm_password" placeholder="Confirm your password" required>
+            <button type="button" class="toggle-password">👁️</button>
+          </div>
+        </div>
+
+        <button type="submit" class="create-account-btn">Create Account</button>
+
+        <div class="form-footer">
+          <p>Already have an account? <a href="{% url 'login' %}">Sign in here</a></p>
+        </div>
+      </form>
+    </div>
+    
+    <div class="back-link">
+      <a href="{% url 'home_page' %}">← Back to Home</a>
+    </div>
+  </div>
+</body>
+</html>
