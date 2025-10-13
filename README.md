@@ -54,6 +54,7 @@ employee compliance.
 --
 
 👥 Team Members
+
 Vince Astly N. Cabungcag - Lead Developer - vinceastly.cabungcag@cit.edu
 
 Edrian Karl V. Cardoso - Frontend Developer - edriankarl.cardoso@cit.edu
