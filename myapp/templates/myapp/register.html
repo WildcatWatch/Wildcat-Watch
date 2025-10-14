@@ -62,10 +62,11 @@
           <label for="role">Role</label>
           <select id="role" name="role" required>
             <option value="">Select your role</option>
-            <option value="security" {% if request.POST.role == "security" %}selected{% endif %}>Security Officer</option>
+            <option value="security-officer" {% if request.POST.role == "security-officer" %}selected{% endif %}>Security Officer</option>
             <option value="supervisor" {% if request.POST.role == "supervisor" %}selected{% endif %}>Supervisor</option>
-            <option value="admin" {% if request.POST.role == "admin" %}selected{% endif %}>Administrator</option>
-          </select>
+            <option value="administrator" {% if request.POST.role == "administrator" %}selected{% endif %}>Administrator</option>
+        </select>
+
         </div>
 
         <div class="form-group">
