@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Dashboard | Wildcat Watch</title>
+  <link rel="stylesheet" href="{% static 'wildcatwatch/css/staff_dashboard.css' %}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <div class="shield-icon">🛡️</div>
+        <h1>Wildcat Watch</h1>
+      </div>
+      <nav class="nav">
+        <a href="#">My Duties</a>
+        <a href="#">Attendance</a>
+        <a href="#">Notifications</a>
+      </nav>
+      <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </div>
+  </header>
+
+  <section class="dashboard">
+    <h2>Welcome, Security Officer / Supervisor</h2>
+    <p>Track your assigned tasks, view schedules, and report duty completions here.</p>
+  </section>
+</body>
+</html>

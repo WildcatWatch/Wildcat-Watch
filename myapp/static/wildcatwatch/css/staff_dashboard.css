@@ -1,0 +1,37 @@
+@import url('home_page.css');
+
+.dashboard {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.dashboard h2 {
+  font-size: 32px;
+  color: #ffd700;
+  margin-bottom: 12px;
+}
+
+.dashboard p {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+  margin: 0 12px;
+  transition: color 0.2s ease;
+}
+
+.nav a:hover {
+  color: #ffd700;
+}
+
+.logout-btn {
+  background: #ffd700;
+  color: #8b4513;
+  padding: 8px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+}
