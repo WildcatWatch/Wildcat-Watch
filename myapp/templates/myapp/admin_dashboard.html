@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Wildcat Watch</title>
+  <link rel="stylesheet" href="{% static 'wildcatwatch/css/admin_dashboard.css' %}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <div class="shield-icon">🛡️</div>
+        <h1>Wildcat Watch</h1>
+      </div>
+      <nav class="nav">
+        <a href="#">Overview</a>
+        <a href="#">Reports</a>
+        <a href="#">Manage Staff</a>
+        <a href="#">Settings</a>
+      </nav>
+      <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </div>
+  </header>
+
+  <section class="dashboard">
+    <h2>Administrator Dashboard</h2>
+    <p>Monitor live reports, manage users, and oversee all campus operations.</p>
+  </section>
+</body>
+</html>
