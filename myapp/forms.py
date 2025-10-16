@@ -1,28 +1,34 @@
-from django import forms
+from django.shortcuts import render,redirect
+from django.contrib import messages
+from django.contrib.auth.models import User
 
-class RegisterForm(forms.Form):
-    fullname = forms.CharField(max_length=200, label="Full Name")
-    email = forms.EmailField(label="CIT Email")
-    id_no = forms.CharField(max_length=150, label="ID Number")
-    role = forms.ChoiceField(
-        choices=[("security", "Security Officer"), ("supervisor", "Supervisor"), ("admin", "Administrator")],
-        label="Role"
-    )
-    password = forms.CharField(widget=forms.PasswordInput, min_length=6, label="Password")
-    confirm_password = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            fullname = form.cleaned_data["fullname"]
+            email = form.cleaned_data["email"].lower()
+            id_no = form.cleaned_data["id_no"]
+            role = form.cleaned_data["role"]
+            password = form.cleaned_data["password"]
 
-    def clean_email(self):
-        email = self.cleaned_data["email"]
-        if not email.lower().endswith("@cit.edu"):
-            raise forms.ValidationError("Email must be a valid @cit.edu address")
-        return email
+            # Check if ID already exists
+            if User.objects.filter(username=id_no).exists():
+                form.add_error("id_no", "ID number already exists")
+                return render(request, "myapp/register.html", {"form": form})
 
-    def clean(self):
-        cleaned_data = super().clean()
-        password = cleaned_data.get("password")
-        confirm_password = cleaned_data.get("confirm_password")
+            # Create user
+            user = User.objects.create_user(username=id_no, email=email, password=password)
+            user.first_name = fullname
+            user.last_name = role  # store role in last_name
+            user.save()
 
-        if password and confirm_password and password != confirm_password:
-            raise forms.ValidationError("Passwords do not match")
+            messages.success(request, "Account created successfully! Please log in.")
+            return redirect("login")
+        else:
+            # Form is invalid, render with errors and previous input
+            return render(request, "myapp/register.html", {"form": form})
+    else:
+        form = RegisterForm()
 
-        return cleaned_data
+    return render(request, "myapp/register.html", {"form": form})
