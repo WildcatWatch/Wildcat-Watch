@@ -1,6 +1,6 @@
 @import url('home_page.css');
 
-/* Body */
+/* ===== Body ===== */
 body {
   font-family: 'Poppins', sans-serif;
   background-color: #0b1e2d;
@@ -9,7 +9,7 @@ body {
   padding: 0;
 }
 
-  /* Header (same as attendance) */
+/* ===== Header (same as staff) ===== */
 .header {
   background-color: #6b3411 !important;
   padding: 15px 0 !important;
@@ -39,7 +39,7 @@ body {
   font-size: 2rem;
 }
 
-/* Navigation Bar */
+/* ===== Navigation Bar ===== */
 .nav {
   display: flex;
   align-items: center;
@@ -57,14 +57,14 @@ body {
   color: #ffd700;
 }
 
-/* Active Page Highlight */
+/* Active Link */
 .nav a.active {
   color: #ffd700;
   border-bottom: 2px solid #ffd700;
   padding-bottom: 4px;
 }
 
-/* Logout Button */
+/* ===== Logout Button ===== */
 .logout-btn {
   background: #ffd700;
   color: #6b3411;
@@ -79,19 +79,21 @@ body {
   background: #ffcc00;
 }
 
-/* Dashboard Section */
-.dashboard {
+/* ===== Attendance Section ===== */
+.attendance {
   text-align: center;
   padding: 80px 20px;
 }
 
-.dashboard h2 {
+.attendance h2 {
   font-size: 32px;
   color: #ffd700;
   margin-bottom: 12px;
 }
 
-.dashboard p {
+.attendance p {
   font-size: 18px;
   color: rgba(255, 255, 255, 0.85);
 }
+
+

@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Duties | Wildcat Watch</title>
+  <link rel="stylesheet" href="{% static 'wildcatwatch/css/staff_dashboard.css' %}">
+  <link rel="stylesheet" href="{% static 'wildcatwatch/css/my_duties.css' %}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <div class="shield-icon">🛡️</div>
+        <h1>Wildcat Watch</h1>
+      </div>
+      <nav class="nav">
+        <a href="{% url 'staff_dashboard' %}">Dashboard</a>
+        <a href="{% url 'my_duties' %}" class="active">My Duties</a>
+        <a href="{% url 'attendance_dashboard' %}">Attendance</a>
+        <a href="#">Notifications</a>
+      </nav>
+      <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </div>
+  </header>
+
+  <section class="dashboard">
+    <h2>My Assigned Duties</h2>
+    <p>View your scheduled tasks and mark them as completed.</p>
+
+    <div class="duties-container">
+      <div class="duty-card">
+        <h3>Main Gate Patrol</h3>
+        <p><strong>Time:</strong> 7:00 AM - 11:00 AM</p>
+        <p><strong>Location:</strong> North Gate</p>
+        <p><strong>Description:</strong> Monitor vehicle entry and assist visitors.</p>
+        <p><span class="status pending">Pending</span></p>
+        <button class="mark-btn">Mark as Completed</button>
+      </div>
+
+      <div class="duty-card">
+        <h3>Building Rounds</h3>
+        <p><strong>Time:</strong> 11:00 AM - 3:00 PM</p>
+        <p><strong>Location:</strong> Engineering and IT Departments</p>
+        <p><strong>Description:</strong> Check fire exits, locks, and report maintenance issues.</p>
+        <p><span class="status completed">Completed</span></p>
+        <button class="mark-btn completed-btn" disabled>Completed</button>
+      </div>
+
+      <div class="duty-card">
+        <h3>Evening Briefing</h3>
+        <p><strong>Time:</strong> 3:30 PM - 5:00 PM</p>
+        <p><strong>Location:</strong> Security Office</p>
+        <p><strong>Description:</strong> Report duty summary and receive next day’s assignments.</p>
+        <p><span class="status pending">Pending</span></p>
+        <button class="mark-btn">Mark as Completed</button>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

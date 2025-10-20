@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance | Wildcat Watch</title>
+  <link rel="stylesheet" href="{% static 'wildcatwatch/css/attendance_dashboard.css' %}">
+</head>
+<body>
+  <!-- ✅ Unified Header (same as staff_dashboard & my_duties) -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <div class="shield-icon">🛡️</div>
+        <h1>Wildcat Watch</h1>
+      </div>
+      <nav class="nav">
+        <a href="{% url 'staff_dashboard' %}">Dashboard</a>
+        <a href="{% url 'my_duties' %}">My Duties</a>
+        <a href="{% url 'attendance_dashboard' %}" class="active">Attendance</a>
+        <a href="#">Notifications</a>
+      </nav>
+      <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </div>
+  </header>
+
+  <!-- ✅ Attendance Section -->
+  <main class="main-content">
+    <section class="attendance">
+      <div class="attendance-container">
+        <h2>Attendance Tracker</h2>
+        <p>Record your check-in and check-out for your assigned duty shifts.</p>
+
+        
+      </div>
+    </section>
+  </main>
+</body>
+</html>

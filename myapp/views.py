@@ -185,3 +185,11 @@ def staff_dashboard(request):
 @login_required(login_url="login")
 def admin_dashboard(request):
     return render(request, "myapp/admin_dashboard.html")
+
+@login_required(login_url="login")
+def my_duties(request):
+    return render(request, "myapp/my_duties.html")
+
+@login_required(login_url="login")
+def attendance(request):
+    return render(request, "myapp/attendance_dashboard.html")
