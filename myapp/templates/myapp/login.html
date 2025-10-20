@@ -27,7 +27,7 @@
         <script>
           Swal.fire({
             icon: "{% if 'error' in messages.last.tags %}error{% elif 'success' in messages.last.tags %}success{% else %}info{% endif %}",
-            title: "Notifications",
+            title: "Notification",
             html: `
               {% for message in messages %}
                 <p>{{ message|escapejs }}</p>
@@ -37,23 +37,22 @@
         </script>
       {% endif %}
 
-
       <form class="login-form" method="post">
         {% csrf_token %}
-        
+
         <div class="form-group">
           <label for="role">Role</label>
           <select id="role" name="role" required>
             <option value="">Select your role</option>
-            <option value="security-officer">Security Officer</option>
+            <option value="security">Security Officer</option>
             <option value="supervisor">Supervisor</option>
-            <option value="administrator">Administrator</option>
+            <option value="admin">Administrator</option>
           </select>
         </div>
-        
+
         <div class="form-group">
-          <label for="idnumber">ID Number</label>
-          <input type="text" id="idnumber" name="id_no" placeholder="Enter your ID number" required>
+          <label for="id_no">ID Number</label>
+          <input type="text" id="id_no" name="id_no" placeholder="Enter your ID number" required>
         </div>
 
         <div class="form-group">
@@ -67,7 +66,10 @@
         <button type="submit" class="sign-in-btn">Sign In</button>
 
         <div class="form-footer">
-          <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+          <p>Don't have an account? 
+            <a href="{% url 'register_staff' %}">Register as Staff</a> or 
+            <a href="{% url 'register_admin' %}">Register as Admin</a>
+          </p>
         </div>
       </form>
     </div>
