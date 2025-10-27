@@ -1,5 +1,8 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.db import models
+from django.utils import timezone
+from django.conf import settings
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, id_number, email, password=None, role='security', fullname="Unknown"):
@@ -38,3 +41,31 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.id_number} - {self.fullname} ({self.role})"
+
+
+class Duty(models.Model):
+    staff = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="duties"
+    )
+    title = models.CharField(max_length=100)
+    location = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    time_start = models.TimeField()
+    time_end = models.TimeField()
+    status = models.CharField(
+        max_length=20,
+        choices=[("pending", "Pending"), ("completed", "Completed")],
+        default="pending",
+    )
+
+    def __str__(self):
+        return f"{self.title} - {self.staff.username}"
+
+
+class Attendance(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    check_in = models.DateTimeField(default=timezone.now)
+    check_out = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user} - {self.check_in.date()}"

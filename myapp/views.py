@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from .models import Attendance
 
 User = get_user_model()
 
@@ -113,6 +114,47 @@ def login_view(request):
             return redirect("login")
 
     return render(request, "myapp/login.html")
+
+
+@login_required
+def my_duties_view(request):
+    duties = Duty.objects.filter(staff=request.user)
+
+    if request.method == "POST":
+        duty_id = request.POST.get("duty_id")
+        duty = get_object_or_404(Duty, id=duty_id, staff=request.user)
+        duty.status = "completed"
+        duty.save()
+        messages.success(request, f"{duty.title} marked as completed.")
+        return redirect("my_duties")
+
+    return render(request, "myapp/my_duties.html", {"duties": duties})
+
+
+@login_required
+def attendance_dashboard(request):
+    """Display the attendance page and handle check-in/out actions."""
+    user = request.user
+
+    # Get user's latest attendance record
+    latest = Attendance.objects.filter(user=user).order_by('-check_in').first()
+
+    # Get attendance history
+    history = Attendance.objects.filter(user=user).order_by('-check_in')
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+        if action == "checkin":
+            Attendance.objects.create(user=user)
+        elif action == "checkout" and latest and latest.check_out is None:
+            latest.check_out = timezone.now()
+            latest.save()
+        return redirect("attendance_dashboard")
+
+    return render(request, "myapp/attendance_dashboard.html", {
+        "latest": latest,
+        "history": history
+    })
 
 
 def logout_view(request):

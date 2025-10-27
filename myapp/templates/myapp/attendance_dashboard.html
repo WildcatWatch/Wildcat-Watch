@@ -32,7 +32,38 @@
         <h2>Attendance Tracker</h2>
         <p>Record your check-in and check-out for your assigned duty shifts.</p>
 
-        
+        <!-- ✅ Check-in / Check-out Form -->
+        <form method="POST">
+          {% csrf_token %}
+          {% if not latest or latest.check_out %}
+            <button type="submit" name="action" value="checkin" class="check-btn">Check In</button>
+          {% else %}
+            <button type="submit" name="action" value="checkout" class="check-btn checkout">Check Out</button>
+          {% endif %}
+        </form>
+
+        <!-- ✅ Attendance History Table -->
+        <h3>Attendance History</h3>
+        <table class="attendance-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Check-In</th>
+              <th>Check-Out</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for record in history %}
+              <tr>
+                <td>{{ record.check_in.date }}</td>
+                <td>{{ record.check_in.time }}</td>
+                <td>{{ record.check_out|default:"—" }}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="3">No attendance records yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </section>
   </main>

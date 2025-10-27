@@ -96,4 +96,60 @@ body {
   color: rgba(255, 255, 255, 0.85);
 }
 
+/* ===== Check-in/Check-out Button ===== */
+.check-btn {
+  background-color: #ffd700;
+  color: #6b3411;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
 
+.check-btn:hover {
+  background-color: #ffcc00;
+}
+
+.check-btn.checkout {
+  background-color: #c0392b;
+  color: white;
+}
+
+.check-btn.checkout:hover {
+  background-color: #e74c3c;
+}
+
+/* ===== Attendance Table ===== */
+.attendance-table {
+  width: 90%;
+  margin: 40px auto 0;
+  border-collapse: collapse;
+  background-color: #d2691e;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.attendance-table th,
+.attendance-table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.attendance-table th {
+  background-color: #6b3411;
+  color: #ffd700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.attendance-table td {
+  color: #f2f2f2;
+}
+
+.attendance-table tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
