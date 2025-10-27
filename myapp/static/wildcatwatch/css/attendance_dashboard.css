@@ -1,6 +1,6 @@
 @import url('home_page.css');
 
-/* Body */
+/* ===== Body ===== */
 body {
   font-family: 'Poppins', sans-serif;
   background-color: #0b1e2d;
@@ -9,7 +9,7 @@ body {
   padding: 0;
 }
 
-  /* Header (same as attendance) */
+/* ===== Header (same as staff) ===== */
 .header {
   background-color: #6b3411 !important;
   padding: 15px 0 !important;
@@ -39,7 +39,7 @@ body {
   font-size: 2rem;
 }
 
-/* Navigation Bar */
+/* ===== Navigation Bar ===== */
 .nav {
   display: flex;
   align-items: center;
@@ -57,14 +57,14 @@ body {
   color: #ffd700;
 }
 
-/* Active Page Highlight */
+/* Active Link */
 .nav a.active {
   color: #ffd700;
   border-bottom: 2px solid #ffd700;
   padding-bottom: 4px;
 }
 
-/* Logout Button */
+/* ===== Logout Button ===== */
 .logout-btn {
   background: #ffd700;
   color: #6b3411;
@@ -79,19 +79,77 @@ body {
   background: #ffcc00;
 }
 
-/* Dashboard Section */
-.dashboard {
+/* ===== Attendance Section ===== */
+.attendance {
   text-align: center;
   padding: 80px 20px;
 }
 
-.dashboard h2 {
+.attendance h2 {
   font-size: 32px;
   color: #ffd700;
   margin-bottom: 12px;
 }
 
-.dashboard p {
+.attendance p {
   font-size: 18px;
   color: rgba(255, 255, 255, 0.85);
+}
+
+/* ===== Check-in/Check-out Button ===== */
+.check-btn {
+  background-color: #ffd700;
+  color: #6b3411;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+
+.check-btn:hover {
+  background-color: #ffcc00;
+}
+
+.check-btn.checkout {
+  background-color: #c0392b;
+  color: white;
+}
+
+.check-btn.checkout:hover {
+  background-color: #e74c3c;
+}
+
+/* ===== Attendance Table ===== */
+.attendance-table {
+  width: 90%;
+  margin: 40px auto 0;
+  border-collapse: collapse;
+  background-color: #d2691e;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.attendance-table th,
+.attendance-table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.attendance-table th {
+  background-color: #6b3411;
+  color: #ffd700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.attendance-table td {
+  color: #f2f2f2;
+}
+
+.attendance-table tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
 }

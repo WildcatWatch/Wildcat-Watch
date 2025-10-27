@@ -1,0 +1,82 @@
+/* My Duties Page Specific Styles */
+
+.duties-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  padding: 20px;
+}
+
+.duty-card {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  width: 300px;
+  padding: 20px;
+  text-align: left;
+  transition: transform 0.2s ease;
+}
+
+.duty-card:hover {
+  transform: translateY(-5px);
+}
+
+.duty-card h3 {
+  color: #ffd700;
+  margin-bottom: 10px;
+  margin-top: 0;
+}
+
+.duty-card p {
+  margin: 5px 0;
+  color: #fff;
+  font-size: 14px;
+}
+
+/* Status Badges */
+.status {
+  font-weight: bold;
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 14px;
+  display: inline-block;
+}
+
+.status.pending {
+  background-color: #ff9800;
+}
+
+.status.completed {
+  background-color: #4caf50;
+}
+
+/* Mark Complete Button */
+.mark-btn {
+  margin-top: 15px;
+  display: inline-block;
+  background-color: #ffd700;
+  color: #8b4513;
+  padding: 8px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.mark-btn:hover {
+  background-color: #ffcc00;
+}
+
+.mark-btn.completed-btn {
+  background-color: gray;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+.mark-btn.completed-btn:hover {
+  background-color: gray;
+}
