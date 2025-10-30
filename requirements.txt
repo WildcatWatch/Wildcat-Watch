@@ -38,3 +38,7 @@ typing_extensions==4.15.0
 tzdata==2025.2
 websockets==15.0.1
 yarl==1.22.0
+gunicorn
+whitenoise
+psycopg2-binary
+django-environ
