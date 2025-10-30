@@ -6,7 +6,10 @@ from django.contrib.auth.decorators import login_required
 
 User = get_user_model()
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> cbdd753 (Fixed security role for login and views.py)
 def register_staff(request):
     if request.method == "POST":
         fullname = request.POST.get("fullname")
@@ -40,7 +43,6 @@ def register_staff(request):
         return redirect("login")
 
     return render(request, "myapp/register_staff.html")
-
 
 def register_admin(request):
     if request.method == "POST":
@@ -79,8 +81,11 @@ def register_admin(request):
 
     return render(request, "myapp/register_admin.html")
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> cbdd753 (Fixed security role for login and views.py)
 def login_view(request):
     if request.method == "POST":
         id_no = request.POST.get("id_no")
