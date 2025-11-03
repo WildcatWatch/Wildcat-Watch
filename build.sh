@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
-# Build script for Render
+set -euo pipefail
+echo "==> Installing dependencies"
+pip install --upgrade pip # this is optional
 pip install -r requirements.txt
-python manage.py collectstatic --no-input
-python manage.py migrate
+echo "==> Running database migrations"
+python manage.py makemigrations
+python manage.py migrate --noinput
+echo "==> Collecting static files"
+python manage.py collectstatic --noinput
+echo "==> Build complete"
