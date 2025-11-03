@@ -9,11 +9,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
 
 # SECURITY
-SECRET_KEY = os.environ.get("SECRET_KEY", "fallback-secret-key")
-DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "fallback-secret-key")
+DEBUG = os.environ.get("DJANGO_DEBUG", "False").lower() == "true"
 
 # Allow all hosts temporarily (replace with your domain later)
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://wildcat-watch-hcue.onrender.com",
+]
+
 
 # Applications
 INSTALLED_APPS = [
@@ -86,7 +91,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
