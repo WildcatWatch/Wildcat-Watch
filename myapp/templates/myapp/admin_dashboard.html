@@ -8,14 +8,16 @@
   <link rel="stylesheet" href="{% static 'wildcatwatch/css/admin_dashboard.css' %}">
 </head>
 <body>
+  <!-- ===== Header ===== -->
   <header class="header">
     <div class="header-container">
       <div class="logo">
+        <!-- Replace emoji with same image/icon used in staff header for consistency -->
         <div class="shield-icon">🛡️</div>
         <h1>Wildcat Watch</h1>
       </div>
       <nav class="nav">
-        <a href="#">Overview</a>
+        <a href="#" class="active">Overview</a>
         <a href="#">Reports</a>
         <a href="#">Manage Staff</a>
         <a href="#">Settings</a>
@@ -24,9 +26,26 @@
     </div>
   </header>
 
+  <!-- ===== Main Dashboard Section ===== -->
   <section class="dashboard">
     <h2>Administrator Dashboard</h2>
     <p>Monitor live reports, manage users, and oversee all campus operations.</p>
+
+    <!-- Optional Placeholder for Future Dashboard Cards -->
+    <div class="cards-container">
+      <div class="card">
+        <h3>Reports</h3>
+        <p>View attendance and incident reports.</p>
+      </div>
+      <div class="card">
+        <h3>Manage Users</h3>
+        <p>Add, edit, or remove staff accounts.</p>
+      </div>
+      <div class="card">
+        <h3>Settings</h3>
+        <p>Configure permissions and system preferences.</p>
+      </div>
+    </div>
   </section>
 </body>
 </html>

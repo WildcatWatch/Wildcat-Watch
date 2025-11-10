@@ -1,25 +1,56 @@
 @import url('home_page.css');
 
-.dashboard {
-  text-align: center;
-  padding: 80px 20px;
+/* ===== Body ===== */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #8c4a19;
+  color: white;
+  margin: 0;
+  padding: 0;
 }
 
-.dashboard h2 {
-  font-size: 36px;
+/* ===== Header ===== */
+.header {
+  background-color: #6b3411 !important;
+  padding: 15px 0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  margin: 0 auto;
+}
+
+/* ===== Logo ===== */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo h1 {
+  font-size: 1.8rem;
   color: #ffd700;
-  margin-bottom: 16px;
 }
 
-.dashboard p {
-  font-size: 18px;
-  color: rgba(255, 255, 255, 0.85);
+.shield-icon {
+  font-size: 2rem;
+}
+
+/* ===== Navigation ===== */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
 }
 
 .nav a {
   color: white;
   text-decoration: none;
-  margin: 0 12px;
+  font-weight: 500;
   transition: color 0.2s ease;
 }
 
@@ -27,11 +58,71 @@
   color: #ffd700;
 }
 
+/* ===== Active Page Highlight ===== */
+.nav a.active {
+  color: #ffd700;
+  border-bottom: 2px solid #ffd700;
+  padding-bottom: 4px;
+}
+
+/* ===== Logout Button ===== */
 .logout-btn {
   background: #ffd700;
-  color: #8b4513;
+  color: #6b3411;
   padding: 8px 16px;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #ffcc00;
+}
+
+/* ===== Dashboard Section ===== */
+.dashboard {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.dashboard h2 {
+  font-size: 32px;
+  color: #ffd700;
+  margin-bottom: 12px;
+}
+
+.dashboard p {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .logout-btn {
+    margin-top: 10px;
+  }
+
+  .dashboard {
+    padding: 40px 15px;
+  }
+
+  .dashboard h2 {
+    font-size: 26px;
+  }
+
+  .dashboard p {
+    font-size: 16px;
+  }
 }
