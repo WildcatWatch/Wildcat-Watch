@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Duty List - Wildcat Watch</title>
+  <link rel="stylesheet" href="duty_list.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <div class="shield-icon">🛡️</div>
+        <h1>Duty List</h1>
+      </div>
+    </div>
+  </header>
+
+  <!-- Duty List Section -->
+  <section class="hero">
+    <div class="hero-container">
+      <h2 class="hero-title">Staff Duty Assignments</h2>
+      <p class="hero-description">
+        Manage and monitor campus security staff assignments efficiently. Add, edit, or remove duties in real-time.
+      </p>
+
+      <!-- Add new assignment -->
+      <div class="form-container">
+        <input type="text" id="nameInput" placeholder="Enter Name" required>
+        <select id="placeInput">
+          <option value="">Select Location</option>
+          <option>Front Gate</option>
+          <option>Back Gate</option>
+          <option>Library</option>
+          <option>RTL Building</option>
+          <option>NGE Building</option>
+          <option>ALLIED Building</option>
+          <option>GLE Building</option>
+        </select>
+        <select id="statusInput">
+          <option>Unassigned</option>
+          <option>On Duty</option>
+          <option>On Break</option>
+          <option>Off Duty</option>
+          <option>Absent</option>
+        </select>
+        <button class="btn btn-add" id="addBtn">Add</button>
+      </div>
+
+      <!-- Duty Table -->
+      <div class="features">
+        <div class="features-container">
+          <table id="dutyTable">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Assigned Place</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Rows will be dynamically added here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="{% static 'js/duty_list.js' %}"></script>
+</body>
+</html>
