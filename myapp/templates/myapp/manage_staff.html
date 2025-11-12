@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Staff | Wildcat Watch</title>
+  <link rel="stylesheet" href="{% static 'wildcatwatch/css/admin_dashboard.css' %}">
+  <link rel="stylesheet" href="{% static 'wildcatwatch/css/manage_staff.css' %}">
+</head>
+<body>
+  <!-- ===== Admin Header ===== -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <div class="shield-icon">🛡️</div>
+        <h1>Wildcat Watch</h1>
+      </div>
+      <nav class="nav">
+        <a href="{% url 'admin_dashboard' %}">Overview</a>
+        <a href="#">Reports</a>
+        <a href="{% url 'manage_staff' %}" class="active">Manage Staff</a>
+        <a href="#">Settings</a>
+      </nav>
+      <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </div>
+  </header>
+
+  <!-- ===== Manage Staff Section ===== -->
+  <main class="main-content">
+    <section class="manage-staff">
+      <div class="container">
+        <h2>Manage Staff & Assign Duties</h2>
+        <p>View all security personnel and assign duties to their designated locations.</p>
+
+        <!-- ✅ Add New Assignment Form -->
+        <div class="form-container">
+          <input type="text" id="nameInput" placeholder="Enter Name" required>
+          <select id="placeInput">
+            <option value="">Select Location</option>
+            <option>Front Gate</option>
+            <option>Back Gate</option>
+            <option>Library</option>
+            <option>RTL Building</option>
+            <option>NGE Building</option>
+            <option>ALLIED Building</option>
+            <option>GLE Building</option>
+          </select>
+          <select id="statusInput">
+            <option>Unassigned</option>
+            <option>On Duty</option>
+            <option>On Break</option>
+            <option>Off Duty</option>
+            <option>Absent</option>
+          </select>
+          <button class="btn btn-add" id="addBtn">Add Assignment</button>
+        </div>
+
+        <!-- ✅ Unified Staff & Duty Table -->
+        <div class="table-container">
+          <table id="staffDutyTable" class="staff-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Assigned Location</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for staff in staff_list %}
+                <tr data-staff-id="{{ staff.id }}">
+                  <td class="staff-name">{{ staff.name }}</td>
+                  <td class="staff-role">{{ staff.role }}</td>
+                  <td class="assigned-location">—</td>
+                  <td class="duty-status">{{ staff.status|default:"—" }}</td>
+                  <td class="action-buttons">
+                    <button class="btn-edit" data-name="{{ staff.name }}">Edit</button>
+                    <button class="btn-delete" data-name="{{ staff.name }}">Remove</button>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr><td colspan="5">No staff found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="{% static 'wildcatwatch/js/manage_staff.js' %}"></script>
+</body>
+</html>

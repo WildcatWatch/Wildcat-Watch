@@ -1,0 +1,216 @@
+@import url('admin_dashboard.css');
+
+/* ===== Manage Staff Section ===== */
+.manage-staff {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.manage-staff h2 {
+  font-size: 32px;
+  color: #ffd700;
+  margin-bottom: 12px;
+}
+
+.manage-staff p {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ===== Cards / Features Container ===== */
+.cards-container,
+.features-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.card {
+  background-color: rgba(107, 52, 17, 0.85);
+  padding: 20px;
+  border-radius: 12px;
+  width: 280px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.card h3 {
+  color: #ffd700;
+  margin-bottom: 10px;
+}
+
+.card p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 16px;
+}
+
+/* ===== Forms ===== */
+.form-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.form-container input,
+.form-container select,
+.form-container button {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
+}
+
+.form-container input,
+.form-container select {
+  width: 180px;
+}
+
+.btn-add {
+  background-color: #ffd700;
+  color: #6b3411;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-add:hover {
+  background-color: #ffcc00;
+}
+
+/* ===== Staff Table ===== */
+.staff-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin-top: 20px;
+  background-color: rgba(107, 52, 17, 0.85);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.staff-table th,
+.staff-table td {
+  padding: 12px 20px; /* even horizontal padding for all columns */
+  vertical-align: middle;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Column widths */
+.staff-table th:nth-child(1),
+.staff-table td.staff-name {
+  width: 20%;
+}
+
+.staff-table th:nth-child(2),
+.staff-table td.staff-role {
+  width: 15%;
+}
+
+.staff-table th:nth-child(3),
+.staff-table td.assigned-location {
+  width: 25%;
+}
+
+.staff-table th:nth-child(4),
+.staff-table td.duty-status {
+  width: 15%;
+}
+
+.staff-table th:nth-child(5),
+.staff-table td.action-buttons {
+  width: 25%;
+  display: flex;
+  justify-content: center; /* horizontally center */
+  align-items: center;     /* vertically center */
+  padding-left: 20px;      /* ensure spacing from previous column */
+  padding-right: 20px;
+}
+
+/* Table header */
+.staff-table thead th {
+  color: #ffd700;
+}
+
+/* Row hover */
+.staff-table tbody tr:hover {
+  background-color: rgba(255, 215, 0, 0.1);
+}
+
+/* ===== Action Buttons Styling ===== */
+.action-buttons {
+  display: inline-flex; /* keeps buttons spaced correctly inside td */
+  gap: 8px;
+}
+
+.btn-edit,
+.btn-delete {
+  padding: 4px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.btn-edit {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.btn-delete {
+  background-color: #f44336;
+  color: white;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .manage-staff {
+    padding: 40px 15px;
+  }
+
+  .manage-staff h2 {
+    font-size: 26px;
+  }
+
+  .manage-staff p {
+    font-size: 16px;
+  }
+
+  .cards-container,
+  .features-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .form-container {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .form-container input,
+  .form-container select {
+    width: 90%;
+  }
+
+  .staff-table th,
+  .staff-table td {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+
+  .staff-table td.action-buttons {
+    flex-direction: column; /* stack buttons vertically on small screens */
+  }
+}

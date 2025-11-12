@@ -1,13 +1,15 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth import get_user_model
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Attendance
+from django.utils import timezone
+from .models import Attendance, Duty
 
 User = get_user_model()
 
-
+# ---------------------------
+# Registration Views
+# ---------------------------
 def register_staff(request):
     if request.method == "POST":
         fullname = request.POST.get("fullname")
@@ -81,27 +83,24 @@ def register_admin(request):
     return render(request, "myapp/register_admin.html")
 
 
-
+# ---------------------------
+# Login & Logout
+# ---------------------------
 def login_view(request):
     if request.method == "POST":
         id_no = request.POST.get("id_no")
         password = request.POST.get("password")
         role = request.POST.get("role")
 
-        # Use 'username' because Django expects USERNAME_FIELD name
         user = authenticate(request, username=id_no, password=password)
 
         if user is not None:
-            print("User authenticated successfully:", user)
-            print("Role from DB:", user.role)
-            print("Selected role from form:", role)
-
             if user.role != role:
                 messages.error(request, "Invalid role selected for this account.")
                 return redirect("login")
 
             login(request, user)
-            request.session["role"] = user.role  # optional: store role in session
+            request.session["role"] = user.role
 
             if user.role == "admin":
                 return redirect("admin_dashboard")
@@ -116,7 +115,32 @@ def login_view(request):
     return render(request, "myapp/login.html")
 
 
-@login_required
+def logout_view(request):
+    logout(request)
+    return redirect("login")
+
+
+# ---------------------------
+# Home / Dashboards
+# ---------------------------
+def home_page(request):
+    return render(request, "myapp/home_page.html")
+
+
+@login_required(login_url="login")
+def staff_dashboard(request):
+    return render(request, "myapp/staff_dashboard.html")
+
+
+@login_required(login_url="login")
+def admin_dashboard(request):
+    return render(request, "myapp/admin_dashboard.html")
+
+
+# ---------------------------
+# Employee Views
+# ---------------------------
+@login_required(login_url="login")
 def my_duties_view(request):
     duties = Duty.objects.filter(staff=request.user)
 
@@ -131,15 +155,10 @@ def my_duties_view(request):
     return render(request, "myapp/my_duties.html", {"duties": duties})
 
 
-@login_required
+@login_required(login_url="login")
 def attendance_dashboard(request):
-    """Display the attendance page and handle check-in/out actions."""
     user = request.user
-
-    # Get user's latest attendance record
     latest = Attendance.objects.filter(user=user).order_by('-check_in').first()
-
-    # Get attendance history
     history = Attendance.objects.filter(user=user).order_by('-check_in')
 
     if request.method == "POST":
@@ -157,26 +176,42 @@ def attendance_dashboard(request):
     })
 
 
-def logout_view(request):
-    logout(request)
-    return redirect("login")
-
-
-def home_page(request):
-    return render(request, "myapp/home_page.html")
-
+# ---------------------------
+# Admin Views
+# ---------------------------
 @login_required(login_url="login")
-def staff_dashboard(request):
-    return render(request, "myapp/staff_dashboard.html")
+def manage_staff(request):
+    if request.user.role != "admin":
+        messages.error(request, "Access denied.")
+        return redirect("home_page")
 
-@login_required(login_url="login")
-def admin_dashboard(request):
-    return render(request, "myapp/admin_dashboard.html")
+    # Fetch staff members (exclude admins)
+    staff_list = User.objects.filter(role__in=["security-officer", "supervisor"])
 
-@login_required(login_url="login")
-def my_duties(request):
-    return render(request, "myapp/my_duties.html")
+    # Fetch all duties
+    duty_list = Duty.objects.all().order_by("time_start")
 
-@login_required(login_url="login")
-def attendance(request):
-    return render(request, "myapp/attendance_dashboard.html")
+    # Handle adding new duties
+    if request.method == "POST":
+        name = request.POST.get("nameInput")
+        place = request.POST.get("placeInput")
+        status = request.POST.get("statusInput")
+
+        staff_member = User.objects.filter(fullname=name).first()
+        if staff_member and place and status:
+            Duty.objects.create(
+                staff=staff_member,
+                title=f"Duty at {place}",
+                location=place,
+                status=status,
+                time_start=timezone.now(),
+                time_end=timezone.now() + timezone.timedelta(hours=8)
+            )
+            messages.success(request, f"Duty assigned to {name}")
+            return redirect("manage_staff")
+
+    context = {
+        "staff_list": staff_list,
+        "duty_list": duty_list
+    }
+    return render(request, "myapp/manage_staff.html", context)
