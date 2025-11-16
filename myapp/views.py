@@ -215,3 +215,15 @@ def manage_staff(request):
         "duty_list": duty_list
     }
     return render(request, "myapp/manage_staff.html", context)
+
+
+# ---------------------------
+# NEW REPORTS VIEW (added)
+# ---------------------------
+@login_required(login_url="login")
+def reports(request):
+    if request.user.role != "admin":
+        messages.error(request, "Access denied.")
+        return redirect("home_page")
+
+    return render(request, "myapp/reports.html")
