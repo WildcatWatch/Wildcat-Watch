@@ -1,5 +1,6 @@
 /* My Duties Page Specific Styles */
 
+/* Card Layout (Original) */
 .duties-container {
   display: flex;
   justify-content: center;
@@ -34,7 +35,7 @@
   font-size: 14px;
 }
 
-/* Status Badges */
+/* Status Badges (Original) */
 .status {
   font-weight: bold;
   color: #fff;
@@ -52,7 +53,7 @@
   background-color: #4caf50;
 }
 
-/* Mark Complete Button */
+/* Mark Complete Button (Original) */
 .mark-btn {
   margin-top: 15px;
   display: inline-block;
@@ -79,4 +80,216 @@
 
 .mark-btn.completed-btn:hover {
   background-color: gray;
+}
+
+/* ===== NEW TABLE STYLES ===== */
+
+/* Override staff_dashboard.css for My Duties page */
+body {
+  background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%) !important;
+  min-height: 100vh;
+}
+
+/* Main Content */
+.main-content {
+  padding: 40px 20px !important;
+  max-width: 1400px !important;
+  margin: 0 auto !important;
+}
+
+/* Override dashboard padding for table view */
+.dashboard {
+  text-align: center !important;
+  padding: 40px 20px !important;
+}
+
+.dashboard h2 {
+  color: #ffd700 !important;
+  margin-bottom: 10px !important;
+  font-size: 32px !important;
+}
+
+.dashboard p {
+  color: #fff !important;
+  margin-bottom: 30px !important;
+  font-size: 18px !important;
+}
+
+/* Table Container */
+.table-container {
+  margin-top: 30px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  padding: 20px !important;
+  overflow-x: auto !important;
+  display: block !important;
+}
+
+/* Duties Table */
+.duties-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  table-layout: fixed !important;
+  display: table !important;
+}
+
+.duties-table thead {
+  background: rgba(0, 0, 0, 0.3) !important;
+  display: table-header-group !important;
+}
+
+.duties-table tbody {
+  display: table-row-group !important;
+}
+
+.duties-table tr {
+  display: table-row !important;
+}
+
+.duties-table th {
+  color: #FFD700 !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+  padding: 15px !important;
+  text-transform: uppercase !important;
+  font-size: 14px !important;
+  letter-spacing: 0.5px !important;
+  display: table-cell !important;
+}
+
+.duties-table td {
+  padding: 15px !important;
+  color: #fff !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  vertical-align: middle !important;
+  display: table-cell !important;
+}
+
+.duties-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.duties-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Column Widths */
+.duties-table th:nth-child(1),
+.duty-title {
+  width: 15%;
+}
+
+.duties-table th:nth-child(2),
+.duty-time {
+  width: 15%;
+  text-align: center !important;
+}
+
+.duties-table th:nth-child(3),
+.duty-location {
+  width: 12%;
+  text-align: center !important;
+}
+
+.duties-table th:nth-child(4),
+.duty-description {
+  width: 30%;
+}
+
+.duties-table th:nth-child(5),
+.duty-status {
+  width: 13%;
+  text-align: center !important;
+}
+
+.duties-table th:nth-child(6),
+.duty-actions {
+  width: 15%;
+  text-align: center !important;
+}
+
+/* Status Badge */
+.status-badge {
+  display: inline-block !important;
+  padding: 6px 12px !important;
+  border-radius: 20px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  text-transform: capitalize !important;
+}
+
+.status-badge.not_started {
+  background: #f44336 !important;
+  color: white !important;
+}
+
+.status-badge.ongoing {
+  background: #ff9800 !important;
+  color: white !important;
+}
+
+.status-badge.completed {
+  background: #4CAF50 !important;
+  color: white !important;
+}
+
+.status-badge.pending {
+  background: #2196F3 !important;
+  color: white !important;
+}
+
+/* Status Dropdown */
+.status-form {
+  display: inline-block !important;
+}
+
+.status-dropdown {
+  padding: 8px 12px !important;
+  border: 2px solid #FFD700 !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+  border-radius: 6px !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  min-width: 150px !important;
+}
+
+.status-dropdown:hover {
+  background: rgba(255, 215, 0, 0.2) !important;
+  border-color: #FFF !important;
+}
+
+.status-dropdown:focus {
+  outline: none !important;
+  background: rgba(255, 215, 0, 0.3) !important;
+  border-color: #FFF !important;
+}
+
+.status-dropdown option {
+  background: #8B4513 !important;
+  color: #fff !important;
+  padding: 10px !important;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .duties-table {
+    font-size: 13px;
+  }
+  
+  .duties-table th,
+  .duties-table td {
+    padding: 10px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-container {
+    overflow-x: scroll !important;
+  }
+  
+  .duties-table {
+    min-width: 900px !important;
+  }
 }
