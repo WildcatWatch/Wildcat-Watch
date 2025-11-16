@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports | Wildcat Watch</title>
+  <link rel="stylesheet" href="{% static 'wildcatwatch/css/admin_dashboard.css' %}">
+  <link rel="stylesheet" href="{% static 'wildcatwatch/css/reports.css' %}">
+</head>
+<body>
+  <!-- ===== Admin Header ===== -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <div class="shield-icon">🛡️</div>
+        <h1>Wildcat Watch</h1>
+      </div>
+      <nav class="nav">
+        <a href="{% url 'admin_dashboard' %}">Overview</a>
+        <a href="{% url 'reports' %}" class="active">Reports</a>
+        <a href="{% url 'manage_staff' %}">Manage Staff</a>
+        <a href="#">Settings</a>
+      </nav>
+      <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </div>
+  </header>
+
+  <!-- ===== Reports Section ===== -->
+  <main class="main-content">
+    <section class="reports">
+      <div class="container">
+        <h2>Staff Reports & Analytics</h2>
+        <p>Monitor real-time staff attendance, duty status, and performance metrics.</p>
+
+        <!-- ✅ Statistics Boxes -->
+        <div class="stats-container">
+          <div class="stat-box present">
+            <div class="stat-icon">✅</div>
+            <div class="stat-info">
+              <h3>{{ total_present|default:"0" }}</h3>
+              <p>Present Today</p>
+            </div>
+          </div>
+
+          <div class="stat-box absent">
+            <div class="stat-icon">❌</div>
+            <div class="stat-info">
+              <h3>{{ total_absent|default:"0" }}</h3>
+              <p>Absent</p>
+            </div>
+          </div>
+
+          <div class="stat-box on-duty">
+            <div class="stat-icon">🔵</div>
+            <div class="stat-info">
+              <h3>{{ total_on_duty|default:"0" }}</h3>
+              <p>On Duty</p>
+            </div>
+          </div>
+
+          <div class="stat-box on-break">
+            <div class="stat-icon">☕</div>
+            <div class="stat-info">
+              <h3>{{ total_on_break|default:"0" }}</h3>
+              <p>On Break</p>
+            </div>
+          </div>
+
+          <div class="stat-box clocked-out">
+            <div class="stat-icon">🏠</div>
+            <div class="stat-info">
+              <h3>{{ total_clocked_out|default:"0" }}</h3>
+              <p>Clocked Out</p>
+            </div>
+          </div>
+
+          <div class="stat-box unassigned">
+            <div class="stat-icon">⚪</div>
+            <div class="stat-info">
+              <h3>{{ total_unassigned|default:"0" }}</h3>
+              <p>Unassigned</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ✅ Detailed Reports Table -->
+        <div class="table-container">
+          <h3>Detailed Staff Status</h3>
+          <table class="reports-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Location</th>
+                <th>Check-In Time</th>
+                <th>Check-Out Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for staff in staff_reports %}
+                <tr>
+                  <td>{{ staff.name }}</td>
+                  <td>{{ staff.role }}</td>
+                  <td>
+                    <span class="status-badge {{ staff.status }}">{{ staff.status|capfirst }}</span>
+                  </td>
+                  <td>{{ staff.location|default:"—" }}</td>
+                  <td>{{ staff.check_in|default:"—" }}</td>
+                  <td>{{ staff.check_out|default:"—" }}</td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="6" style="text-align: center; padding: 30px;">No staff reports available.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
