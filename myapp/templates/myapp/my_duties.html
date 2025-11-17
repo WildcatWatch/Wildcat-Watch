@@ -7,6 +7,7 @@
   <title>My Duties | Wildcat Watch</title>
   <link rel="stylesheet" href="{% static 'wildcatwatch/css/staff_dashboard.css' %}">
   <link rel="stylesheet" href="{% static 'wildcatwatch/css/my_duties.css' %}">
+  <link rel="stylesheet" href="{% static 'wildcatwatch/css/my_duties_table.css' %}">
 </head>
 <body>
   <header class="header">
@@ -25,9 +26,9 @@
     </div>
   </header>
 
-  <section class="dashboard">
+  <section class="duties-section">
     <h2>My Assigned Duties</h2>
-    <p>View your scheduled tasks and mark them as completed.</p>
+    <p>View your scheduled tasks and update their status.</p>
 
     <div class="duties-container">
       {% for duty in duties %}
