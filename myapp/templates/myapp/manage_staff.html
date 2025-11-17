@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="{% static 'wildcatwatch/css/manage_staff.css' %}">
 </head>
 <body>
-  <!-- ===== Admin Header ===== -->
   <header class="header">
     <div class="header-container">
       <div class="logo">
@@ -26,14 +25,12 @@
     </div>
   </header>
 
-  <!-- ===== Manage Staff Section ===== -->
   <main class="main-content">
     <section class="manage-staff">
       <div class="container">
         <h2>Manage Staff & Assign Duties</h2>
         <p>View all security personnel and assign duties to their designated locations.</p>
 
-        <!-- ✅ Add New Assignment Form -->
         <div class="form-container">
           <input type="text" id="nameInput" placeholder="Enter Name" required>
           <select id="placeInput">
@@ -56,7 +53,6 @@
           <button class="btn btn-add" id="addBtn">Add Assignment</button>
         </div>
 
-        <!-- ✅ Unified Staff & Duty Table -->
         <div class="table-container">
           <table id="staffDutyTable" class="staff-table">
             <thead>

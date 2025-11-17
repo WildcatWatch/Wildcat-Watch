@@ -64,8 +64,17 @@ class Duty(models.Model):
 
 class Attendance(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    fullname = models.CharField(max_length=255, blank=True)  
+    role = models.CharField(max_length=50, blank=True)      
     check_in = models.DateTimeField(default=timezone.now)
     check_out = models.DateTimeField(null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        if not self.fullname:
+            self.fullname = self.user.fullname
+        if not self.role:
+            self.role = self.user.role
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"{self.user} - {self.check_in.date()}"
+        return f"{self.fullname} ({self.role}) - {self.check_in.date()}"

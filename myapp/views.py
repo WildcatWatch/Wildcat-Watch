@@ -215,3 +215,22 @@ def manage_staff(request):
         "duty_list": duty_list
     }
     return render(request, "myapp/manage_staff.html", context)
+
+@login_required
+def check_in(request):
+    Attendance.objects.create(
+        user=request.user,
+        status="IN",
+        timestamp=timezone.now()
+    )
+    return redirect("attendance_page")
+
+
+@login_required
+def check_out(request):
+    Attendance.objects.create(
+        user=request.user,
+        status="OUT",
+        timestamp=timezone.now()
+    )
+    return redirect("attendance_page")

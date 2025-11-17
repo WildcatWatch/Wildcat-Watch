@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="{% static 'wildcatwatch/css/attendance_dashboard.css' %}">
 </head>
 <body>
-  <!-- ✅ Unified Header (same as staff_dashboard & my_duties) -->
   <header class="header">
     <div class="header-container">
       <div class="logo">
@@ -26,14 +25,12 @@
     </div>
   </header>
 
-  <!-- ✅ Attendance Section -->
   <main class="main-content">
     <section class="attendance">
       <div class="attendance-container">
         <h2>Attendance Tracker</h2>
         <p>Record your check-in and check-out for your assigned duty shifts.</p>
 
-        <!-- ✅ Check-in / Check-out Form -->
         <form method="POST">
           {% csrf_token %}
           {% if not latest or latest.check_out %}
@@ -43,7 +40,6 @@
           {% endif %}
         </form>
 
-        <!-- ✅ Attendance History Table -->
         <h3>Attendance History</h3>
         <table class="attendance-table">
           <thead>
