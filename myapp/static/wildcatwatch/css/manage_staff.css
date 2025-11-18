@@ -1,6 +1,5 @@
 @import url('admin_dashboard.css');
 
-/* ===== Manage Staff Section ===== */
 .manage-staff {
   text-align: center;
   padding: 80px 20px;
@@ -17,7 +16,6 @@
   color: rgba(255, 255, 255, 0.85);
 }
 
-/* ===== Cards / Features Container ===== */
 .cards-container,
 .features-container {
   display: flex;
@@ -51,7 +49,6 @@
   font-size: 16px;
 }
 
-/* ===== Forms ===== */
 .form-container {
   margin-top: 20px;
   display: flex;
@@ -86,7 +83,6 @@
   background-color: #ffcc00;
 }
 
-/* ===== Staff Table ===== */
 .staff-table {
   width: 100%;
   border-collapse: collapse;
@@ -99,7 +95,7 @@
 
 .staff-table th,
 .staff-table td {
-  padding: 12px 20px; /* even horizontal padding for all columns */
+  padding: 12px 20px; 
   vertical-align: middle;
   text-align: center;
   white-space: nowrap;
@@ -107,7 +103,6 @@
   text-overflow: ellipsis;
 }
 
-/* Column widths */
 .staff-table th:nth-child(1),
 .staff-table td.staff-name {
   width: 20%;
@@ -132,25 +127,22 @@
 .staff-table td.action-buttons {
   width: 25%;
   display: flex;
-  justify-content: center; /* horizontally center */
-  align-items: center;     /* vertically center */
-  padding-left: 20px;      /* ensure spacing from previous column */
+  justify-content: center; 
+  align-items: center;     
+  padding-left: 20px;      
   padding-right: 20px;
 }
 
-/* Table header */
 .staff-table thead th {
   color: #ffd700;
 }
 
-/* Row hover */
 .staff-table tbody tr:hover {
   background-color: rgba(255, 215, 0, 0.1);
 }
 
-/* ===== Action Buttons Styling ===== */
 .action-buttons {
-  display: inline-flex; /* keeps buttons spaced correctly inside td */
+  display: inline-flex; 
   gap: 8px;
 }
 
@@ -173,7 +165,6 @@
   color: white;
 }
 
-/* ===== Responsive ===== */
 @media (max-width: 768px) {
   .manage-staff {
     padding: 40px 15px;
@@ -211,6 +202,6 @@
   }
 
   .staff-table td.action-buttons {
-    flex-direction: column; /* stack buttons vertically on small screens */
+    flex-direction: column; 
   }
 }

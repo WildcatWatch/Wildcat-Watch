@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="{% static 'wildcatwatch/css/attendance_dashboard.css' %}">
 </head>
 <body>
-  <!-- ✅ Unified Header (same as staff_dashboard & my_duties) -->
   <header class="header">
     <div class="header-container">
       <div class="logo">
@@ -27,24 +26,18 @@
     </div>
   </header>
 
-  <!-- ✅ Attendance Section -->
   <main class="main-content">
     <section class="attendance">
       <div class="attendance-container">
         <h2>Attendance Tracker</h2>
         <p>Record your check-in and check-out for your assigned duty shifts.</p>
 
-        <!-- ✅ Check-in / Check-out Form -->
-        <form method="POST">
-          {% csrf_token %}
-          {% if not latest or latest.check_out %}
-            <button type="submit" name="action" value="checkin" class="check-btn">Check In</button>
-          {% else %}
-            <button type="submit" name="action" value="checkout" class="check-btn checkout">Check Out</button>
-          {% endif %}
-        </form>
+        <!-- AJAX Buttons -->
+        <div class="attendance-actions">
+          <button id="checkin-btn" class="check-btn" {% if latest and not latest.check_out %}disabled{% endif %}>Check In</button>
+          <button id="checkout-btn" class="check-btn checkout" {% if not latest or latest.check_out %}disabled{% endif %}>Check Out</button>
+        </div>
 
-        <!-- ✅ Attendance History Table -->
         <h3>Attendance History</h3>
         <table class="attendance-table">
           <thead>
@@ -57,9 +50,9 @@
           <tbody>
             {% for record in history %}
               <tr>
-                <td>{{ record.check_in.date }}</td>
-                <td>{{ record.check_in.time }}</td>
-                <td>{{ record.check_out|default:"—" }}</td>
+                <td>{{ record.check_in|date:"M. d, Y" }}</td>
+                <td>{{ record.check_in|time:"g:i a" }}</td>
+                <td>{% if record.check_out %}{{ record.check_out|time:"g:i a" }}{% else %}—{% endif %}</td>
               </tr>
             {% empty %}
               <tr><td colspan="3">No attendance records yet.</td></tr>
@@ -69,5 +62,31 @@
       </div>
     </section>
   </main>
+
+  <!-- jQuery AJAX for Check In / Check Out -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#checkin-btn').click(function() {
+        $.post("{% url 'attendance_action' %}", { 
+            action: 'checkin', 
+            csrfmiddlewaretoken: '{{ csrf_token }}' 
+        }, function(data) {
+            alert(data.message);
+            if(data.success) location.reload();
+        });
+      });
+
+      $('#checkout-btn').click(function() {
+        $.post("{% url 'attendance_action' %}", { 
+            action: 'checkout', 
+            csrfmiddlewaretoken: '{{ csrf_token }}' 
+        }, function(data) {
+            alert(data.message);
+            if(data.success) location.reload();
+        });
+      });
+    });
+  </script>
 </body>
 </html>

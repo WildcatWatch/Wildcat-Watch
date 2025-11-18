@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import Attendance, Duty
+from django.http import JsonResponse
 
 User = get_user_model()
 
@@ -36,7 +37,7 @@ def register_staff(request):
             email=email,
             password=password,
             role=role,
-            fullname=fullname 
+            fullname=fullname
         )
 
         messages.success(request, "Staff account created successfully! Please log in.")
@@ -74,7 +75,7 @@ def register_admin(request):
             id_number=id_no,
             email=email,
             password=password,
-            fullname=fullname  
+            fullname=fullname
         )
 
         messages.success(request, "Administrator account created successfully! Please log in.")
@@ -138,7 +139,7 @@ def admin_dashboard(request):
 
 
 # ---------------------------
-# Profile Pages (NEW)
+# Profile Pages
 # ---------------------------
 @login_required(login_url="login")
 def admin_profile(request):
@@ -179,22 +180,26 @@ def my_duties_view(request):
 @login_required(login_url="login")
 def attendance_dashboard(request):
     user = request.user
-    latest = Attendance.objects.filter(user=user).order_by('-check_in').first()
-    history = Attendance.objects.filter(user=user).order_by('-check_in')
+    now = timezone.localtime()
 
-    if request.method == "POST":
-        action = request.POST.get("action")
-        if action == "checkin":
-            Attendance.objects.create(user=user)
-        elif action == "checkout" and latest and latest.check_out is None:
-            latest.check_out = timezone.now()
-            latest.save()
-        return redirect("attendance_dashboard")
+    latest = Attendance.objects.filter(user=user).order_by("-check_in").first()
 
-    return render(request, "myapp/attendance_dashboard.html", {
+    current_duty = Duty.objects.filter(
+        staff=user,
+        time_start__lte=now.time(),
+        time_end__gte=now.time()
+    ).first()
+
+    history = Attendance.objects.filter(user=user).order_by("-check_in")
+
+    context = {
         "latest": latest,
-        "history": history
-    })
+        "history": history,
+        "current_duty": current_duty,
+        "now": now,
+    }
+
+    return render(request, "myapp/attendance_dashboard.html", context)
 
 
 # ---------------------------
@@ -235,7 +240,7 @@ def manage_staff(request):
 
 
 # ---------------------------
-# Reports Page (NEW)
+# Reports Page
 # ---------------------------
 @login_required(login_url="login")
 def reports(request):
@@ -244,3 +249,86 @@ def reports(request):
         return redirect("home_page")
 
     return render(request, "myapp/reports.html")
+
+
+# ---------------------------
+# Attendance Actions
+# ---------------------------
+@login_required
+def check_in(request):
+    user = request.user
+
+    active_shift = Attendance.objects.filter(user=user, check_out__isnull=True).first()
+    if active_shift:
+        messages.error(request, "You are already checked in! Check out first.")
+        return redirect("attendance_dashboard")
+
+    Attendance.objects.create(user=user, check_in=timezone.now())
+    messages.success(request, "Checked in successfully.")
+    return redirect("attendance_dashboard")
+
+
+@login_required
+def check_out(request):
+    user = request.user
+    active_shift = Attendance.objects.filter(user=user, check_out__isnull=True).first()
+
+    if not active_shift:
+        messages.error(request, "You have no active shift to check out.")
+        return redirect("attendance_dashboard")
+
+    active_shift.check_out = timezone.now()
+    active_shift.save()
+
+    messages.success(request, "Checked out successfully.")
+    return redirect("attendance_dashboard")
+
+
+@login_required
+def attendance_action(request):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "message": "Invalid request method"})
+
+    user = request.user
+    action = request.POST.get("action")
+    latest = Attendance.objects.filter(user=user).order_by("-check_in").first()
+    now = timezone.localtime()
+
+    response = {"success": False, "message": ""}
+
+    if action == "checkin":
+        active_shift = Attendance.objects.filter(user=user, check_out__isnull=True).first()
+        if active_shift:
+            response["message"] = "You are already checked in! Check out first."
+        else:
+            check_in_record = Attendance.objects.create(user=user, check_in=timezone.now())
+            response["success"] = True
+            response["message"] = "Check-in successful."
+            response["check_in_time"] = timezone.localtime(check_in_record.check_in).strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
+
+    elif action == "checkout":
+        if latest and latest.check_out is None:
+            local_check_in = timezone.localtime(latest.check_in)
+            min_checkout_time = local_check_in + timezone.timedelta(hours=8)
+
+            if now < min_checkout_time:
+                response["message"] = (
+                    f"You cannot check out before 8 hours from check-in. "
+                    f"Earliest checkout: {min_checkout_time.strftime('%I:%M %p')}"
+                )
+            else:
+                latest.check_out = timezone.now()
+                latest.save()
+                response["success"] = True
+                response["message"] = "Check-out successful."
+                response["check_out_time"] = timezone.localtime(latest.check_out).strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                )
+        else:
+            response["message"] = "No active check-in to check out from."
+    else:
+        response["message"] = "Invalid action."
+
+    return JsonResponse(response)
