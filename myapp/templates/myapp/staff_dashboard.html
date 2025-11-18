@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Staff Profile | Wildcat Watch</title>
+  <title>Staff Dashboard | Wildcat Watch</title>
   <link rel="stylesheet" href="{% static 'wildcatwatch/css/staff_dashboard.css' %}">
-  <link rel="stylesheet" href="{% static 'wildcatwatch/css/staff_profile.css' %}">
+  <link rel="stylesheet" href="{% static 'wildcatwatch/css/staff_dashboard_main.css' %}">
 </head>
 <body>
   <header class="header">
@@ -17,180 +17,131 @@
       </div>
       <nav class="nav">
         <a href="{% url 'staff_dashboard' %}" class="active">Dashboard</a>
+        <a href="{% url 'staff_profile' %}">Profile</a>
         <a href="{% url 'my_duties' %}">My Duties</a>
         <a href="{% url 'attendance_dashboard' %}">Attendance</a>
         <a href="#">Notifications</a>
       </nav>
-      <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+      <div class="header-actions">
+        <a href="{% url 'staff_profile' %}" class="profile-icon">👤</a>
+        <a href="#" class="notification-icon">🔔</a>
+      </div>
     </div>
   </header>
 
-  <!-- ===== Staff Profile Section ===== -->
-  <main class="main-content">
-    <section class="profile">
-      <div class="container">
-        <h2>My Profile</h2>
-        <p>View and manage your personal information and account details.</p>
-
-        <!-- ✅ Profile Header with Avatar -->
-        <div class="profile-header">
-          <div class="avatar-section">
-            <div class="avatar-placeholder">
-              <span class="avatar-icon">👤</span>
-            </div>
-            <button class="btn-upload">Upload Photo</button>
-          </div>
-          <div class="profile-summary">
-            <h3 class="profile-name">{{ staff.name|default:"Not Set" }}</h3>
-            <p class="profile-role">{{ staff.role|default:"Not Set" }}</p>
-            <span class="profile-status active">● Active</span>
-          </div>
-        </div>
-
-        <!-- ✅ All Sections in One Box -->
-        <div class="profile-section-wrapper">
+  <!-- ===== Main Dashboard Content ===== -->
+  <main class="dashboard-main">
+    <div class="container">
+      
+      <!-- My Status Section -->
+      <section class="status-section">
+        <h2>My Status Today</h2>
+        <div class="status-cards">
           
-          <!-- Personal Information Subsection -->
-          <div class="subsection">
-            <div class="section-header">
-              <h3>Personal Information</h3>
-              <button class="btn-edit-section">Edit</button>
+          <div class="status-card active">
+            <div class="card-header">
+              <span class="card-title">Current Status</span>
+              <span class="badge badge-active">{{ staff.current_status|default:"On Duty" }}</span>
             </div>
-            <div class="info-grid">
-              <div class="info-item">
-                <label>Full Name</label>
-                <p class="{% if not staff.name %}empty{% endif %}">
-                  {{ staff.name|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Date of Birth</label>
-                <p class="{% if not staff.dob %}empty{% endif %}">
-                  {{ staff.dob|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Age</label>
-                <p class="{% if not staff.age %}empty{% endif %}">
-                  {{ staff.age|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Gender</label>
-                <p class="{% if not staff.gender %}empty{% endif %}">
-                  {{ staff.gender|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Nationality</label>
-                <p class="{% if not staff.nationality %}empty{% endif %}">
-                  {{ staff.nationality|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Blood Type</label>
-                <p class="{% if not staff.blood_type %}empty{% endif %}">
-                  {{ staff.blood_type|default:"Not provided" }}
-                </p>
+            <div class="card-content">
+              <div class="status-info">
+                <p class="status-location">📍 {{ staff.current_location|default:"Front Gate" }}</p>
+                <p class="status-time">Started: {{ staff.shift_start|default:"8:00 AM" }}</p>
               </div>
             </div>
           </div>
 
-          <!-- Contact Information Subsection -->
-          <div class="subsection">
-            <div class="section-header">
-              <h3>Contact Information</h3>
-              <button class="btn-edit-section">Edit</button>
+          <div class="status-card monitor">
+            <div class="card-header">
+              <span class="card-title">My Duties Today</span>
+              <span class="badge badge-monitor">{{ duties_completed|default:"3" }}/{{ total_duties|default:"5" }}</span>
             </div>
-            <div class="info-grid">
-              <div class="info-item full-width">
-                <label>Email Address</label>
-                <p class="{% if not staff.email %}empty{% endif %}">
-                  {{ staff.email|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Phone Number</label>
-                <p class="{% if not staff.phone %}empty{% endif %}">
-                  {{ staff.phone|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Emergency Contact</label>
-                <p class="{% if not staff.emergency_contact %}empty{% endif %}">
-                  {{ staff.emergency_contact|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item full-width">
-                <label>Address</label>
-                <p class="{% if not staff.address %}empty{% endif %}">
-                  {{ staff.address|default:"Not provided" }}
-                </p>
-              </div>
+            <div class="card-content">
+              <div class="big-number">{{ duties_remaining|default:"2" }}</div>
+              <div class="card-subtitle">Remaining</div>
             </div>
           </div>
 
-          <!-- Employment Information Subsection -->
-          <div class="subsection">
-            <div class="section-header">
-              <h3>Employment Information</h3>
-              <button class="btn-edit-section">Edit</button>
+          <div class="status-card info">
+            <div class="card-header">
+              <span class="card-title">Hours Today</span>
             </div>
-            <div class="info-grid">
-              <div class="info-item">
-                <label>Staff ID</label>
-                <p class="{% if not staff.staff_id %}empty{% endif %}">
-                  {{ staff.staff_id|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Work Schedule</label>
-                <p class="{% if not staff.work_schedule %}empty{% endif %}">
-                  {{ staff.work_schedule|default:"Not provided" }}
-                </p>
-              </div>
+            <div class="card-content">
+              <div class="big-number">{{ hours_worked|default:"4.5" }}</div>
+              <div class="card-subtitle">hours worked</div>
             </div>
           </div>
 
-          <!-- Account Security Subsection -->
-          <div class="subsection">
-            <div class="section-header">
-              <h3>Account Security</h3>
-              <button class="btn-edit-section">Edit</button>
+          <div class="status-card action">
+            <div class="card-header">
+              <span class="card-title">Quick Actions</span>
             </div>
-            <div class="info-grid">
-              <div class="info-item">
-                <label>Username</label>
-                <p class="{% if not staff.username %}empty{% endif %}">
-                  {{ staff.username|default:"Not provided" }}
-                </p>
+            <div class="card-content">
+              <div class="quick-actions">
+                <button class="action-btn check-in">Check In</button>
+                <button class="action-btn check-out">Check Out</button>
               </div>
-              <div class="info-item">
-                <label>Password</label>
-                <p>••••••••</p>
-              </div>
-              <div class="info-item">
-                <label>Last Login</label>
-                <p class="{% if not staff.last_login %}empty{% endif %}">
-                  {{ staff.last_login|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Account Created</label>
-                <p class="{% if not staff.date_created %}empty{% endif %}">
-                  {{ staff.date_created|default:"Not provided" }}
-                </p>
-              </div>
-            </div>
-            <div class="security-actions">
-              <button class="btn-change-password">Change Password</button>
-              <button class="btn-two-factor">Enable 2FA</button>
             </div>
           </div>
 
         </div>
-      </div>
-    </section>
+      </section>
+
+      <!-- Today's Schedule Section -->
+      <section class="schedule-section">
+        <div class="section-header">
+          <h2>📅 Today's Schedule</h2>
+        </div>
+        <div class="schedule-container">
+          <div class="schedule-timeline">
+            {% for duty in todays_duties %}
+              <div class="schedule-item {% if duty.status == 'completed' %}completed{% elif duty.status == 'ongoing' %}ongoing{% endif %}">
+                <div class="schedule-time">{{ duty.time_start }} - {{ duty.time_end }}</div>
+                <div class="schedule-details">
+                  <h4>{{ duty.title }}</h4>
+                  <p>📍 {{ duty.location }}</p>
+                  <span class="schedule-status {{ duty.status }}">{{ duty.status|capfirst }}</span>
+                </div>
+              </div>
+            {% empty %}
+              <div class="empty-state">
+                <p>No duties scheduled for today.</p>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <!-- My Recent Activity Section -->
+      <section class="activity-feed-section">
+        <div class="section-header">
+          <h2>📋 My Recent Activity</h2>
+        </div>
+        <div class="activity-feed-container">
+          <div class="activity-list">
+            {% for activity in my_recent_activities %}
+              <div class="activity-item">
+                <div class="activity-icon {{ activity.type }}">
+                  {% if activity.type == "check_in" %}✓
+                  {% elif activity.type == "check_out" %}✗
+                  {% elif activity.type == "duty_complete" %}✔
+                  {% else %}●{% endif %}
+                </div>
+                <div class="activity-details">
+                  <p class="activity-text">{{ activity.description }}</p>
+                  <span class="activity-time">{{ activity.timestamp }}</span>
+                </div>
+              </div>
+            {% empty %}
+              <div class="activity-item empty">
+                <p>No recent activity. Your check-ins, check-outs, and duty completions will appear here.</p>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+    </div>
   </main>
 </body>
 </html>

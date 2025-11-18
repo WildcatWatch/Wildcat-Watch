@@ -138,6 +138,27 @@ def admin_dashboard(request):
 
 
 # ---------------------------
+# Profile Pages (NEW)
+# ---------------------------
+@login_required(login_url="login")
+def admin_profile(request):
+    if request.user.role != "admin":
+        messages.error(request, "Access denied.")
+        return redirect("home_page")
+
+    return render(request, "myapp/admin_profile.html")
+
+
+@login_required(login_url="login")
+def staff_profile(request):
+    if request.user.role not in ["security-officer", "supervisor"]:
+        messages.error(request, "Access denied.")
+        return redirect("home_page")
+
+    return render(request, "myapp/staff_profile.html")
+
+
+# ---------------------------
 # Employee Views
 # ---------------------------
 @login_required(login_url="login")
@@ -185,13 +206,9 @@ def manage_staff(request):
         messages.error(request, "Access denied.")
         return redirect("home_page")
 
-    # Fetch staff members (exclude admins)
     staff_list = User.objects.filter(role__in=["security-officer", "supervisor"])
-
-    # Fetch all duties
     duty_list = Duty.objects.all().order_by("time_start")
 
-    # Handle adding new duties
     if request.method == "POST":
         name = request.POST.get("nameInput")
         place = request.POST.get("placeInput")
@@ -218,7 +235,7 @@ def manage_staff(request):
 
 
 # ---------------------------
-# NEW REPORTS VIEW (added)
+# Reports Page (NEW)
 # ---------------------------
 @login_required(login_url="login")
 def reports(request):
