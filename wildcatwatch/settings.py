@@ -10,8 +10,8 @@ load_dotenv()
 
 # SECURITY
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "fallback-secret-key")
-DEBUG = os.environ.get("DJANGO_DEBUG", "False").lower() == "false"
-
+#DEBUG = os.environ.get("DJANGO_DEBUG", "False").lower() == "false"
+DEBUG = True
 # Allow all hosts temporarily (replace with your domain later)
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
@@ -83,13 +83,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Manila'
 USE_I18N = True
 USE_TZ = True
 
 # Static files
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
+#STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 

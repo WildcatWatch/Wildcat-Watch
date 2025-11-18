@@ -1,6 +1,5 @@
 @import url('home_page.css');
 
-/* ===== Body ===== */
 body {
   font-family: 'Poppins', sans-serif;
   background-color: #8c4a19;
@@ -9,7 +8,6 @@ body {
   padding: 0;
 }
 
-/* ===== Header ===== */
 .header {
   background-color: #6b3411 !important;
   padding: 15px 0 !important;
@@ -24,7 +22,6 @@ body {
   margin: 0 auto;
 }
 
-/* ===== Logo ===== */
 .logo {
   display: flex;
   align-items: center;
@@ -40,7 +37,6 @@ body {
   font-size: 2rem;
 }
 
-/* ===== Navigation ===== */
 .nav {
   display: flex;
   align-items: center;
@@ -58,14 +54,12 @@ body {
   color: #ffd700;
 }
 
-/* ===== Active Page Highlight ===== */
 .nav a.active {
   color: #ffd700;
   border-bottom: 2px solid #ffd700;
   padding-bottom: 4px;
 }
 
-/* ===== Logout Button ===== */
 .logout-btn {
   background: #ffd700;
   color: #6b3411;
@@ -80,7 +74,6 @@ body {
   background: #ffcc00;
 }
 
-/* ===== Dashboard Section ===== */
 .dashboard {
   text-align: center;
   padding: 80px 20px;
@@ -97,7 +90,6 @@ body {
   color: rgba(255, 255, 255, 0.85);
 }
 
-/* ===== Responsive Design ===== */
 @media (max-width: 768px) {
   .header-container {
     flex-direction: column;

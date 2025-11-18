@@ -9,11 +9,11 @@
   <link rel="stylesheet" href="{% static 'wildcatwatch/css/staff_profile.css' %}">
 </head>
 <body>
+  <!-- ===== Staff Header ===== -->
   <header class="header">
     <div class="header-container">
       <div class="logo">
         <div class="shield-icon">🛡️</div>
-        <h1>Wildcat Watch</h1>
       </div>
       <nav class="nav">
         <a href="{% url 'staff_dashboard' %}" class="active">Dashboard</a>
@@ -49,7 +49,7 @@
 
         <!-- ✅ All Sections in One Box -->
         <div class="profile-section-wrapper">
-          
+
           <!-- Personal Information Subsection -->
           <div class="subsection">
             <div class="section-header">
@@ -59,39 +59,27 @@
             <div class="info-grid">
               <div class="info-item">
                 <label>Full Name</label>
-                <p class="{% if not staff.name %}empty{% endif %}">
-                  {{ staff.name|default:"Not provided" }}
-                </p>
+                <p class="{% if not staff.name %}empty{% endif %}">{{ staff.name|default:"Not provided" }}</p>
               </div>
               <div class="info-item">
                 <label>Date of Birth</label>
-                <p class="{% if not staff.dob %}empty{% endif %}">
-                  {{ staff.dob|default:"Not provided" }}
-                </p>
+                <p class="{% if not staff.dob %}empty{% endif %}">{{ staff.dob|default:"Not provided" }}</p>
               </div>
               <div class="info-item">
                 <label>Age</label>
-                <p class="{% if not staff.age %}empty{% endif %}">
-                  {{ staff.age|default:"Not provided" }}
-                </p>
+                <p class="{% if not staff.age %}empty{% endif %}">{{ staff.age|default:"Not provided" }}</p>
               </div>
               <div class="info-item">
                 <label>Gender</label>
-                <p class="{% if not staff.gender %}empty{% endif %}">
-                  {{ staff.gender|default:"Not provided" }}
-                </p>
+                <p class="{% if not staff.gender %}empty{% endif %}">{{ staff.gender|default:"Not provided" }}</p>
               </div>
               <div class="info-item">
                 <label>Nationality</label>
-                <p class="{% if not staff.nationality %}empty{% endif %}">
-                  {{ staff.nationality|default:"Not provided" }}
-                </p>
+                <p class="{% if not staff.nationality %}empty{% endif %}">{{ staff.nationality|default:"Not provided" }}</p>
               </div>
               <div class="info-item">
                 <label>Blood Type</label>
-                <p class="{% if not staff.blood_type %}empty{% endif %}">
-                  {{ staff.blood_type|default:"Not provided" }}
-                </p>
+                <p class="{% if not staff.blood_type %}empty{% endif %}">{{ staff.blood_type|default:"Not provided" }}</p>
               </div>
             </div>
           </div>
@@ -105,27 +93,19 @@
             <div class="info-grid">
               <div class="info-item full-width">
                 <label>Email Address</label>
-                <p class="{% if not staff.email %}empty{% endif %}">
-                  {{ staff.email|default:"Not provided" }}
-                </p>
+                <p class="{% if not staff.email %}empty{% endif %}">{{ staff.email|default:"Not provided" }}</p>
               </div>
               <div class="info-item">
                 <label>Phone Number</label>
-                <p class="{% if not staff.phone %}empty{% endif %}">
-                  {{ staff.phone|default:"Not provided" }}
-                </p>
+                <p class="{% if not staff.phone %}empty{% endif %}">{{ staff.phone|default:"Not provided" }}</p>
               </div>
               <div class="info-item">
                 <label>Emergency Contact</label>
-                <p class="{% if not staff.emergency_contact %}empty{% endif %}">
-                  {{ staff.emergency_contact|default:"Not provided" }}
-                </p>
+                <p class="{% if not staff.emergency_contact %}empty{% endif %}">{{ staff.emergency_contact|default:"Not provided" }}</p>
               </div>
               <div class="info-item full-width">
                 <label>Address</label>
-                <p class="{% if not staff.address %}empty{% endif %}">
-                  {{ staff.address|default:"Not provided" }}
-                </p>
+                <p class="{% if not staff.address %}empty{% endif %}">{{ staff.address|default:"Not provided" }}</p>
               </div>
             </div>
           </div>
@@ -139,15 +119,11 @@
             <div class="info-grid">
               <div class="info-item">
                 <label>Staff ID</label>
-                <p class="{% if not staff.staff_id %}empty{% endif %}">
-                  {{ staff.staff_id|default:"Not provided" }}
-                </p>
+                <p class="{% if not staff.staff_id %}empty{% endif %}">{{ staff.staff_id|default:"Not provided" }}</p>
               </div>
               <div class="info-item">
                 <label>Work Schedule</label>
-                <p class="{% if not staff.work_schedule %}empty{% endif %}">
-                  {{ staff.work_schedule|default:"Not provided" }}
-                </p>
+                <p class="{% if not staff.work_schedule %}empty{% endif %}">{{ staff.work_schedule|default:"Not provided" }}</p>
               </div>
             </div>
           </div>
@@ -161,9 +137,7 @@
             <div class="info-grid">
               <div class="info-item">
                 <label>Username</label>
-                <p class="{% if not staff.username %}empty{% endif %}">
-                  {{ staff.username|default:"Not provided" }}
-                </p>
+                <p class="{% if not staff.username %}empty{% endif %}">{{ staff.username|default:"Not provided" }}</p>
               </div>
               <div class="info-item">
                 <label>Password</label>
@@ -171,17 +145,14 @@
               </div>
               <div class="info-item">
                 <label>Last Login</label>
-                <p class="{% if not staff.last_login %}empty{% endif %}">
-                  {{ staff.last_login|default:"Not provided" }}
-                </p>
+                <p class="{% if not staff.last_login %}empty{% endif %}">{{ staff.last_login|default:"Not provided" }}</p>
               </div>
               <div class="info-item">
                 <label>Account Created</label>
-                <p class="{% if not staff.date_created %}empty{% endif %}">
-                  {{ staff.date_created|default:"Not provided" }}
-                </p>
+                <p class="{% if not staff.date_created %}empty{% endif %}">{{ staff.date_created|default:"Not provided" }}</p>
               </div>
             </div>
+
             <div class="security-actions">
               <button class="btn-change-password">Change Password</button>
               <button class="btn-two-factor">Enable 2FA</button>
