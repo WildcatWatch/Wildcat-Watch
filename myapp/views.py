@@ -37,7 +37,7 @@ def register_staff(request):
             email=email,
             password=password,
             role=role,
-            fullname=fullname 
+            fullname=fullname
         )
 
         messages.success(request, "Staff account created successfully! Please log in.")
@@ -75,7 +75,7 @@ def register_admin(request):
             id_number=id_no,
             email=email,
             password=password,
-            fullname=fullname  
+            fullname=fullname
         )
 
         messages.success(request, "Administrator account created successfully! Please log in.")
@@ -139,6 +139,27 @@ def admin_dashboard(request):
 
 
 # ---------------------------
+# Profile Pages
+# ---------------------------
+@login_required(login_url="login")
+def admin_profile(request):
+    if request.user.role != "admin":
+        messages.error(request, "Access denied.")
+        return redirect("home_page")
+
+    return render(request, "myapp/admin_profile.html")
+
+
+@login_required(login_url="login")
+def staff_profile(request):
+    if request.user.role not in ["security-officer", "supervisor"]:
+        messages.error(request, "Access denied.")
+        return redirect("home_page")
+
+    return render(request, "myapp/staff_profile.html")
+
+
+# ---------------------------
 # Employee Views
 # ---------------------------
 @login_required(login_url="login")
@@ -161,7 +182,7 @@ def attendance_dashboard(request):
     user = request.user
     now = timezone.localtime()
 
-    latest = Attendance.objects.filter(user=user).order_by('-check_in').first()
+    latest = Attendance.objects.filter(user=user).order_by("-check_in").first()
 
     current_duty = Duty.objects.filter(
         staff=user,
@@ -169,7 +190,7 @@ def attendance_dashboard(request):
         time_end__gte=now.time()
     ).first()
 
-    history = Attendance.objects.filter(user=user).order_by('-check_in')
+    history = Attendance.objects.filter(user=user).order_by("-check_in")
 
     context = {
         "latest": latest,
@@ -218,6 +239,9 @@ def manage_staff(request):
     return render(request, "myapp/manage_staff.html", context)
 
 
+# ---------------------------
+# Reports Page
+# ---------------------------
 @login_required(login_url="login")
 def reports(request):
     if request.user.role != "admin":
@@ -248,12 +272,14 @@ def check_in(request):
 def check_out(request):
     user = request.user
     active_shift = Attendance.objects.filter(user=user, check_out__isnull=True).first()
+
     if not active_shift:
         messages.error(request, "You have no active shift to check out.")
         return redirect("attendance_dashboard")
 
     active_shift.check_out = timezone.now()
     active_shift.save()
+
     messages.success(request, "Checked out successfully.")
     return redirect("attendance_dashboard")
 
@@ -265,8 +291,9 @@ def attendance_action(request):
 
     user = request.user
     action = request.POST.get("action")
-    latest = Attendance.objects.filter(user=user).order_by('-check_in').first()
+    latest = Attendance.objects.filter(user=user).order_by("-check_in").first()
     now = timezone.localtime()
+
     response = {"success": False, "message": ""}
 
     if action == "checkin":
@@ -277,12 +304,15 @@ def attendance_action(request):
             check_in_record = Attendance.objects.create(user=user, check_in=timezone.now())
             response["success"] = True
             response["message"] = "Check-in successful."
-            response["check_in_time"] = timezone.localtime(check_in_record.check_in).strftime("%Y-%m-%d %H:%M:%S")
+            response["check_in_time"] = timezone.localtime(check_in_record.check_in).strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
 
     elif action == "checkout":
         if latest and latest.check_out is None:
             local_check_in = timezone.localtime(latest.check_in)
             min_checkout_time = local_check_in + timezone.timedelta(hours=8)
+
             if now < min_checkout_time:
                 response["message"] = (
                     f"You cannot check out before 8 hours from check-in. "
@@ -293,7 +323,9 @@ def attendance_action(request):
                 latest.save()
                 response["success"] = True
                 response["message"] = "Check-out successful."
-                response["check_out_time"] = timezone.localtime(latest.check_out).strftime("%Y-%m-%d %H:%M:%S")
+                response["check_out_time"] = timezone.localtime(latest.check_out).strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                )
         else:
             response["message"] = "No active check-in to check out from."
     else:

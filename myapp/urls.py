@@ -14,6 +14,8 @@ urlpatterns = [
     path('register/admin/', views.register_admin, name='register_admin'),
     path('manage-staff/', views.manage_staff, name='manage_staff'),
     path('reports/', views.reports, name='reports'),
+    path('admin-profile/', views.admin_profile, name='admin_profile'),
+    path('staff-profile/', views.staff_profile, name='staff_profile'),
 ]
 
 
