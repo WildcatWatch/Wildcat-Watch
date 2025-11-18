@@ -1,5 +1,4 @@
 asgiref==3.10.0
-dj-database-url==3.0.1
 Django==5.2.8
 psycopg2-binary==2.9.11
 python-dotenv==1.2.1
