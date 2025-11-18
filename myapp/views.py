@@ -181,9 +181,6 @@ def attendance_dashboard(request):
     return render(request, "myapp/attendance_dashboard.html", context)
 
 
-
-
-
 # ---------------------------
 # Admin Views
 # ---------------------------
@@ -194,7 +191,6 @@ def manage_staff(request):
         return redirect("home_page")
 
     staff_list = User.objects.filter(role__in=["security-officer", "supervisor"])
-
     duty_list = Duty.objects.all().order_by("time_start")
 
     if request.method == "POST":
@@ -222,9 +218,6 @@ def manage_staff(request):
     return render(request, "myapp/manage_staff.html", context)
 
 
-# ---------------------------
-# NEW REPORTS VIEW (added)
-# ---------------------------
 @login_required(login_url="login")
 def reports(request):
     if request.user.role != "admin":
@@ -234,47 +227,36 @@ def reports(request):
     return render(request, "myapp/reports.html")
 
 
+# ---------------------------
+# Attendance Actions
+# ---------------------------
 @login_required
 def check_in(request):
     user = request.user
 
-    active_shift = Attendance.objects.filter(
-        user=user,
-        check_out__isnull=True
-    ).first()
-
+    active_shift = Attendance.objects.filter(user=user, check_out__isnull=True).first()
     if active_shift:
         messages.error(request, "You are already checked in! Check out first.")
         return redirect("attendance_dashboard")
 
-    Attendance.objects.create(
-        user=user,
-        check_in=timezone.now()
-    )
-
+    Attendance.objects.create(user=user, check_in=timezone.now())
     messages.success(request, "Checked in successfully.")
     return redirect("attendance_dashboard")
-
 
 
 @login_required
 def check_out(request):
     user = request.user
-
-    active_shift = Attendance.objects.filter(
-        user=user,
-        check_out__isnull=True
-    ).first()
-
+    active_shift = Attendance.objects.filter(user=user, check_out__isnull=True).first()
     if not active_shift:
         messages.error(request, "You have no active shift to check out.")
         return redirect("attendance_dashboard")
 
     active_shift.check_out = timezone.now()
     active_shift.save()
-
     messages.success(request, "Checked out successfully.")
     return redirect("attendance_dashboard")
+
 
 @login_required
 def attendance_action(request):
@@ -284,7 +266,7 @@ def attendance_action(request):
     user = request.user
     action = request.POST.get("action")
     latest = Attendance.objects.filter(user=user).order_by('-check_in').first()
-    now = timezone.localtime()  
+    now = timezone.localtime()
     response = {"success": False, "message": ""}
 
     if action == "checkin":
@@ -300,23 +282,20 @@ def attendance_action(request):
     elif action == "checkout":
         if latest and latest.check_out is None:
             local_check_in = timezone.localtime(latest.check_in)
-            
             min_checkout_time = local_check_in + timezone.timedelta(hours=8)
-
             if now < min_checkout_time:
                 response["message"] = (
                     f"You cannot check out before 8 hours from check-in. "
                     f"Earliest checkout: {min_checkout_time.strftime('%I:%M %p')}"
                 )
             else:
-                latest.check_out = timezone.now() 
+                latest.check_out = timezone.now()
                 latest.save()
                 response["success"] = True
                 response["message"] = "Check-out successful."
                 response["check_out_time"] = timezone.localtime(latest.check_out).strftime("%Y-%m-%d %H:%M:%S")
         else:
             response["message"] = "No active check-in to check out from."
-
     else:
         response["message"] = "Invalid action."
 

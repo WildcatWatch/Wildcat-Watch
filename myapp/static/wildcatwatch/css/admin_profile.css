@@ -1,5 +1,6 @@
 @import url('admin_dashboard.css');
 
+/* ===== Profile Section ===== */
 .profile {
   padding: 40px 20px;
 }
@@ -23,6 +24,7 @@
   margin-bottom: 40px;
 }
 
+/* ===== Profile Header ===== */
 .profile-header {
   background: rgba(107, 52, 17, 0.85);
   border-radius: 12px;
@@ -101,6 +103,7 @@
   color: #4CAF50;
 }
 
+/* ===== Profile Grid - Single Box ===== */
 .profile-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -114,6 +117,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* All subsections inside one box */
 .profile-section-wrapper {
   background: rgba(107, 52, 17, 0.85);
   border-radius: 12px;
@@ -160,6 +164,7 @@
   color: #6b3411;
 }
 
+/* ===== Info Grid ===== */
 .info-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -201,6 +206,7 @@
   border: 1px dashed rgba(255, 255, 255, 0.2);
 }
 
+/* ===== Security Actions ===== */
 .security-actions {
   margin-top: 20px;
   display: flex;
@@ -239,6 +245,7 @@
   color: #6b3411;
 }
 
+/* ===== Responsive ===== */
 @media (max-width: 768px) {
   .profile {
     padding: 40px 15px;

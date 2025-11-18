@@ -1,3 +1,4 @@
+/* Force table to display - matches attendance design */
 .duties-section {
   display: block !important;
   padding: 40px 20px !important;
@@ -19,6 +20,7 @@
   font-size: 18px !important;
 }
 
+/* Table wrapper */
 .table-wrapper {
   background: rgba(255, 255, 255, 0.1) !important;
   border-radius: 8px !important;
@@ -26,6 +28,7 @@
   overflow-x: auto !important;
 }
 
+/* Duties Table - matches attendance style */
 table.duties-table {
   width: 100% !important;
   background: transparent !important;
@@ -78,6 +81,7 @@ table.duties-table tbody tr:last-child td {
   border-bottom: none !important;
 }
 
+/* Column alignment */
 table.duties-table th:nth-child(2),
 table.duties-table td:nth-child(2),
 table.duties-table th:nth-child(3),
@@ -89,6 +93,7 @@ table.duties-table td:nth-child(6) {
   text-align: center !important;
 }
 
+/* Status Badge - matches attendance style */
 .status-badge {
   display: inline-block !important;
   padding: 6px 12px !important;
@@ -118,6 +123,7 @@ table.duties-table td:nth-child(6) {
   color: white !important;
 }
 
+/* Status Dropdown */
 .status-dropdown {
   padding: 8px 12px !important;
   border: 2px solid #FFD700 !important;
@@ -147,6 +153,7 @@ table.duties-table td:nth-child(6) {
   padding: 10px !important;
 }
 
+/* Responsive */
 @media (max-width: 1200px) {
   table.duties-table {
     font-size: 13px !important;
