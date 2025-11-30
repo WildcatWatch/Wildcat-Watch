@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import Attendance, Duty
 from django.http import JsonResponse
+from .models import AdminAccessKey
+import secrets
 
 User = get_user_model()
 
@@ -16,7 +18,7 @@ def register_staff(request):
         fullname = request.POST.get("fullname")
         email = request.POST.get("email")
         id_no = request.POST.get("id_no")
-        role = request.POST.get("role")
+        selected_role = request.POST.get("role") or "staff"
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
@@ -26,22 +28,20 @@ def register_staff(request):
 
         if User.objects.filter(id_number=id_no).exists():
             messages.error(request, "ID number already exists.")
-            return redirect("register_staff")
-
         if User.objects.filter(email=email).exists():
             messages.error(request, "Email already exists.")
-            return redirect("register_staff")
-
-        user = User.objects.create_user(
-            id_number=id_no,
-            email=email,
-            password=password,
-            role=role,
-            fullname=fullname 
-        )
-
-        messages.success(request, "Staff account created successfully! Please log in.")
-        return redirect("login")
+        else:
+            user = User.objects.create_user(
+                id_number=id_no,
+                email=email,
+                password=password,
+                role=selected_role,
+                fullname=fullname 
+            )
+            messages.success(request, "Staff account created successfully! Please log in.")
+            return redirect("login")
+        
+        return redirect("register_staff")
 
     return render(request, "myapp/register_staff.html")
 
@@ -55,8 +55,10 @@ def register_admin(request):
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
-        if access_code != "WILDCAT-ADMIN-2025":
-            messages.error(request, "Invalid admin access code.")
+        try:
+            key_obj = AdminAccessKey.objects.get(key=access_code, used=False)
+        except AdminAccessKey.DoesNotExist:
+            messages.error(request, "Invalid or already used admin access key.")
             return redirect("register_admin")
 
         if password != confirm_password:
@@ -78,6 +80,9 @@ def register_admin(request):
             fullname=fullname  
         )
 
+        key_obj.used = True
+        key_obj.save()
+
         messages.success(request, "Administrator account created successfully! Please log in.")
         return redirect("login")
 
@@ -91,15 +96,10 @@ def login_view(request):
     if request.method == "POST":
         id_no = request.POST.get("id_no")
         password = request.POST.get("password")
-        role = request.POST.get("role")
 
         user = authenticate(request, username=id_no, password=password)
 
         if user is not None:
-            if user.role != role:
-                messages.error(request, "Invalid role selected for this account.")
-                return redirect("login")
-
             login(request, user)
             request.session["role"] = user.role
 
@@ -137,6 +137,23 @@ def staff_dashboard(request):
 def admin_dashboard(request):
     return render(request, "myapp/admin_dashboard.html")
 
+@login_required(login_url="login")
+def generate_admin_key(request):
+    # Only admins can generate keys
+    if request.user.role != "admin":
+        messages.error(request, "Access denied.")
+        return redirect("home_page")
+
+    if request.method == "POST":
+        # Generate a random key
+        new_key = secrets.token_urlsafe(16)
+        AdminAccessKey.objects.create(key=new_key, created_by=request.user)
+
+        # Show success message with the key
+        messages.success(request, f"Admin access key generated: {new_key}")
+        return redirect("admin_dashboard")
+
+    return redirect("admin_dashboard")
 
 # ---------------------------
 # Employee Views

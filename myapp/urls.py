@@ -14,6 +14,7 @@ urlpatterns = [
     path('register/admin/', views.register_admin, name='register_admin'),
     path('manage-staff/', views.manage_staff, name='manage_staff'),
     path('reports/', views.reports, name='reports'),
+    path('generate-admin-key/', views.generate_admin_key, name='generate_admin_key'),
 ]
 
 

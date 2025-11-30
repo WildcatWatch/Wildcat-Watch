@@ -41,6 +41,19 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.id_number} - {self.fullname} ({self.role})"
+    
+#AdminAccessKey Model
+class AdminAccessKey(models.Model):
+    key = models.CharField(max_length=50, unique=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    used = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.key} (used: {self.used})"
 
 
 class Duty(models.Model):
