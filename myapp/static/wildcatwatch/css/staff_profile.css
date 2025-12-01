@@ -1,4 +1,6 @@
 @import url('staff_dashboard.css');
+
+/* ===== Profile Section ===== */
 .profile {
   padding: 40px 20px;
 }
@@ -22,6 +24,7 @@
   margin-bottom: 40px;
 }
 
+/* ===== Profile Header ===== */
 .profile-header {
   background: rgba(139, 69, 19, 0.6);
   border-radius: 12px;
@@ -100,6 +103,7 @@
   color: #4CAF50;
 }
 
+/* ===== Profile Section Wrapper - Single Box ===== */
 .profile-section-wrapper {
   background: rgba(139, 69, 19, 0.6);
   border-radius: 12px;
@@ -146,6 +150,7 @@
   color: #8b4513;
 }
 
+/* ===== Info Grid ===== */
 .info-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -187,6 +192,7 @@
   border: 1px dashed rgba(255, 255, 255, 0.2);
 }
 
+/* ===== Security Actions ===== */
 .security-actions {
   margin-top: 20px;
   display: flex;
@@ -225,6 +231,7 @@
   color: #8b4513;
 }
 
+/* ===== Responsive ===== */
 @media (max-width: 768px) {
   .profile {
     padding: 40px 15px;

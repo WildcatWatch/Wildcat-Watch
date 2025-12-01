@@ -81,7 +81,7 @@ def register_admin(request):
             id_number=id_no,
             email=email,
             password=password,
-            fullname=fullname  
+            fullname=fullname
         )
 
         key_obj.used = True
@@ -160,6 +160,27 @@ def generate_admin_key(request):
 
 
 # ---------------------------
+# Profile Pages
+# ---------------------------
+@login_required(login_url="login")
+def admin_profile(request):
+    if request.user.role != "admin":
+        messages.error(request, "Access denied.")
+        return redirect("home_page")
+
+    return render(request, "myapp/admin_profile.html")
+
+
+@login_required(login_url="login")
+def staff_profile(request):
+    if request.user.role not in ["security-officer", "supervisor"]:
+        messages.error(request, "Access denied.")
+        return redirect("home_page")
+
+    return render(request, "myapp/staff_profile.html")
+
+
+# ---------------------------
 # Employee Views
 # ---------------------------
 @login_required(login_url="login")
@@ -182,7 +203,7 @@ def attendance_dashboard(request):
     user = request.user
     now = timezone.localtime()
 
-    latest = Attendance.objects.filter(user=user).order_by('-check_in').first()
+    latest = Attendance.objects.filter(user=user).order_by("-check_in").first()
 
     current_duty = Duty.objects.filter(
         staff=user,
@@ -190,7 +211,7 @@ def attendance_dashboard(request):
         time_end__gte=now.time()
     ).first()
 
-    history = Attendance.objects.filter(user=user).order_by('-check_in')
+    history = Attendance.objects.filter(user=user).order_by("-check_in")
 
     context = {
         "latest": latest,
@@ -212,7 +233,6 @@ def manage_staff(request):
         return redirect("home_page")
 
     staff_list = User.objects.filter(role__in=["security-officer", "supervisor"])
-
     duty_list = Duty.objects.all().order_by("time_start")
 
     if request.method == "POST":
@@ -241,7 +261,7 @@ def manage_staff(request):
 
 
 # ---------------------------
-# NEW REPORTS VIEW (added)
+# Reports Page
 # ---------------------------
 @login_required(login_url="login")
 def reports(request):
@@ -252,24 +272,19 @@ def reports(request):
     return render(request, "myapp/reports.html")
 
 
+# ---------------------------
+# Attendance Actions
+# ---------------------------
 @login_required
 def check_in(request):
     user = request.user
 
-    active_shift = Attendance.objects.filter(
-        user=user,
-        check_out__isnull=True
-    ).first()
-
+    active_shift = Attendance.objects.filter(user=user, check_out__isnull=True).first()
     if active_shift:
         messages.error(request, "You are already checked in! Check out first.")
         return redirect("attendance_dashboard")
 
-    Attendance.objects.create(
-        user=user,
-        check_in=timezone.now()
-    )
-
+    Attendance.objects.create(user=user, check_in=timezone.now())
     messages.success(request, "Checked in successfully.")
     return redirect("attendance_dashboard")
 
@@ -277,11 +292,7 @@ def check_in(request):
 @login_required
 def check_out(request):
     user = request.user
-
-    active_shift = Attendance.objects.filter(
-        user=user,
-        check_out__isnull=True
-    ).first()
+    active_shift = Attendance.objects.filter(user=user, check_out__isnull=True).first()
 
     if not active_shift:
         messages.error(request, "You have no active shift to check out.")

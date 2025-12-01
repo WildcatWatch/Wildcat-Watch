@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="{% static 'wildcatwatch/css/reports.css' %}">
 </head>
 <body>
+  <!-- ===== Admin Header ===== -->
   <header class="header">
     <div class="header-container">
       <div class="logo">
@@ -17,6 +18,7 @@
       </div>
       <nav class="nav">
         <a href="{% url 'admin_dashboard' %}">Overview</a>
+        <a href="{% url 'admin_profile' %}">Profile</a>
         <a href="{% url 'reports' %}" class="active">Reports</a>
         <a href="{% url 'manage_staff' %}">Manage Staff</a>
         <a href="#">Settings</a>
@@ -25,12 +27,14 @@
     </div>
   </header>
 
+  <!-- ===== Reports Section ===== -->
   <main class="main-content">
     <section class="reports">
       <div class="container">
         <h2>Staff Reports & Analytics</h2>
         <p>Monitor real-time staff attendance, duty status, and performance metrics.</p>
 
+        <!-- ✅ Statistics Boxes -->
         <div class="stats-container">
           <div class="stat-box present">
             <div class="stat-icon">✅</div>
@@ -81,6 +85,7 @@
           </div>
         </div>
 
+        <!-- ✅ Detailed Reports Table -->
         <div class="table-container">
           <h3>Detailed Staff Status</h3>
           <table class="reports-table">
