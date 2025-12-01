@@ -31,7 +31,6 @@
         <h2>Attendance Tracker</h2>
         <p>Record your check-in and check-out for your assigned duty shifts.</p>
 
-        <!-- AJAX Buttons -->
         <div class="attendance-actions">
           <button id="checkin-btn" class="check-btn" {% if latest and not latest.check_out %}disabled{% endif %}>Check In</button>
           <button id="checkout-btn" class="check-btn checkout" {% if not latest or latest.check_out %}disabled{% endif %}>Check Out</button>
@@ -62,7 +61,6 @@
     </section>
   </main>
 
-  <!-- jQuery AJAX for Check In / Check Out -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function() {

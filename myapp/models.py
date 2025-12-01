@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
-
+from django.contrib.auth.hashers import make_password, check_password
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, id_number, email, password=None, role='security', fullname="Unknown"):
@@ -42,9 +42,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return f"{self.id_number} - {self.fullname} ({self.role})"
     
-#AdminAccessKey Model
 class AdminAccessKey(models.Model):
-    key = models.CharField(max_length=50, unique=True)
+    key = models.CharField(max_length=255)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
@@ -52,8 +51,14 @@ class AdminAccessKey(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     used = models.BooleanField(default=False)
 
+    def set_key(self, raw_key):
+        self.key = make_password(raw_key)
+
+    def verify_key(self, raw_key):
+        return check_password(raw_key, self.key)
+
     def __str__(self):
-        return f"{self.key} (used: {self.used})"
+        return f"Admin Access Key (used: {self.used})"
 
 
 class Duty(models.Model):

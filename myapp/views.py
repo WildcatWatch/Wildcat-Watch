@@ -55,9 +55,13 @@ def register_admin(request):
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
-        try:
-            key_obj = AdminAccessKey.objects.get(key=access_code, used=False)
-        except AdminAccessKey.DoesNotExist:
+        key_obj = None
+        for k in AdminAccessKey.objects.filter(used=False):
+            if k.verify_key(access_code):
+                key_obj = k
+                break
+
+        if not key_obj:
             messages.error(request, "Invalid or already used admin access key.")
             return redirect("register_admin")
 
@@ -139,21 +143,21 @@ def admin_dashboard(request):
 
 @login_required(login_url="login")
 def generate_admin_key(request):
-    # Only admins can generate keys
     if request.user.role != "admin":
         messages.error(request, "Access denied.")
         return redirect("home_page")
 
     if request.method == "POST":
-        # Generate a random key
-        new_key = secrets.token_urlsafe(16)
-        AdminAccessKey.objects.create(key=new_key, created_by=request.user)
+        raw_key = secrets.token_urlsafe(16)  
+        key_obj = AdminAccessKey(created_by=request.user)
+        key_obj.set_key(raw_key)  
+        key_obj.save()
 
-        # Show success message with the key
-        messages.success(request, f"Admin access key generated: {new_key}")
+        messages.success(request, f"Admin access key generated: {raw_key}")
         return redirect("admin_dashboard")
 
     return redirect("admin_dashboard")
+
 
 # ---------------------------
 # Employee Views
@@ -196,9 +200,6 @@ def attendance_dashboard(request):
     }
 
     return render(request, "myapp/attendance_dashboard.html", context)
-
-
-
 
 
 # ---------------------------
@@ -273,7 +274,6 @@ def check_in(request):
     return redirect("attendance_dashboard")
 
 
-
 @login_required
 def check_out(request):
     user = request.user
@@ -293,6 +293,7 @@ def check_out(request):
     messages.success(request, "Checked out successfully.")
     return redirect("attendance_dashboard")
 
+
 @login_required
 def attendance_action(request):
     if request.method != "POST":
@@ -300,39 +301,34 @@ def attendance_action(request):
 
     user = request.user
     action = request.POST.get("action")
-    latest = Attendance.objects.filter(user=user).order_by('-check_in').first()
-    now = timezone.localtime()  
+    now = timezone.localtime()
+
+    active_shift = Attendance.objects.filter(user=user, check_out__isnull=True).first()
+
     response = {"success": False, "message": ""}
 
     if action == "checkin":
-        active_shift = Attendance.objects.filter(user=user, check_out__isnull=True).first()
         if active_shift:
-            response["message"] = "You are already checked in! Check out first."
+            response["message"] = "You are already checked in!"
         else:
-            check_in_record = Attendance.objects.create(user=user, check_in=timezone.now())
-            response["success"] = True
-            response["message"] = "Check-in successful."
-            response["check_in_time"] = timezone.localtime(check_in_record.check_in).strftime("%Y-%m-%d %H:%M:%S")
+            record = Attendance.objects.create(user=user, check_in=timezone.now())
+            response = {
+                "success": True,
+                "message": "Check-in successful.",
+                "check_in_time": timezone.localtime(record.check_in).strftime("%Y-%m-%d %H:%M:%S")
+            }
 
     elif action == "checkout":
-        if latest and latest.check_out is None:
-            local_check_in = timezone.localtime(latest.check_in)
-            
-            min_checkout_time = local_check_in + timezone.timedelta(hours=8)
-
-            if now < min_checkout_time:
-                response["message"] = (
-                    f"You cannot check out before 8 hours from check-in. "
-                    f"Earliest checkout: {min_checkout_time.strftime('%I:%M %p')}"
-                )
-            else:
-                latest.check_out = timezone.now() 
-                latest.save()
-                response["success"] = True
-                response["message"] = "Check-out successful."
-                response["check_out_time"] = timezone.localtime(latest.check_out).strftime("%Y-%m-%d %H:%M:%S")
+        if not active_shift:
+            response["message"] = "You have no active check-in to check out from."
         else:
-            response["message"] = "No active check-in to check out from."
+            active_shift.check_out = timezone.now()
+            active_shift.save()
+            response = {
+                "success": True,
+                "message": "Check-out successful.",
+                "check_out_time": timezone.localtime(active_shift.check_out).strftime("%Y-%m-%d %H:%M:%S")
+            }
 
     else:
         response["message"] = "Invalid action."
