@@ -4,9 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard | Wildcat Watch</title>
+  <title>Admin Access Key | Wildcat Watch</title>
   <link rel="stylesheet" href="{% static 'wildcatwatch/css/admin_dashboard.css' %}">
-  <link rel="stylesheet" href="{% static 'wildcatwatch/css/admin_dashboard_main.css' %}">
 </head>
 <body>
   <header class="header">
@@ -17,140 +16,33 @@
       </div>
       <nav class="nav">
         <a href="{% url 'admin_dashboard' %}" class="active">Dashboard</a>
-        <a href="{% url 'admin_profile' %}">Profile</a>
         <a href="{% url 'reports' %}">Reports</a>
-        <a href="{% url 'manage_staff' %}">Duty Management</a>
+        <a href="{% url 'manage_staff' %}">Manage Staff</a>
         <a href="#">Settings</a>
       </nav>
-      <div class="header-actions">
-        <a href="{% url 'admin_profile' %}" class="profile-icon">👤</a>
-        <a href="#" class="notification-icon">🔔</a>
-      </div>
+      <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
     </div>
   </header>
 
-  <!-- ===== Main Dashboard Content ===== -->
-  <main class="dashboard-main">
-    <div class="container">
-      
-      <!-- Real-Time Status Section -->
-      <section class="status-section">
-        <h2>Real-Time Status</h2>
-        <div class="status-cards">
-          
-          <div class="status-card active">
-            <div class="card-header">
-              <span class="card-title">On Duty Now</span>
-              <span class="badge badge-active">Active</span>
-            </div>
-            <div class="card-content">
-              <div class="big-number">{{ on_duty_count|default:"45" }}</div>
-              <div class="card-subtitle">/ {{ total_assigned|default:"50" }} Assigned</div>
-            </div>
-          </div>
+  <main class="main-content">
+    <div class="center-wrapper">
+      <div class="generate-key-section">
+        <h3>Admin Access Key</h3>
+        <p>Generate a one-time key for a new admin to register.</p>
 
-          <div class="status-card alert">
-            <div class="card-header">
-              <span class="card-title">Late / Missed Check-ins</span>
-              <span class="badge badge-alert">Alert</span>
-            </div>
-            <div class="card-content">
-              <div class="big-number">{{ late_checkins|default:"3" }}</div>
-            </div>
-          </div>
+        <form method="post" action="{% url 'generate_admin_key' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn-generate-key">Generate Access Key</button>
+        </form>
 
-          <div class="status-card monitor">
-            <div class="card-header">
-              <span class="card-title">Duties Completed (Today)</span>
-              <span class="badge badge-monitor">Monitor</span>
-            </div>
-            <div class="card-content">
-              <div class="big-number">{{ completed_duties|default:"84" }}</div>
-              <div class="card-subtitle">% Complete</div>
-            </div>
-          </div>
-
-          <div class="status-card action">
-            <div class="card-header">
-              <span class="card-title">Unverified Logs</span>
-              <span class="badge badge-action">Action Needed</span>
-            </div>
-            <div class="card-content">
-              <div class="big-number">{{ unverified_logs|default:"7" }}</div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- Live Campus Status Section -->
-      <section class="campus-status-section">
-        <div class="section-header">
-          <h2>📍 Live Campus Status</h2>
-        </div>
-        <div class="campus-map-container">
-          <p class="placeholder-text">Interactive Map Placeholder: Showing real-time locations of on-duty personnel.</p>
-          <!-- Future: Interactive campus map will go here -->
-          <div class="location-grid">
-            <div class="location-item">
-              <span class="location-name">Front Gate</span>
-              <span class="personnel-count">5 personnel</span>
-            </div>
-            <div class="location-item">
-              <span class="location-name">Back Gate</span>
-              <span class="personnel-count">3 personnel</span>
-            </div>
-            <div class="location-item">
-              <span class="location-name">Library</span>
-              <span class="personnel-count">4 personnel</span>
-            </div>
-            <div class="location-item">
-              <span class="location-name">RTL Building</span>
-              <span class="personnel-count">6 personnel</span>
-            </div>
-            <div class="location-item">
-              <span class="location-name">NGE Building</span>
-              <span class="personnel-count">4 personnel</span>
-            </div>
-            <div class="location-item">
-              <span class="location-name">ALLIED Building</span>
-              <span class="personnel-count">3 personnel</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Recent Activity Feed Section -->
-      <section class="activity-feed-section">
-        <div class="section-header">
-          <h2>📋 Recent Activity Feed</h2>
-        </div>
-        <div class="activity-feed-container">
-          <p class="placeholder-text">Live Feed Placeholder: Recent check-ins, duty completions, and shift changes will appear here.</p>
-          
-          <div class="activity-list">
-            {% for activity in recent_activities %}
-              <div class="activity-item">
-                <div class="activity-icon {{ activity.type }}">
-                  {% if activity.type == "check_in" %}✓
-                  {% elif activity.type == "check_out" %}✗
-                  {% elif activity.type == "duty_complete" %}✔
-                  {% else %}●{% endif %}
-                </div>
-                <div class="activity-details">
-                  <p class="activity-text">{{ activity.description }}</p>
-                  <span class="activity-time">{{ activity.timestamp }}</span>
-                </div>
-              </div>
-            {% empty %}
-              <div class="activity-item empty">
-                <p>No recent activity. Activity will appear here as staff check in, complete duties, and make changes.</p>
-              </div>
+        {% if messages %}
+          <div class="messages">
+            {% for message in messages %}
+              <p>{{ message }}</p>
             {% endfor %}
           </div>
-        </div>
-      </section>
-
+        {% endif %}
+      </div>
     </div>
   </main>
 </body>

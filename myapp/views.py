@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import Attendance, Duty
 from django.http import JsonResponse
+from .models import AdminAccessKey
+import secrets
 
 User = get_user_model()
 
@@ -16,7 +18,7 @@ def register_staff(request):
         fullname = request.POST.get("fullname")
         email = request.POST.get("email")
         id_no = request.POST.get("id_no")
-        role = request.POST.get("role")
+        selected_role = request.POST.get("role") or "staff"
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
@@ -26,22 +28,20 @@ def register_staff(request):
 
         if User.objects.filter(id_number=id_no).exists():
             messages.error(request, "ID number already exists.")
-            return redirect("register_staff")
-
         if User.objects.filter(email=email).exists():
             messages.error(request, "Email already exists.")
-            return redirect("register_staff")
-
-        user = User.objects.create_user(
-            id_number=id_no,
-            email=email,
-            password=password,
-            role=role,
-            fullname=fullname
-        )
-
-        messages.success(request, "Staff account created successfully! Please log in.")
-        return redirect("login")
+        else:
+            user = User.objects.create_user(
+                id_number=id_no,
+                email=email,
+                password=password,
+                role=selected_role,
+                fullname=fullname 
+            )
+            messages.success(request, "Staff account created successfully! Please log in.")
+            return redirect("login")
+        
+        return redirect("register_staff")
 
     return render(request, "myapp/register_staff.html")
 
@@ -55,8 +55,14 @@ def register_admin(request):
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
-        if access_code != "WILDCAT-ADMIN-2025":
-            messages.error(request, "Invalid admin access code.")
+        key_obj = None
+        for k in AdminAccessKey.objects.filter(used=False):
+            if k.verify_key(access_code):
+                key_obj = k
+                break
+
+        if not key_obj:
+            messages.error(request, "Invalid or already used admin access key.")
             return redirect("register_admin")
 
         if password != confirm_password:
@@ -78,6 +84,9 @@ def register_admin(request):
             fullname=fullname
         )
 
+        key_obj.used = True
+        key_obj.save()
+
         messages.success(request, "Administrator account created successfully! Please log in.")
         return redirect("login")
 
@@ -91,15 +100,10 @@ def login_view(request):
     if request.method == "POST":
         id_no = request.POST.get("id_no")
         password = request.POST.get("password")
-        role = request.POST.get("role")
 
         user = authenticate(request, username=id_no, password=password)
 
         if user is not None:
-            if user.role != role:
-                messages.error(request, "Invalid role selected for this account.")
-                return redirect("login")
-
             login(request, user)
             request.session["role"] = user.role
 
@@ -136,6 +140,23 @@ def staff_dashboard(request):
 @login_required(login_url="login")
 def admin_dashboard(request):
     return render(request, "myapp/admin_dashboard.html")
+
+@login_required(login_url="login")
+def generate_admin_key(request):
+    if request.user.role != "admin":
+        messages.error(request, "Access denied.")
+        return redirect("home_page")
+
+    if request.method == "POST":
+        raw_key = secrets.token_urlsafe(16)  
+        key_obj = AdminAccessKey(created_by=request.user)
+        key_obj.set_key(raw_key)  
+        key_obj.save()
+
+        messages.success(request, f"Admin access key generated: {raw_key}")
+        return redirect("admin_dashboard")
+
+    return redirect("admin_dashboard")
 
 
 # ---------------------------
@@ -291,43 +312,35 @@ def attendance_action(request):
 
     user = request.user
     action = request.POST.get("action")
-    latest = Attendance.objects.filter(user=user).order_by("-check_in").first()
     now = timezone.localtime()
+
+    active_shift = Attendance.objects.filter(user=user, check_out__isnull=True).first()
 
     response = {"success": False, "message": ""}
 
     if action == "checkin":
-        active_shift = Attendance.objects.filter(user=user, check_out__isnull=True).first()
         if active_shift:
-            response["message"] = "You are already checked in! Check out first."
+            response["message"] = "You are already checked in!"
         else:
-            check_in_record = Attendance.objects.create(user=user, check_in=timezone.now())
-            response["success"] = True
-            response["message"] = "Check-in successful."
-            response["check_in_time"] = timezone.localtime(check_in_record.check_in).strftime(
-                "%Y-%m-%d %H:%M:%S"
-            )
+            record = Attendance.objects.create(user=user, check_in=timezone.now())
+            response = {
+                "success": True,
+                "message": "Check-in successful.",
+                "check_in_time": timezone.localtime(record.check_in).strftime("%Y-%m-%d %H:%M:%S")
+            }
 
     elif action == "checkout":
-        if latest and latest.check_out is None:
-            local_check_in = timezone.localtime(latest.check_in)
-            min_checkout_time = local_check_in + timezone.timedelta(hours=8)
-
-            if now < min_checkout_time:
-                response["message"] = (
-                    f"You cannot check out before 8 hours from check-in. "
-                    f"Earliest checkout: {min_checkout_time.strftime('%I:%M %p')}"
-                )
-            else:
-                latest.check_out = timezone.now()
-                latest.save()
-                response["success"] = True
-                response["message"] = "Check-out successful."
-                response["check_out_time"] = timezone.localtime(latest.check_out).strftime(
-                    "%Y-%m-%d %H:%M:%S"
-                )
+        if not active_shift:
+            response["message"] = "You have no active check-in to check out from."
         else:
-            response["message"] = "No active check-in to check out from."
+            active_shift.check_out = timezone.now()
+            active_shift.save()
+            response = {
+                "success": True,
+                "message": "Check-out successful.",
+                "check_out_time": timezone.localtime(active_shift.check_out).strftime("%Y-%m-%d %H:%M:%S")
+            }
+
     else:
         response["message"] = "Invalid action."
 
