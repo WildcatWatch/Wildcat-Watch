@@ -15,6 +15,14 @@ urlpatterns = [
     path('manage-staff/', views.manage_staff, name='manage_staff'),
     path('reports/', views.reports, name='reports'),
     path('generate-admin-key/', views.generate_admin_key, name='generate_admin_key'),
+    path('staff-profile/', views.staff_profile, name='staff_profile'),
+    path('admin-profile/', views.admin_profile, name='admin_profile'),
+    path("admin_profile/edit_personal/", views.edit_admin_personal_info, name="edit_admin_personal_info"),
+    path("admin_profile/edit_contact/", views.edit_admin_contact_info, name="edit_admin_contact_info"),
+    path("admin_profile/edit_employment/", views.edit_admin_employment_info, name="edit_admin_employment_info"),
+    path("admin_profile/edit_security/", views.edit_admin_account_security, name="edit_admin_account_security"),
+
+
 ]
 
 

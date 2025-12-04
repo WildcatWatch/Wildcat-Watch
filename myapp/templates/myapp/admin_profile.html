@@ -31,10 +31,7 @@
   <main class="main-content">
     <section class="profile">
       <div class="container">
-        <h2>Administrator Profile</h2>
-        <p>View and manage your personal information and account details.</p>
-
-        <!-- ✅ Profile Header with Avatar -->
+        <!-- Profile Header -->
         <div class="profile-header">
           <div class="avatar-section">
             <div class="avatar-placeholder">
@@ -43,146 +40,152 @@
             <button class="btn-upload">Upload Photo</button>
           </div>
           <div class="profile-summary">
-            <h3 class="profile-name">{{ admin.name|default:"Not Set" }}</h3>
-            <p class="profile-role">{{ admin.role|default:"Administrator" }}</p>
+            <h3 class="profile-name">{{ admin.fullname|default:"Not Set" }}</h3>
+            <p class="profile-role">Administrator</p>
             <span class="profile-status active">● Active</span>
           </div>
         </div>
 
-        <!-- ✅ All Sections in One Box -->
+        <!-- All Sections -->
         <div class="profile-section-wrapper">
-          
-          <!-- Personal Information Subsection -->
+
+          <!-- Personal Information -->
           <div class="subsection">
             <div class="section-header">
               <h3>Personal Information</h3>
-              <button class="btn-edit-section">Edit</button>
+              <button class="btn-edit-section" onclick="toggleEdit('personal')">Edit</button>
             </div>
-            <div class="info-grid">
+            <form method="POST" id="personal-form" class="info-grid edit-form" style="display:none;">
+              {% csrf_token %}
               <div class="info-item">
                 <label>Full Name</label>
-                <p class="{% if not admin.name %}empty{% endif %}">
-                  {{ admin.name|default:"Not provided" }}
-                </p>
+                <input type="text" name="fullname" value="{{ admin.fullname }}">
               </div>
               <div class="info-item">
                 <label>Date of Birth</label>
-                <p class="{% if not admin.dob %}empty{% endif %}">
-                  {{ admin.dob|default:"Not provided" }}
-                </p>
+                <input type="date" name="dob" value="{{ admin.dob }}">
               </div>
               <div class="info-item">
                 <label>Age</label>
-                <p class="{% if not admin.age %}empty{% endif %}">
-                  {{ admin.age|default:"Not provided" }}
-                </p>
+                <input type="number" name="age" value="{{ admin.age }}">
               </div>
               <div class="info-item">
                 <label>Gender</label>
-                <p class="{% if not admin.gender %}empty{% endif %}">
-                  {{ admin.gender|default:"Not provided" }}
-                </p>
+                <input type="text" name="gender" value="{{ admin.gender }}">
               </div>
               <div class="info-item">
                 <label>Nationality</label>
-                <p class="{% if not admin.nationality %}empty{% endif %}">
-                  {{ admin.nationality|default:"Not provided" }}
-                </p>
+                <input type="text" name="nationality" value="{{ admin.nationality }}">
               </div>
               <div class="info-item">
                 <label>Blood Type</label>
-                <p class="{% if not admin.blood_type %}empty{% endif %}">
-                  {{ admin.blood_type|default:"Not provided" }}
-                </p>
+                <input type="text" name="blood_type" value="{{ admin.blood_type }}">
               </div>
+              <button type="submit" class="btn-save">Save</button>
+              <button type="button" class="btn-cancel" onclick="toggleEdit('personal')">Cancel</button>
+            </form>
+            <div class="info-grid" id="personal-display">
+              <div class="info-item"><label>Full Name</label><p>{{ admin.fullname|default:"Not provided" }}</p></div>
+              <div class="info-item"><label>Date of Birth</label><p>{{ admin.dob|default:"Not provided" }}</p></div>
+              <div class="info-item"><label>Age</label><p>{{ admin.age|default:"Not provided" }}</p></div>
+              <div class="info-item"><label>Gender</label><p>{{ admin.gender|default:"Not provided" }}</p></div>
+              <div class="info-item"><label>Nationality</label><p>{{ admin.nationality|default:"Not provided" }}</p></div>
+              <div class="info-item"><label>Blood Type</label><p>{{ admin.blood_type|default:"Not provided" }}</p></div>
             </div>
           </div>
 
-          <!-- Contact Information Subsection -->
+          <!-- Contact Information -->
           <div class="subsection">
             <div class="section-header">
               <h3>Contact Information</h3>
-              <button class="btn-edit-section">Edit</button>
+              <button class="btn-edit-section" onclick="toggleEdit('contact')">Edit</button>
             </div>
-            <div class="info-grid">
+            <form method="POST" id="contact-form" class="info-grid edit-form" style="display:none;">
+              {% csrf_token %}
               <div class="info-item full-width">
                 <label>Email Address</label>
-                <p class="{% if not admin.email %}empty{% endif %}">
-                  {{ admin.email|default:"Not provided" }}
-                </p>
+                <input type="email" name="email" value="{{ admin.email }}">
               </div>
               <div class="info-item">
                 <label>Phone Number</label>
-                <p class="{% if not admin.phone %}empty{% endif %}">
-                  {{ admin.phone|default:"Not provided" }}
-                </p>
+                <input type="text" name="phone" value="{{ admin.phone }}">
               </div>
               <div class="info-item">
                 <label>Emergency Contact</label>
-                <p class="{% if not admin.emergency_contact %}empty{% endif %}">
-                  {{ admin.emergency_contact|default:"Not provided" }}
-                </p>
+                <input type="text" name="emergency_contact" value="{{ admin.emergency_contact }}">
               </div>
               <div class="info-item full-width">
                 <label>Address</label>
-                <p class="{% if not admin.address %}empty{% endif %}">
-                  {{ admin.address|default:"Not provided" }}
-                </p>
+                <input type="text" name="address" value="{{ admin.address }}">
               </div>
+              <button type="submit" class="btn-save">Save</button>
+              <button type="button" class="btn-cancel" onclick="toggleEdit('contact')">Cancel</button>
+            </form>
+            <div class="info-grid" id="contact-display">
+              <div class="info-item full-width"><label>Email Address</label><p>{{ admin.email|default:"Not provided" }}</p></div>
+              <div class="info-item"><label>Phone Number</label><p>{{ admin.phone|default:"Not provided" }}</p></div>
+              <div class="info-item"><label>Emergency Contact</label><p>{{ admin.emergency_contact|default:"Not provided" }}</p></div>
+              <div class="info-item full-width"><label>Address</label><p>{{ admin.address|default:"Not provided" }}</p></div>
             </div>
           </div>
 
-          <!-- Employment Information Subsection -->
+          <!-- Employment Information -->
           <div class="subsection">
             <div class="section-header">
               <h3>Employment Information</h3>
-              <button class="btn-edit-section">Edit</button>
+              <button class="btn-edit-section" onclick="toggleEdit('employment')">Edit</button>
             </div>
-            <div class="info-grid">
+            <form method="POST" id="employment-form" class="info-grid edit-form" style="display:none;">
+              {% csrf_token %}
               <div class="info-item">
                 <label>Staff ID</label>
-                <p class="{% if not admin.staff_id %}empty{% endif %}">
-                  {{ admin.staff_id|default:"Not provided" }}
-                </p>
+                <input type="text" name="staff_id" value="{{ admin.staff_id }}">
               </div>
               <div class="info-item">
                 <label>Work Schedule</label>
-                <p class="{% if not admin.work_schedule %}empty{% endif %}">
-                  {{ admin.work_schedule|default:"Not provided" }}
-                </p>
+                <input type="text" name="work_schedule" value="{{ admin.work_schedule }}">
               </div>
+              <button type="submit" class="btn-save">Save</button>
+              <button type="button" class="btn-cancel" onclick="toggleEdit('employment')">Cancel</button>
+            </form>
+            <div class="info-grid" id="employment-display">
+              <div class="info-item"><label>Staff ID</label><p>{{ admin.staff_id|default:"Not provided" }}</p></div>
+              <div class="info-item"><label>Work Schedule</label><p>{{ admin.work_schedule|default:"Not provided" }}</p></div>
             </div>
           </div>
 
-          <!-- Account Security Subsection -->
+          <!-- Account Security -->
           <div class="subsection">
             <div class="section-header">
               <h3>Account Security</h3>
-              <button class="btn-edit-section">Edit</button>
+              <button class="btn-edit-section" onclick="toggleEdit('security')">Edit</button>
             </div>
-            <div class="info-grid">
+            <form method="POST" id="security-form" class="info-grid edit-form" style="display:none;">
+              {% csrf_token %}
               <div class="info-item">
                 <label>Username</label>
-                <p class="{% if not admin.username %}empty{% endif %}">
-                  {{ admin.username|default:"Not provided" }}
-                </p>
+                <input type="text" name="username" value="{{ admin.username }}">
               </div>
               <div class="info-item">
                 <label>Password</label>
-                <p>••••••••</p>
+                <input type="password" name="password" placeholder="••••••••">
               </div>
               <div class="info-item">
                 <label>Last Login</label>
-                <p class="{% if not admin.last_login %}empty{% endif %}">
-                  {{ admin.last_login|default:"Not provided" }}
-                </p>
+                <input type="text" value="{{ admin.last_login }}" disabled>
               </div>
               <div class="info-item">
                 <label>Account Created</label>
-                <p class="{% if not admin.date_created %}empty{% endif %}">
-                  {{ admin.date_created|default:"Not provided" }}
-                </p>
+                <input type="text" value="{{ admin.date_joined }}" disabled>
               </div>
+              <button type="submit" class="btn-save">Save</button>
+              <button type="button" class="btn-cancel" onclick="toggleEdit('security')">Cancel</button>
+            </form>
+            <div class="info-grid" id="security-display">
+              <div class="info-item"><label>Username</label><p>{{ admin.username|default:"Not provided" }}</p></div>
+              <div class="info-item"><label>Password</label><p>••••••••</p></div>
+              <div class="info-item"><label>Last Login</label><p>{{ admin.last_login|default:"Not provided" }}</p></div>
+              <div class="info-item"><label>Account Created</label><p>{{ admin.date_joined|default:"Not provided" }}</p></div>
             </div>
             <div class="security-actions">
               <button class="btn-change-password">Change Password</button>
@@ -194,5 +197,19 @@
       </div>
     </section>
   </main>
+
+  <script>
+    function toggleEdit(section) {
+        const form = document.getElementById(section + "-form");
+        const display = document.getElementById(section + "-display");
+        if(form.style.display === "none") {
+            form.style.display = "grid";
+            display.style.display = "none";
+        } else {
+            form.style.display = "none";
+            display.style.display = "grid";
+        }
+    }
+  </script>
 </body>
 </html>

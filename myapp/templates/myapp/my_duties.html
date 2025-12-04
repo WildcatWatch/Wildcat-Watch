@@ -23,7 +23,11 @@
         <a href="{% url 'attendance_dashboard' %}">Attendance</a>
         <a href="#">Notifications</a>
       </nav>
-      <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+      <div class="header-actions">
+        <a href="{% url 'staff_profile' %}" class="profile-icon">👤</a>
+        <a href="#" class="notification-icon">🔔</a>
+        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+      </div>
     </div>
   </header>
 

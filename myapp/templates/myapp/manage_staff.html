@@ -16,9 +16,11 @@
         <h1>Wildcat Watch</h1>
       </div>
       <nav class="nav">
-        <a href="{% url 'admin_dashboard' %}">Overview</a>
-        <a href="#">Reports</a>
+        <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+        <a href="{% url 'admin_profile' %}">Profile</a>
+        <a href="{% url 'reports' %}">Reports</a>
         <a href="{% url 'manage_staff' %}" class="active">Manage Staff</a>
+       
         <a href="#">Settings</a>
       </nav>
       <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
@@ -31,9 +33,20 @@
         <h2>Manage Staff & Assign Duties</h2>
         <p>View all security personnel and assign duties to their designated locations.</p>
 
+        <!-- Assignment Form -->
         <div class="form-container">
-          <input type="text" id="nameInput" placeholder="Enter Name" required>
-          <select id="placeInput">
+          <select id="nameInput" name="nameInput">
+            <option value="">Select Staff</option>
+            {% for role, staff_list in staff_by_role %}
+              <optgroup label="{{ role|title }}">
+                {% for staff in staff_list %}
+                  <option value="{{ staff.fullname }}">{{ staff.fullname }}</option>
+                {% endfor %}
+              </optgroup>
+            {% endfor %}
+          </select>
+
+          <select id="placeInput" name="placeInput">
             <option value="">Select Location</option>
             <option>Front Gate</option>
             <option>Back Gate</option>
@@ -43,45 +56,52 @@
             <option>ALLIED Building</option>
             <option>GLE Building</option>
           </select>
-          <select id="statusInput">
+
+          <select id="statusInput" name="statusInput">
             <option>Unassigned</option>
             <option>On Duty</option>
             <option>On Break</option>
             <option>Off Duty</option>
             <option>Absent</option>
           </select>
+
           <button class="btn btn-add" id="addBtn">Add Assignment</button>
         </div>
 
+        <!-- Staff Tables grouped by role -->
         <div class="table-container">
-          <table id="staffDutyTable" class="staff-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Role</th>
-                <th>Assigned Location</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for staff in staff_list %}
-                <tr data-staff-id="{{ staff.id }}">
-                  <td class="staff-name">{{ staff.name }}</td>
-                  <td class="staff-role">{{ staff.role }}</td>
-                  <td class="assigned-location">—</td>
-                  <td class="duty-status">{{ staff.status|default:"—" }}</td>
-                  <td class="action-buttons">
-                    <button class="btn-edit" data-name="{{ staff.name }}">Edit</button>
-                    <button class="btn-delete" data-name="{{ staff.name }}">Remove</button>
-                  </td>
+          {% for role, staff_list in staff_by_role %}
+            <h3>{{ role|title }}</h3>
+            <table class="staff-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Assigned Location</th>
+                  <th>Status</th>
+                  <th>Actions</th>
                 </tr>
-              {% empty %}
-                <tr><td colspan="5">No staff found.</td></tr>
-              {% endfor %}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {% if staff_list %}
+                  {% for staff in staff_list %}
+                    <tr data-staff-id="{{ staff.id }}">
+                      <td class="staff-name">{{ staff.fullname }}</td>
+                      <td class="assigned-location">—</td>
+                      <td class="duty-status">{{ staff.status|default:"—" }}</td>
+                      <td class="action-buttons">
+                        <button class="btn-edit" data-name="{{ staff.fullname }}">Edit</button>
+                        <button class="btn-delete" data-name="{{ staff.fullname }}">Remove</button>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr><td colspan="4">No staff found.</td></tr>
+                {% endif %}
+              </tbody>
+            </table>
+          {% endfor %}
         </div>
+
       </div>
     </section>
   </main>

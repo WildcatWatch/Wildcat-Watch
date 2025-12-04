@@ -1,207 +1,208 @@
 @import url('admin_dashboard.css');
 
+/* ============================================= */
+/* FORCE RICH BROWN BACKGROUND – NO MORE BLUE   */
+/* ============================================= */
+body, .manage-staff {
+    background: linear-gradient(135deg, 
+        rgba(107, 52, 17, 0.98) 0%, 
+        rgba(80, 40, 15, 1) 100%
+    ) !important;
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+}
+
 .manage-staff {
-  text-align: center;
-  padding: 80px 20px;
+    text-align: center;
+    padding: 80px 20px;
 }
 
 .manage-staff h2 {
-  font-size: 32px;
-  color: #ffd700;
-  margin-bottom: 12px;
+    font-size: 32px;
+    color: #ffd700;
+    margin-bottom: 12px;
+    font-weight: 600;
 }
 
 .manage-staff p {
-  font-size: 18px;
-  color: rgba(255, 255, 255, 0.85);
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 40px;
 }
 
-.cards-container,
-.features-container {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-top: 30px;
+/* Cards & Form – unchanged but polished */
+.cards-container, .features-container {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 30px;
 }
 
 .card {
-  background-color: rgba(107, 52, 17, 0.85);
-  padding: 20px;
-  border-radius: 12px;
-  width: 280px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: rgba(107, 52, 17, 0.9);
+    padding: 24px;
+    border-radius: 14px;
+    width: 290px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 215, 0, 0.15);
 }
 
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-}
-
-.card h3 {
-  color: #ffd700;
-  margin-bottom: 10px;
-}
-
-.card p {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 16px;
-}
+.card:hover { transform: translateY(-8px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4); }
+.card h3 { color: #ffd700; margin-bottom: 12px; font-size: 20px; }
+.card p { color: rgba(255, 255, 255, 0.9); font-size: 16px; }
 
 .form-container {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
-.form-container input,
-.form-container select,
-.form-container button {
-  padding: 10px 12px;
-  border-radius: 6px;
-  border: none;
-  font-size: 14px;
-}
-
-.form-container input,
-.form-container select {
-  width: 180px;
+.form-container input, .form-container select {
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #ffd700;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 15px;
+    width: 200px;
 }
 
 .btn-add {
-  background-color: #ffd700;
-  color: #6b3411;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
+    padding: 12px 28px;
+    background: #ffd700;
+    color: #6b3411;
+    font-weight: 600;
+    font-size: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.btn-add:hover {
-  background-color: #ffcc00;
-}
+.btn-add:hover { background: #ffcc00; transform: translateY(-2px); }
 
+/* ==================== STAFF TABLE ==================== */
 .staff-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-  margin-top: 20px;
-  background-color: rgba(107, 52, 17, 0.85);
-  border-radius: 8px;
-  overflow: hidden;
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+    margin-top: 30px;
+    background-color: rgba(107, 52, 17, 0.92);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 215, 0, 0.2);
 }
 
-.staff-table th,
+.staff-table th {
+    background-color: rgba(107, 52, 17, 0.95);
+    color: #ffd700;
+    padding: 16px 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
 .staff-table td {
-  padding: 12px 20px; 
-  vertical-align: middle;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.staff-table th:nth-child(1),
-.staff-table td.staff-name {
-  width: 20%;
-}
-
-.staff-table th:nth-child(2),
-.staff-table td.staff-role {
-  width: 15%;
-}
-
-.staff-table th:nth-child(3),
-.staff-table td.assigned-location {
-  width: 25%;
-}
-
-.staff-table th:nth-child(4),
-.staff-table td.duty-status {
-  width: 15%;
-}
-
-.staff-table th:nth-child(5),
-.staff-table td.action-buttons {
-  width: 25%;
-  display: flex;
-  justify-content: center; 
-  align-items: center;     
-  padding-left: 20px;      
-  padding-right: 20px;
-}
-
-.staff-table thead th {
-  color: #ffd700;
+    padding: 14px 15px;
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.15);
+    vertical-align: middle;
 }
 
 .staff-table tbody tr:hover {
-  background-color: rgba(255, 215, 0, 0.1);
+    background-color: rgba(255, 215, 0, 0.12);
 }
 
+/* ROLE COLUMN – NOW SUPER VISIBLE & BEAUTIFUL */
+.staff-table td:nth-child(2) {
+    font-weight: 600;
+    font-size: 15px;
+    text-transform: capitalize;
+    color: #ffffff !important;
+    position: relative;
+}
+
+.staff-table td:nth-child(2)::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 36px;
+    background: rgba(255, 215, 0, 0.18);
+    border-radius: 8px;
+    z-index: -1;
+}
+
+/* Optional: different badge color for Supervisor */
+.staff-table tr td:nth-child(2):text("supervisor")::before,
+.staff-table tr td:nth-child(2):contains("Supervisor")::before {
+    background: rgba(255, 215, 0, 0.25);
+    border: 1px solid rgba(255, 215, 0, 0.4);
+}
+
+/* Column sizing */
+.staff-table th:nth-child(1), .staff-table td:nth-child(1) { width: 22%; min-width: 140px; }
+.staff-table th:nth-child(2), .staff-table td:nth-child(2) { width: 18%; min-width: 140px; text-align: center; }
+.staff-table th:nth-child(3), .staff-table td:nth-child(3) { width: auto; min-width: 110px; }
+.staff-table th:nth-child(4), .staff-table td:nth-child(4) { width: auto; min-width: 90px; }
+.staff-table th:nth-child(5), .staff-table td:nth-child(5) { min-width: 180px; text-align: center; }
+
+/* Action Buttons – Gold Theme */
 .action-buttons {
-  display: inline-flex; 
-  gap: 8px;
+    display: inline-flex;
+    gap: 12px;
+    justify-content: center;
+    width: 100%;
 }
 
-.btn-edit,
-.btn-delete {
-  padding: 4px 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 13px;
+.btn-edit, .btn-delete {
+    padding: 9px 22px;
+    min-width: 84px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .btn-edit {
-  background-color: #4CAF50;
-  color: white;
+    background: #ffd700;
+    color: #6b3411;
 }
+
+.btn-edit:hover { background: #ffcc00; transform: translateY(-2px); }
 
 .btn-delete {
-  background-color: #f44336;
-  color: white;
+    background: transparent;
+    color: #ff6b6b;
+    border: 2px solid #ff6b6b;
 }
 
+.btn-delete:hover {
+    background: #ff6b6b;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .manage-staff {
-    padding: 40px 15px;
-  }
+    .manage-staff { padding: 50px 15px; }
+    .staff-table td:nth-child(2) { font-size: 14px; }
+    .staff-table td:nth-child(2)::before { height: 32px; }
+}
 
-  .manage-staff h2 {
-    font-size: 26px;
-  }
-
-  .manage-staff p {
-    font-size: 16px;
-  }
-
-  .cards-container,
-  .features-container {
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .form-container {
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-  }
-
-  .form-container input,
-  .form-container select {
-    width: 90%;
-  }
-
-  .staff-table th,
-  .staff-table td {
-    padding: 8px 10px;
-    font-size: 14px;
-  }
-
-  .staff-table td.action-buttons {
-    flex-direction: column; 
-  }
+@media (max-width: 480px) {
+    .action-buttons { flex-direction: column; gap: 8px; }
+    .staff-table td:nth-child(5) { min-width: 100px; }
 }

@@ -168,7 +168,10 @@ def admin_profile(request):
         messages.error(request, "Access denied.")
         return redirect("home_page")
 
-    return render(request, "myapp/admin_profile.html")
+    context = {
+        "admin": request.user  # pass admin to template
+    }
+    return render(request, "myapp/admin_profile.html", context)
 
 
 @login_required(login_url="login")
@@ -176,6 +179,10 @@ def staff_profile(request):
     if request.user.role not in ["security-officer", "supervisor"]:
         messages.error(request, "Access denied.")
         return redirect("home_page")
+
+    context = {
+        "staff": request.user  # pass staff to template
+    }
 
     return render(request, "myapp/staff_profile.html")
 
@@ -232,8 +239,13 @@ def manage_staff(request):
         messages.error(request, "Access denied.")
         return redirect("home_page")
 
-    staff_list = User.objects.filter(role__in=["security-officer", "supervisor"])
-    duty_list = Duty.objects.all().order_by("time_start")
+    roles = ["security-officer", "supervisor"]
+
+    # Make a list of tuples: (role_name, queryset of staff)
+    staff_by_role = []
+    for role in roles:
+        staff_list = list(User.objects.filter(role=role))  # convert QuerySet to list
+        staff_by_role.append((role, staff_list))  # tuple: (role, list_of_staff)
 
     if request.method == "POST":
         name = request.POST.get("nameInput")
@@ -254,10 +266,11 @@ def manage_staff(request):
             return redirect("manage_staff")
 
     context = {
-        "staff_list": staff_list,
-        "duty_list": duty_list
+        "staff_by_role": staff_by_role,
     }
     return render(request, "myapp/manage_staff.html", context)
+
+
 
 
 # ---------------------------
@@ -345,3 +358,114 @@ def attendance_action(request):
         response["message"] = "Invalid action."
 
     return JsonResponse(response)
+
+@login_required(login_url="login")
+def remove_duty(request, duty_id):
+    if request.user.role != "admin":
+        messages.error(request, "Access denied.")
+        return redirect("home_page")
+
+    duty = get_object_or_404(Duty, id=duty_id)
+    duty.delete()
+    messages.success(request, "Duty removed successfully.")
+    return redirect("manage_staff")
+
+
+@login_required(login_url="login")
+def edit_duty(request, duty_id):
+    if request.user.role != "admin":
+        messages.error(request, "Access denied.")
+        return redirect("home_page")
+
+    duty = get_object_or_404(Duty, id=duty_id)
+
+    if request.method == "POST":
+        duty.location = request.POST.get("location")
+        duty.status = request.POST.get("status")
+        duty.save()
+        messages.success(request, "Duty updated successfully.")
+        return redirect("manage_staff")
+
+    context = {"duty": duty}
+    return render(request, "myapp/edit_duty.html", context)
+
+
+@login_required(login_url="login")
+def edit_admin_personal_info(request):
+    if request.user.role != "admin":
+        messages.error(request, "Access denied.")
+        return redirect("home_page")
+
+    admin = request.user
+
+    if request.method == "POST":
+        admin.fullname = request.POST.get("fullname")
+        admin.dob = request.POST.get("dob")
+        admin.age = request.POST.get("age")
+        admin.gender = request.POST.get("gender")
+        admin.nationality = request.POST.get("nationality")
+        admin.blood_type = request.POST.get("blood_type")
+        admin.save()
+        messages.success(request, "Personal information updated successfully!")
+        return redirect("admin_profile")
+
+    return render(request, "myapp/edit_admin_personal_info.html", {"admin": admin})
+
+
+@login_required(login_url="login")
+def edit_admin_contact_info(request):
+    if request.user.role != "admin":
+        messages.error(request, "Access denied.")
+        return redirect("home_page")
+
+    admin = request.user
+
+    if request.method == "POST":
+        admin.email = request.POST.get("email")
+        admin.phone = request.POST.get("phone")
+        admin.emergency_contact = request.POST.get("emergency_contact")
+        admin.address = request.POST.get("address")
+        admin.save()
+        messages.success(request, "Contact information updated successfully!")
+        return redirect("admin_profile")
+
+    return render(request, "myapp/edit_admin_contact_info.html", {"admin": admin})
+
+
+@login_required(login_url="login")
+def edit_admin_employment_info(request):
+    if request.user.role != "admin":
+        messages.error(request, "Access denied.")
+        return redirect("home_page")
+
+    admin = request.user
+
+    if request.method == "POST":
+        admin.staff_id = request.POST.get("staff_id")
+        admin.work_schedule = request.POST.get("work_schedule")
+        admin.save()
+        messages.success(request, "Employment information updated successfully!")
+        return redirect("admin_profile")
+
+    return render(request, "myapp/edit_admin_employment_info.html", {"admin": admin})
+
+
+@login_required(login_url="login")
+def edit_admin_account_security(request):
+    if request.user.role != "admin":
+        messages.error(request, "Access denied.")
+        return redirect("home_page")
+
+    admin = request.user
+
+    if request.method == "POST":
+        admin.username = request.POST.get("username")
+        # For password, hash it
+        password = request.POST.get("password")
+        if password:
+            admin.set_password(password)
+        admin.save()
+        messages.success(request, "Account security updated successfully!")
+        return redirect("admin_profile")
+
+    return render(request, "myapp/edit_admin_account_security.html", {"admin": admin})

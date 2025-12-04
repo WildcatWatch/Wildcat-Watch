@@ -1,165 +1,14 @@
-/* admin_profile.html */
+/* admin_profile.css */
 
-/* <!-- <h2>Administrator Profile</h2>
-        <p>View and manage your personal information and account details.</p>
+/* Import base dashboard styles */
+@import url('admin_dashboard.css');
 
-        <div class="profile-header">
-          <div class="avatar-section">
-            <div class="avatar-placeholder">
-              <span class="avatar-icon">👤</span>
-            </div>
-            <button class="btn-upload">Upload Photo</button>
-          </div>
-          <div class="profile-summary">
-            <h3 class="profile-name">{{ admin.name|default:"Not Set" }}</h3>
-            <p class="profile-role">{{ admin.role|default:"Administrator" }}</p>
-            <span class="profile-status active">● Active</span>
-          </div>
-        </div>
-
-        <div class="profile-section-wrapper">
-          
-          <div class="subsection">
-            <div class="section-header">
-              <h3>Personal Information</h3>
-              <button class="btn-edit-section">Edit</button>
-            </div>
-            <div class="info-grid">
-              <div class="info-item">
-                <label>Full Name</label>
-                <p class="{% if not admin.name %}empty{% endif %}">
-                  {{ admin.name|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Date of Birth</label>
-                <p class="{% if not admin.dob %}empty{% endif %}">
-                  {{ admin.dob|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Age</label>
-                <p class="{% if not admin.age %}empty{% endif %}">
-                  {{ admin.age|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Gender</label>
-                <p class="{% if not admin.gender %}empty{% endif %}">
-                  {{ admin.gender|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Nationality</label>
-                <p class="{% if not admin.nationality %}empty{% endif %}">
-                  {{ admin.nationality|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Blood Type</label>
-                <p class="{% if not admin.blood_type %}empty{% endif %}">
-                  {{ admin.blood_type|default:"Not provided" }}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <div class="section-header">
-              <h3>Contact Information</h3>
-              <button class="btn-edit-section">Edit</button>
-            </div>
-            <div class="info-grid">
-              <div class="info-item full-width">
-                <label>Email Address</label>
-                <p class="{% if not admin.email %}empty{% endif %}">
-                  {{ admin.email|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Phone Number</label>
-                <p class="{% if not admin.phone %}empty{% endif %}">
-                  {{ admin.phone|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Emergency Contact</label>
-                <p class="{% if not admin.emergency_contact %}empty{% endif %}">
-                  {{ admin.emergency_contact|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item full-width">
-                <label>Address</label>
-                <p class="{% if not admin.address %}empty{% endif %}">
-                  {{ admin.address|default:"Not provided" }}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <div class="section-header">
-              <h3>Employment Information</h3>
-              <button class="btn-edit-section">Edit</button>
-            </div>
-            <div class="info-grid">
-              <div class="info-item">
-                <label>Staff ID</label>
-                <p class="{% if not admin.staff_id %}empty{% endif %}">
-                  {{ admin.staff_id|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Work Schedule</label>
-                <p class="{% if not admin.work_schedule %}empty{% endif %}">
-                  {{ admin.work_schedule|default:"Not provided" }}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <div class="section-header">
-              <h3>Account Security</h3>
-              <button class="btn-edit-section">Edit</button>
-            </div>
-            <div class="info-grid">
-              <div class="info-item">
-                <label>Username</label>
-                <p class="{% if not admin.username %}empty{% endif %}">
-                  {{ admin.username|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Password</label>
-                <p>••••••••</p>
-              </div>
-              <div class="info-item">
-                <label>Last Login</label>
-                <p class="{% if not admin.last_login %}empty{% endif %}">
-                  {{ admin.last_login|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Account Created</label>
-                <p class="{% if not admin.date_created %}empty{% endif %}">
-                  {{ admin.date_created|default:"Not provided" }}
-                </p>
-              </div>
-            </div>
-            <div class="security-actions">
-              <button class="btn-change-password">Change Password</button>
-              <button class="btn-two-factor">Enable 2FA</button>
-            </div>
-          </div>
-        </div> -->
-
-@import url('admin_dashboard.css'); */
-
-/* Styles for admin_profile.html */
-
-/* .profile {
+/* ===== Profile Container ===== */
+.profile {
   padding: 40px 20px;
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  min-height: 100vh;
 }
 
 .profile .container {
@@ -167,6 +16,7 @@
   margin: 0 auto;
 }
 
+/* Page Heading */
 .profile h2 {
   font-size: 32px;
   color: #ffd700;
@@ -174,7 +24,7 @@
   margin-bottom: 12px;
 }
 
-.profile > .container > p {
+.profile p.page-subtitle {
   font-size: 18px;
   color: rgba(255, 255, 255, 0.85);
   text-align: center;
@@ -190,7 +40,8 @@
   align-items: center;
   gap: 30px;
   margin-bottom: 30px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
 }
 
 .avatar-section {
@@ -198,11 +49,12 @@
   flex-direction: column;
   align-items: center;
   gap: 15px;
+  flex-shrink: 0;
 }
 
 .avatar-placeholder {
-  width: 120px;
-  height: 120px;
+  width: 130px;
+  height: 130px;
   background: rgba(255, 255, 255, 0.1);
   border: 3px dashed rgba(255, 215, 0, 0.5);
   border-radius: 50%;
@@ -211,22 +63,29 @@
   justify-content: center;
   font-size: 60px;
   color: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.avatar-placeholder:hover {
+  border-color: #ffd700;
+  background: rgba(255, 215, 0, 0.1);
 }
 
 .btn-upload {
-  padding: 8px 16px;
+  padding: 10px 20px;
   background: #ffd700;
   color: #6b3411;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .btn-upload:hover {
   background: #ffcc00;
+  transform: translateY(-2px);
 }
 
 .profile-summary {
@@ -236,80 +95,59 @@
 .profile-name {
   font-size: 28px;
   color: #ffd700;
-  margin: 0 0 5px 0;
+  margin: 0 0 8px 0;
+  font-weight: 600;
 }
 
 .profile-role {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.7);
-  margin: 0 0 10px 0;
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 0 12px 0;
 }
 
 .profile-status {
   display: inline-block;
-  padding: 6px 12px;
-  background: rgba(76, 175, 80, 0.2);
+  padding: 7px 16px;
+  background: rgba(76, 175, 80, 0.25);
   color: #4CAF50;
-  border-radius: 20px;
+  border-radius: 30px;
   font-size: 14px;
   font-weight: 600;
+  border: 1px solid rgba(76, 175, 80, 0.4);
 }
 
-.profile-status.active {
-  background: rgba(76, 175, 80, 0.2);
-  color: #4CAF50;
-}
-
-/* ===== Profile Grid - Single Box ===== */
-.profile-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0;
-}
-
-.profile-section {
-  background: rgba(107, 52, 17, 0.85);
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* All subsections inside one box */
-.profile-section-wrapper {
-  background: rgba(107, 52, 17, 0.85);
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
+/* ===== Subsections / Cards ===== */
 .subsection {
-  padding: 20px 0;
-}
-
-.subsection:not(:last-child) {
-  border-bottom: 2px solid rgba(255, 215, 0, 0.2);
-  margin-bottom: 20px;
+  background: #6b3411;
+  padding: 28px;
+  border-radius: 14px;
+  margin-bottom: 24px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 215, 0, 0.1);
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .section-header h3 {
-  font-size: 20px;
+  font-size: 21px;
   color: #ffd700;
   margin: 0;
+  font-weight: 600;
 }
 
 .btn-edit-section {
-  padding: 6px 12px;
+  padding: 8px 16px;
   background: transparent;
   color: #ffd700;
   border: 2px solid #ffd700;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -319,19 +157,20 @@
 .btn-edit-section:hover {
   background: #ffd700;
   color: #6b3411;
+  transform: translateY(-2px);
 }
 
 /* ===== Info Grid ===== */
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
 }
 
 .info-item {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
 }
 
 .info-item.full-width {
@@ -340,9 +179,9 @@
 
 .info-item label {
   font-size: 13px;
-  color: rgba(255, 215, 0, 0.8);
+  color: rgba(255, 215, 0, 0.9);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   font-weight: 600;
 }
 
@@ -350,36 +189,81 @@
   font-size: 16px;
   color: #fff;
   margin: 0;
-  padding: 10px 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  min-height: 20px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .info-item p.empty {
   color: rgba(255, 255, 255, 0.4);
   font-style: italic;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px dashed rgba(255, 255, 255, 0.2);
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+}
+
+/* ===== Editable Form Fields ===== */
+.edit-form input,
+.edit-form select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #ffd700;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.edit-form input:focus,
+.edit-form select:focus {
+  outline: none;
+  border-color: #ffcc00;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+.edit-form button {
+  margin-top: 16px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  background: #ffd700;
+  color: #6b3411;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.edit-form button:hover {
+  background: #ffcc00;
+  transform: translateY(-2px);
 }
 
 /* ===== Security Actions ===== */
 .security-actions {
-  margin-top: 20px;
+  margin-top: 24px;
   display: flex;
-  gap: 15px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
 .btn-change-password,
 .btn-two-factor {
-  padding: 10px 20px;
+  padding: 12px 24px;
   border: none;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: 8px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  flex: 1;
+  min-width: 200px;
+  text-align: center;
 }
 
 .btn-change-password {
@@ -389,6 +273,7 @@
 
 .btn-change-password:hover {
   background: #ffcc00;
+  transform: translateY(-2px);
 }
 
 .btn-two-factor {
@@ -400,6 +285,7 @@
 .btn-two-factor:hover {
   background: #ffd700;
   color: #6b3411;
+  transform: translateY(-2px);
 }
 
 /* ===== Responsive ===== */
@@ -408,38 +294,37 @@
     padding: 40px 15px;
   }
 
-  .profile h2 {
-    font-size: 26px;
-  }
-
-  .profile > .container > p {
-    font-size: 16px;
-  }
+  .profile h2 { font-size: 28px; }
+  .profile p.page-subtitle { font-size: 16px; }
 
   .profile-header {
     flex-direction: column;
     text-align: center;
-    padding: 25px;
+    padding: 25px 20px;
+    gap: 20px;
   }
 
   .avatar-placeholder {
-    width: 100px;
-    height: 100px;
+    width: 110px;
+    height: 110px;
     font-size: 50px;
   }
 
-  .profile-name {
-    font-size: 24px;
-  }
+  .profile-name { font-size: 24px; }
 
   .info-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .section-header {
     flex-direction: column;
-    gap: 10px;
-    align-items: flex-start;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .btn-edit-section {
+    width: 100%;
   }
 
   .security-actions {
@@ -449,5 +334,7 @@
   .btn-change-password,
   .btn-two-factor {
     width: 100%;
+    min-width: auto;
   }
-} */
+}
+
