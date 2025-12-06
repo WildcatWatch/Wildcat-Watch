@@ -62,8 +62,8 @@
           <label for="role">Role</label>
           <select id="role" name="role" required>
             <option value="">Select your role</option>
-            <option value="security-officer" {% if request.POST.role == "security-officer" %}selected{% endif %}>Security Officer</option>
-            <option value="supervisor" {% if request.POST.role == "supervisor" %}selected{% endif %}>Supervisor</option>
+            <option value="security" {% if request.POST.role == "security" %}selected{% endif %}>Security Guard</option>
+            <option value="janitor" {% if request.POST.role == "janitor" %}selected{% endif %}>Janitor</option>
           </select>
         </div>
 

@@ -6,9 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Duties | Wildcat Watch</title>
   <link rel="stylesheet" href="{% static 'wildcatwatch/css/staff_dashboard.css' %}">
-  <link rel="stylesheet" href="{% static 'wildcatwatch/css/my_duties.css' %}">
   <link rel="stylesheet" href="{% static 'wildcatwatch/css/my_duties_table.css' %}">
-</head>
+  </head>
 <body>
   <header class="header">
     <div class="header-container">
@@ -30,29 +29,52 @@
     <h2>My Assigned Duties</h2>
     <p>View your scheduled tasks and update their status.</p>
 
-    <div class="duties-container">
-      {% for duty in duties %}
-        <div class="duty-card">
-          <h3>{{ duty.title }}</h3>
-          <p><strong>Time:</strong> {{ duty.time_start }} - {{ duty.time_end }}</p>
-          <p><strong>Location:</strong> {{ duty.location }}</p>
-          <p><strong>Description:</strong> {{ duty.description }}</p>
-          <p><span class="status {{ duty.status }}">{{ duty.status|capfirst }}</span></p>
-
-          {% if duty.status == "pending" %}
-          <form method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="duty_id" value="{{ duty.id }}">
-            <button class="mark-btn" type="submit">Mark as Completed</button>
-          </form>
-          {% else %}
-          <button class="mark-btn completed-btn" disabled>Completed</button>
-          {% endif %}
-        </div>
-      {% empty %}
-        <p>No assigned duties yet.</p>
-      {% endfor %}
+    <div class="table-wrapper">
+      <table class="duties-table">
+        <thead>
+          <tr>
+            <th>Duty Title</th>
+            <th>Time</th>
+            <th>Location</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for duty in duties %}
+          <tr>
+            <td class="duty-title">{{ duty.title }}</td>
+            <td class="duty-time">{{ duty.time_start|time:"g:i A" }} - {{ duty.time_end|time:"g:i A" }}</td>
+            <td class="duty-location">{{ duty.location }}</td>
+            <td class="duty-description">{{ duty.description }}</td>
+            <td class="duty-status">
+              <span class="status-badge {{ duty.status }}">{{ duty.status|capfirst }}</span>
+            </td>
+            <td class="duty-actions">
+              {% if duty.status == "pending" or duty.status == "ongoing" %}
+              <form method="POST" class="status-form">
+                {% csrf_token %}
+                <input type="hidden" name="duty_id" value="{{ duty.id }}">
+                <select name="status" class="status-dropdown" onchange="this.form.submit()">
+                  <option value="" disabled selected>Mark as...</option>
+                  <option value="completed">Completed</option>
+                  </select>
+              </form>
+              {% else %}
+              <button class="mark-btn completed-btn" disabled>No Action</button>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" style="text-align: center;">No assigned duties found for you.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+
   </section>
 </body>
 </html>

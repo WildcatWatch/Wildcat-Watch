@@ -15,6 +15,7 @@ urlpatterns = [
     path('manage-staff/', views.manage_staff, name='manage_staff'),
     path('reports/', views.reports, name='reports'),
     path('generate-admin-key/', views.generate_admin_key, name='generate_admin_key'),
+    path('notifications/', views.notifications_list, name='notifications_list'),
 ]
 
 

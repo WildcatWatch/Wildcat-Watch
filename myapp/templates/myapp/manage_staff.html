@@ -2,90 +2,213 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Staff | Wildcat Watch</title>
-  <link rel="stylesheet" href="{% static 'wildcatwatch/css/admin_dashboard.css' %}">
-  <link rel="stylesheet" href="{% static 'wildcatwatch/css/manage_staff.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Staff | Wildcat Watch</title>
+    <link rel="stylesheet" href="{% static 'wildcatwatch/css/admin_dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'wildcatwatch/css/manage_staff.css' %}">
 </head>
 <body>
-  <header class="header">
-    <div class="header-container">
-      <div class="logo">
-        <div class="shield-icon">🛡️</div>
-        <h1>Wildcat Watch</h1>
-      </div>
-      <nav class="nav">
-        <a href="{% url 'admin_dashboard' %}">Overview</a>
-        <a href="#">Reports</a>
-        <a href="{% url 'manage_staff' %}" class="active">Manage Staff</a>
-        <a href="#">Settings</a>
-      </nav>
-      <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
-    </div>
-  </header>
-
-  <main class="main-content">
-    <section class="manage-staff">
-      <div class="container">
-        <h2>Manage Staff & Assign Duties</h2>
-        <p>View all security personnel and assign duties to their designated locations.</p>
-
-        <div class="form-container">
-          <input type="text" id="nameInput" placeholder="Enter Name" required>
-          <select id="placeInput">
-            <option value="">Select Location</option>
-            <option>Front Gate</option>
-            <option>Back Gate</option>
-            <option>Library</option>
-            <option>RTL Building</option>
-            <option>NGE Building</option>
-            <option>ALLIED Building</option>
-            <option>GLE Building</option>
-          </select>
-          <select id="statusInput">
-            <option>Unassigned</option>
-            <option>On Duty</option>
-            <option>On Break</option>
-            <option>Off Duty</option>
-            <option>Absent</option>
-          </select>
-          <button class="btn btn-add" id="addBtn">Add Assignment</button>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <div class="shield-icon">🛡️</div>
+                <h1>Wildcat Watch</h1>
+            </div>
+            <nav class="nav">
+                <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+                <a href="{% url 'reports' %}">Reports</a>
+                <a href="{% url 'manage_staff' %}" class="active">Manage Staff</a>
+                <a href="#">Settings</a>
+            </nav>
+            <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
         </div>
+    </header>
 
-        <div class="table-container">
-          <table id="staffDutyTable" class="staff-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Role</th>
-                <th>Assigned Location</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for staff in staff_list %}
-                <tr data-staff-id="{{ staff.id }}">
-                  <td class="staff-name">{{ staff.name }}</td>
-                  <td class="staff-role">{{ staff.role }}</td>
-                  <td class="assigned-location">—</td>
-                  <td class="duty-status">{{ staff.status|default:"—" }}</td>
-                  <td class="action-buttons">
-                    <button class="btn-edit" data-name="{{ staff.name }}">Edit</button>
-                    <button class="btn-delete" data-name="{{ staff.name }}">Remove</button>
-                  </td>
-                </tr>
-              {% empty %}
-                <tr><td colspan="5">No staff found.</td></tr>
-              {% endfor %}
-            </tbody>
-          </table>
+    <main class="main-content">
+        <section class="manage-staff">
+            <div class="container">
+                <h2>Manage Staff & Assign Duties</h2>
+                <p>Use the form below to create new duty assignments, or manage existing ones in the table.</p>
+                
+                {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+
+                <form method="POST" class="form-create">
+                    {% csrf_token %}
+                    <input type="hidden" name="action_type" value="create">
+                    
+                    <div class="form-container">
+                        <select name="staff_id_input" required>
+                            <option value="">Select Staff Member *</option>
+                            {% for staff in staff_list %}
+                            <option value="{{ staff.id }}">{{ staff.fullname }} ({{ staff.role|capfirst }})</option>
+                            {% endfor %}
+                        </select>
+                        
+                        <input type="text" name="titleInput" placeholder="Duty Title (e.g., Main Gate Patrol)" required>
+                        
+                        <select name="placeInput" required>
+                            <option value="">Select Location *</option>
+                            <option value="Front Gate">Front Gate</option>
+                            <option value="Back Gate">Back Gate</option>
+                            <option value="Library">Library</option>
+                            <option value="RTL Building">RTL Building</option>
+                            <option value="NGE Building">NGE Building</option>
+                            <option value="ALLIED Building">ALLIED Building</option>
+                            <option value="GLE Building">GLE Building</option>
+                        </select>
+                        
+                        <input type="text" name="descriptionInput" placeholder="Brief Description (Optional)">
+
+                        <div class="datetime-group">
+                            <label for="timeStartInput">Start Time:</label>
+                            <input type="datetime-local" name="timeStartInput" id="timeStartInput" required>
+                        </div>
+                        
+                        <div class="datetime-group">
+                            <label for="timeEndInput">End Time:</label>
+                            <input type="datetime-local" name="timeEndInput" id="timeEndInput" required>
+                        </div>
+                        
+                        <button class="btn btn-add" type="submit">Assign New Duty</button>
+                    </div>
+                </form>
+                
+                <div class="table-container">
+                    <h3>Current Duty Assignments</h3>
+                    <table id="dutyAssignmentsTable" class="staff-table">
+                        <thead>
+                            <tr>
+                                <th>Staff Name</th>
+                                <th>Duty Title</th>
+                                <th>Location</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for duty in duty_list %}
+                            <tr>
+                                <td class="staff-name">{{ duty.staff.fullname }}</td>
+                                <td class="duty-title">{{ duty.title }}</td>
+                                <td class="assigned-location">{{ duty.location }}</td>
+                                <td>{{ duty.time_start|date:"Y-m-d H:i" }}</td>
+                                <td>{{ duty.time_end|date:"Y-m-d H:i" }}</td>
+                                <td class="duty-status"><span class="status-{{ duty.status }}">{{ duty.status|capfirst }}</span></td>
+                                <td class="action-buttons">
+                                    <button class="btn-edit" 
+                                            data-duty-id="{{ duty.id }}" 
+                                            data-staff-id="{{ duty.staff.id }}"
+                                            data-staff-name="{{ duty.staff.fullname }}"
+                                            data-title="{{ duty.title }}"
+                                            data-location="{{ duty.location }}"
+                                            data-desc="{{ duty.description }}"
+                                            data-start="{{ duty.time_start|date:'Y-m-d\TH:i' }}"
+                                            data-end="{{ duty.time_end|date:'Y-m-d\TH:i' }}">
+                                        Edit
+                                    </button>
+                                    
+                                    <form method="POST" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action_type" value="delete">
+                                        <input type="hidden" name="duty_id" value="{{ duty.id }}">
+                                        <button class="btn-delete" type="submit" onclick="return confirm('Are you sure you want to delete the duty: {{ duty.title }}?');">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="7">No duty assignments found.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h3>Edit Duty Assignment</h3>
+                <form id="editDutyForm" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="action_type" value="update">
+                    <input type="hidden" name="duty_id" id="modalDutyId">
+                    <input type="hidden" name="staff_id_input" id="modalStaffId">
+                    
+                    <label for="modalStaffName">Staff Member:</label>
+                    <input type="text" id="modalStaffName" readonly>
+                    
+                    <label for="modalTitle">Duty Title:</label>
+                    <input type="text" name="titleInput" id="modalTitle" required>
+                    
+                    <label for="modalLocation">Location:</label>
+                    <select name="placeInput" id="modalLocation" required>
+                        <option value="Front Gate">Front Gate</option>
+                        <option value="Back Gate">Back Gate</option>
+                        <option value="Library">Library</option>
+                        <option value="RTL Building">RTL Building</option>
+                        <option value="NGE Building">NGE Building</option>
+                        <option value="ALLIED Building">ALLIED Building</option>
+                        <option value="GLE Building">GLE Building</option>
+                    </select>
+
+                    <label for="modalDescription">Description:</label>
+                    <input type="text" name="descriptionInput" id="modalDescription">
+
+                    <label for="modalTimeStart">Start Time:</label>
+                    <input type="datetime-local" name="timeStartInput" id="modalTimeStart" required>
+                    
+                    <label for="modalTimeEnd">End Time:</label>
+                    <input type="datetime-local" name="timeEndInput" id="modalTimeEnd" required>
+                    
+                    <button type="submit" class="btn btn-update">Save Changes</button>
+                </form>
+            </div>
         </div>
-      </div>
-    </section>
-  </main>
+        
+    </main>
 
-  <script src="{% static 'wildcatwatch/js/manage_staff.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const editModal = document.getElementById('editModal');
+            const closeBtn = editModal.querySelector('.close-btn');
+            const editButtons = document.querySelectorAll('.btn-edit');
+            
+            editButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const dutyId = this.dataset.dutyId;
+                    const staffId = this.dataset.staffId;
+                    
+                    document.getElementById('modalDutyId').value = dutyId;
+                    document.getElementById('modalStaffId').value = staffId;
+                    
+                    document.getElementById('modalStaffName').value = this.dataset.staffName; 
+                    document.getElementById('modalTitle').value = this.dataset.title;
+                    document.getElementById('modalLocation').value = this.dataset.location;
+                    document.getElementById('modalDescription').value = this.dataset.desc || '';
+                    document.getElementById('modalTimeStart').value = this.dataset.start;
+                    document.getElementById('modalTimeEnd').value = this.dataset.end;
+                    
+                    editModal.style.display = 'block';
+                });
+            });
+
+            closeBtn.addEventListener('click', function() {
+                editModal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target == editModal) {
+                    editModal.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>

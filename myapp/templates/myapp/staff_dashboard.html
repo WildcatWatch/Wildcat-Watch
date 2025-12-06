@@ -26,6 +26,15 @@
   </header>
 
   <main class="main-content">
+    <div class="container notification-alert-container">
+          {% if unread_notifications and unread_notifications|length > 0 %}
+          <div class="alert alert-warning">
+              <span class="alert-icon">🔔</span> 
+              You have {{ unread_notifications|length }} unread shift reminders! 
+              <a href="{% url 'notifications_list' %}" class="btn-view-notes">View Notifications</a>
+          </div>
+          {% endif %}
+    </div>
     <section class="profile">
       <div class="container">
         <h2>My Profile</h2>

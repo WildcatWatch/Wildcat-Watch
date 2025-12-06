@@ -89,3 +89,44 @@ body {
   font-size: 18px;
   color: rgba(255, 255, 255, 0.85);
 }
+
+.notification-alert-container {
+    max-width: 1200px; 
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+.alert {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.alert-warning {
+    background-color: #ffd700; 
+    color: #333; 
+    border-left: 5px solid #ff9800; 
+}
+
+.alert-icon {
+    font-size: 1.5em;
+    margin-right: 15px;
+}
+
+.btn-view-notes {
+    background-color: #6b3411;
+    color: white; 
+    padding: 8px 15px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+}
+
+.btn-view-notes:hover {
+    background-color: #8b4513; 
+}
