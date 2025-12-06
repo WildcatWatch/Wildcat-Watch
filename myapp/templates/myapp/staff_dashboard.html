@@ -30,14 +30,36 @@
     </div>
   </header>
 
-  <!-- ===== Main Dashboard Content ===== -->
-  <main class="dashboard-main">
-    <div class="container">
-      
-      <!-- My Status Section -->
-      <section class="status-section">
-        <h2>My Status Today</h2>
-        <div class="status-cards">
+  <main class="main-content">
+    <div class="container notification-alert-container">
+          {% if unread_notifications and unread_notifications|length > 0 %}
+          <div class="alert alert-warning">
+              <span class="alert-icon">🔔</span> 
+              You have {{ unread_notifications|length }} unread shift reminders! 
+              <a href="{% url 'notifications_list' %}" class="btn-view-notes">View Notifications</a>
+          </div>
+          {% endif %}
+    </div>
+    <section class="profile">
+      <div class="container">
+        <h2>My Profile</h2>
+        <p>View and manage your personal information and account details.</p>
+
+        <div class="profile-header">
+          <div class="avatar-section">
+            <div class="avatar-placeholder">
+              <span class="avatar-icon">👤</span>
+            </div>
+            <button class="btn-upload">Upload Photo</button>
+          </div>
+          <div class="profile-summary">
+            <h3 class="profile-name">{{ staff.name|default:"Not Set" }}</h3>
+            <p class="profile-role">{{ staff.role|default:"Not Set" }}</p>
+            <span class="profile-status active">● Active</span>
+          </div>
+        </div>
+
+        <div class="profile-section-wrapper">
           
           <div class="status-card active">
             <div class="card-header">

@@ -3,10 +3,12 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from .models import Attendance, Duty
+from .models import Attendance, Duty, AdminAccessKey, Notification
 from django.http import JsonResponse
-from .models import AdminAccessKey
 import secrets
+from datetime import timedelta
+import re
+from django.db.models import Count
 
 User = get_user_model()
 
@@ -18,9 +20,13 @@ def register_staff(request):
         fullname = request.POST.get("fullname")
         email = request.POST.get("email")
         id_no = request.POST.get("id_no")
-        selected_role = request.POST.get("role") or "staff"
+        selected_role = request.POST.get("role")
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
+
+        if selected_role not in ['security', 'janitor']:
+            messages.error(request, "Invalid role selected.")
+            return redirect("register_staff")
 
         if password != confirm_password:
             messages.error(request, "Passwords do not match.")
@@ -28,8 +34,11 @@ def register_staff(request):
 
         if User.objects.filter(id_number=id_no).exists():
             messages.error(request, "ID number already exists.")
+            return redirect("register_staff")
+        
         if User.objects.filter(email=email).exists():
             messages.error(request, "Email already exists.")
+            return redirect("register_staff")
         else:
             user = User.objects.create_user(
                 id_number=id_no,
@@ -40,8 +49,6 @@ def register_staff(request):
             )
             messages.success(request, "Staff account created successfully! Please log in.")
             return redirect("login")
-        
-        return redirect("register_staff")
 
     return render(request, "myapp/register_staff.html")
 
@@ -109,7 +116,7 @@ def login_view(request):
 
             if user.role == "admin":
                 return redirect("admin_dashboard")
-            elif user.role in ["security-officer", "supervisor"]:
+            elif user.role in ["security", "janitor"]:
                 return redirect("staff_dashboard")
             else:
                 return redirect("home_page")
@@ -134,12 +141,22 @@ def home_page(request):
 
 @login_required(login_url="login")
 def staff_dashboard(request):
-    return render(request, "myapp/staff_dashboard.html")
+    user = request.user
+    
+    unread_notifications = Notification.objects.filter(user=user, is_read=False)
+
+    context = {
+        'staff': user, 
+        'unread_notifications': unread_notifications, 
+    }
+    
+    return render(request, "myapp/staff_dashboard.html", context)
 
 
 @login_required(login_url="login")
 def admin_dashboard(request):
     return render(request, "myapp/admin_dashboard.html")
+
 
 @login_required(login_url="login")
 def generate_admin_key(request):
@@ -160,44 +177,33 @@ def generate_admin_key(request):
 
 
 # ---------------------------
-# Profile Pages
-# ---------------------------
-@login_required(login_url="login")
-def admin_profile(request):
-    if request.user.role != "admin":
-        messages.error(request, "Access denied.")
-        return redirect("home_page")
-
-    return render(request, "myapp/admin_profile.html")
-
-
-@login_required(login_url="login")
-def staff_profile(request):
-    if request.user.role not in ["security-officer", "supervisor"]:
-        messages.error(request, "Access denied.")
-        return redirect("home_page")
-
-    return render(request, "myapp/staff_profile.html")
-
-
-# ---------------------------
-# Employee Views
+# Employee Views - my_duties_view 
 # ---------------------------
 @login_required(login_url="login")
 def my_duties_view(request):
-    duties = Duty.objects.filter(staff=request.user)
+    duties = Duty.objects.filter(staff=request.user).order_by('time_start')
 
     if request.method == "POST":
         duty_id = request.POST.get("duty_id")
+        new_status = request.POST.get("status", "completed") 
+        
         duty = get_object_or_404(Duty, id=duty_id, staff=request.user)
-        duty.status = "completed"
-        duty.save()
-        messages.success(request, f"{duty.title} marked as completed.")
+        
+        if new_status in ["completed", "ongoing", "pending"]:
+            duty.status = new_status
+            duty.save()
+            messages.success(request, f"Duty **{duty.title}** status updated to {new_status.capitalize()}.")
+        else:
+            messages.error(request, "Invalid status submitted.")
+            
         return redirect("my_duties")
 
     return render(request, "myapp/my_duties.html", {"duties": duties})
 
 
+# ---------------------------
+# Employee Views - attendance_dashboard 
+# ---------------------------
 @login_required(login_url="login")
 def attendance_dashboard(request):
     user = request.user
@@ -207,8 +213,8 @@ def attendance_dashboard(request):
 
     current_duty = Duty.objects.filter(
         staff=user,
-        time_start__lte=now.time(),
-        time_end__gte=now.time()
+        time_start__lte=now,
+        time_end__gt=now 
     ).first()
 
     history = Attendance.objects.filter(user=user).order_by("-check_in")
@@ -223,35 +229,98 @@ def attendance_dashboard(request):
     return render(request, "myapp/attendance_dashboard.html", context)
 
 
-# ---------------------------
-# Admin Views
-# ---------------------------
 @login_required(login_url="login")
 def manage_staff(request):
     if request.user.role != "admin":
         messages.error(request, "Access denied.")
         return redirect("home_page")
 
-    staff_list = User.objects.filter(role__in=["security-officer", "supervisor"])
-    duty_list = Duty.objects.all().order_by("time_start")
+    staff_list = User.objects.filter(role__in=["security", "janitor"]) 
+    duty_list = Duty.objects.all().order_by("-time_start") 
 
     if request.method == "POST":
-        name = request.POST.get("nameInput")
+        action_type = request.POST.get("action_type") 
+        
+        if action_type == "delete":
+            duty_id = request.POST.get("duty_id")
+            duty = get_object_or_404(Duty, id=duty_id)
+            
+            if duty:
+                duty_title = duty.title
+                duty.delete()
+                messages.success(request, f"Duty '{duty_title}' successfully deleted.")
+                return redirect("manage_staff")
+        
+        duty_id = request.POST.get("duty_id") 
+        staff_id = request.POST.get("staff_id_input") 
+        duty_title = request.POST.get("titleInput")
         place = request.POST.get("placeInput")
-        status = request.POST.get("statusInput")
+        description = request.POST.get("descriptionInput")
+        time_start_str = request.POST.get("timeStartInput")
+        time_end_str = request.POST.get("timeEndInput")
+        
+        try:
+            staff_member = User.objects.get(id=staff_id)
+            
+            DATETIME_INPUT_FORMAT = '%Y-%m-%dT%H:%M'
 
-        staff_member = User.objects.filter(fullname=name).first()
-        if staff_member and place and status:
-            Duty.objects.create(
+            if not time_start_str or not time_end_str:
+                messages.error(request, "Start time and End time are required.")
+                return redirect("manage_staff")
+            
+            time_start = timezone.datetime.strptime(time_start_str, DATETIME_INPUT_FORMAT).astimezone(timezone.get_current_timezone())
+            time_end = timezone.datetime.strptime(time_end_str, DATETIME_INPUT_FORMAT).astimezone(timezone.get_current_timezone())
+            
+            if time_start >= time_end:
+                messages.error(request, "Duty end time must be after start time.")
+                return redirect("manage_staff")
+
+            overlap_query = Duty.objects.filter(
                 staff=staff_member,
-                title=f"Duty at {place}",
-                location=place,
-                status=status,
-                time_start=timezone.now(),
-                time_end=timezone.now() + timezone.timedelta(hours=8)
+                time_start__lt=time_end, 
+                time_end__gt=time_start,
             )
-            messages.success(request, f"Duty assigned to {name}")
-            return redirect("manage_staff")
+            
+            if action_type == "update" and duty_id:
+                overlap_query = overlap_query.exclude(id=duty_id)
+                
+            if overlap_query.exists():
+                messages.error(request, f"Duty assignment conflicts with an existing duty for {staff_member.fullname} during that period.")
+                return redirect("manage_staff")
+
+            duty_data = {
+                "staff": staff_member,
+                "title": duty_title,
+                "location": place,
+                "description": description,
+                "time_start": time_start,
+                "time_end": time_end,
+            }
+            
+            if action_type == "create":
+                Duty.objects.create(**duty_data, status="pending")
+                messages.success(request, f"Duty assigned to {staff_member.fullname} successfully.")
+                
+            elif action_type == "update" and duty_id:
+                duty_instance = get_object_or_404(Duty, id=duty_id)
+                
+                for key, value in duty_data.items():
+                    setattr(duty_instance, key, value)
+                duty_instance.save()
+                
+                messages.success(request, f"Duty '{duty_title}' successfully updated.")
+                
+            else:
+                messages.error(request, "Invalid action or missing ID for update.")
+
+        except User.DoesNotExist:
+            messages.error(request, "Staff member not found.")
+        except ValueError:
+            messages.error(request, "Invalid date/time format submitted. Ensure format is YYYY-MM-DD HH:MM:SS.")
+        except Exception as e:
+            messages.error(request, f"An unexpected error occurred during operation.")
+            
+        return redirect("manage_staff")
 
     context = {
         "staff_list": staff_list,
@@ -261,7 +330,7 @@ def manage_staff(request):
 
 
 # ---------------------------
-# Reports Page
+# Reports Views
 # ---------------------------
 @login_required(login_url="login")
 def reports(request):
@@ -269,26 +338,98 @@ def reports(request):
         messages.error(request, "Access denied.")
         return redirect("home_page")
 
-    return render(request, "myapp/reports.html")
+    start_date_str = request.GET.get('start_date')
+    end_date_str = request.GET.get('end_date')
+    staff_role = request.GET.get('staff_role')
+    
+    report_data = Attendance.objects.none()
+    total_records = 0
+    completed_duties = 0
+    missed_duties = 0
+
+    if start_date_str or end_date_str or staff_role:
+        
+        report_data = Attendance.objects.select_related('user', 'assigned_duty').all().order_by('-check_in')
+
+        try:
+            if start_date_str:
+                start_datetime = timezone.datetime.strptime(start_date_str, '%Y-%m-%d').date()
+                report_data = report_data.filter(check_in__date__gte=start_datetime)
+                
+            if end_date_str:
+                end_datetime = timezone.datetime.strptime(end_date_str, '%Y-%m-%d').date()
+                end_of_day = end_datetime + timedelta(days=1)
+                report_data = report_data.filter(check_in__date__lt=end_of_day)
+
+            if staff_role and staff_role != 'all' and staff_role in ['security', 'janitor', 'admin']:
+                report_data = report_data.filter(user__role=staff_role)
+
+            total_records = report_data.count()
+            
+            completed_duties = report_data.filter(
+                assigned_duty__status='completed'
+            ).aggregate(count=Count('assigned_duty', distinct=True))['count'] or 0
+
+            missed_duties = report_data.filter(
+                assigned_duty__status='missed'
+            ).aggregate(count=Count('assigned_duty', distinct=True))['count'] or 0
+            
+        except ValueError:
+            messages.error(request, "Invalid date format provided. Please use YYYY-MM-DD.")
+            report_data = Attendance.objects.none() 
+
+    context = {
+        'report_records': report_data,
+        'total_records': total_records,
+        'completed_duties': completed_duties,
+        'missed_duties': missed_duties,
+        'start_date': start_date_str,
+        'end_date': end_date_str,
+        'staff_role': staff_role,
+    }
+    
+    return render(request, 'myapp/reports.html', context)
 
 
 # ---------------------------
-# Attendance Actions
+# Employee Views - check_in
 # ---------------------------
 @login_required
 def check_in(request):
     user = request.user
+    now = timezone.localtime() 
 
     active_shift = Attendance.objects.filter(user=user, check_out__isnull=True).first()
     if active_shift:
         messages.error(request, "You are already checked in! Check out first.")
         return redirect("attendance_dashboard")
 
-    Attendance.objects.create(user=user, check_in=timezone.now())
-    messages.success(request, "Checked in successfully.")
+    current_duty = Duty.objects.filter(
+        staff=user,
+        time_start__lte=now,
+        time_end__gt=now, 
+        status__in=['pending', 'ongoing']
+    ).first()
+    
+    Attendance.objects.create(
+        user=user,
+        check_in=timezone.now(),
+        assigned_duty=current_duty 
+    )
+
+    if current_duty:
+        current_duty.status = 'ongoing'
+        current_duty.save()
+        messages.success(request, f"Checked in successfully. Your shift is **{current_duty.title}**.")
+    else:
+        messages.warning(request, "Checked in successfully. No scheduled duty found for this exact time.")
+
     return redirect("attendance_dashboard")
 
 
+# ---------------------------
+# Employee Views - check_out 
+# ---------------------------
 @login_required
 def check_out(request):
     user = request.user
@@ -298,13 +439,34 @@ def check_out(request):
         messages.error(request, "You have no active shift to check out.")
         return redirect("attendance_dashboard")
 
-    active_shift.check_out = timezone.now()
+    checkout_time = timezone.now()
+    active_shift.check_out = checkout_time
     active_shift.save()
 
-    messages.success(request, "Checked out successfully.")
+    if active_shift.assigned_duty:
+        duty = active_shift.assigned_duty
+        
+        early_tolerance = timedelta(minutes=15)
+        
+        compliant_checkout_time = duty.time_end - early_tolerance
+        
+        if checkout_time < compliant_checkout_time:
+            duty.status = 'missed' 
+            messages.warning(request, f"Checked out successfully. Duty **{duty.title}** was marked as **MISSED** due to early departure.")
+        else:
+            duty.status = 'completed'
+            messages.success(request, f"Checked out successfully, and duty **{duty.title}** marked as completed.")
+            
+        duty.save()
+    else:
+        messages.success(request, "Checked out successfully (Unscheduled attendance recorded).")
+
     return redirect("attendance_dashboard")
 
 
+# ---------------------------
+# JSON API Check-in/out View
+# ---------------------------
 @login_required
 def attendance_action(request):
     if request.method != "POST":
@@ -315,17 +477,32 @@ def attendance_action(request):
     now = timezone.localtime()
 
     active_shift = Attendance.objects.filter(user=user, check_out__isnull=True).first()
-
     response = {"success": False, "message": ""}
 
     if action == "checkin":
         if active_shift:
             response["message"] = "You are already checked in!"
         else:
-            record = Attendance.objects.create(user=user, check_in=timezone.now())
+            current_duty = Duty.objects.filter(
+                staff=user,
+                time_start__lte=now,
+                time_end__gt=now,
+                status__in=['pending', 'ongoing']
+            ).first()
+            
+            record = Attendance.objects.create(
+                user=user, 
+                check_in=timezone.now(),
+                assigned_duty=current_duty
+            )
+            
+            if current_duty:
+                current_duty.status = 'ongoing'
+                current_duty.save()
+                
             response = {
                 "success": True,
-                "message": "Check-in successful.",
+                "message": f"Check-in successful. Duty: {current_duty.title}" if current_duty else "Check-in successful.",
                 "check_in_time": timezone.localtime(record.check_in).strftime("%Y-%m-%d %H:%M:%S")
             }
 
@@ -333,8 +510,23 @@ def attendance_action(request):
         if not active_shift:
             response["message"] = "You have no active check-in to check out from."
         else:
-            active_shift.check_out = timezone.now()
+            checkout_time = timezone.now()
+            active_shift.check_out = checkout_time
+            
+            if active_shift.assigned_duty:
+                duty = active_shift.assigned_duty
+                early_tolerance = timedelta(minutes=15)
+                compliant_checkout_time = duty.time_end - early_tolerance
+                
+                if checkout_time < compliant_checkout_time:
+                    duty.status = 'missed' 
+                else:
+                    duty.status = 'completed'
+                
+                duty.save()
+            
             active_shift.save()
+            
             response = {
                 "success": True,
                 "message": "Check-out successful.",
@@ -345,3 +537,18 @@ def attendance_action(request):
         response["message"] = "Invalid action."
 
     return JsonResponse(response)
+
+
+# ---------------------------
+# Notification View
+# ---------------------------
+@login_required(login_url="login")
+def notifications_list(request):
+    notifications = Notification.objects.filter(user=request.user) 
+    
+    notifications.filter(is_read=False).update(is_read=True)
+    
+    context = {
+        'notifications': notifications
+    }
+    return render(request, 'myapp/notifications.html', context)

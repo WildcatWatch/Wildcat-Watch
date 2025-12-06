@@ -5,9 +5,12 @@ from django.conf import settings
 from django.contrib.auth.hashers import make_password, check_password
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, id_number, email, password=None, role='security', fullname="Unknown"):
+    def create_user(self, id_number, email, password=None, role='security', fullname=None):
         if not id_number:
             raise ValueError("Users must have an ID number")
+        if not fullname:
+            raise ValueError("Full name is required")
+        
         user = self.model(id_number=id_number, email=email, role=role, fullname=fullname)
         user.set_password(password)
         user.save(using=self._db)
@@ -22,13 +25,13 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = [
-        ('security', 'Security Officer'),
-        ('supervisor', 'Supervisor'),
+        ('security', 'Security Guard'),
+        ('janitor', 'Janitor'),
         ('admin', 'Administrator'),
     ]
 
     id_number = models.CharField(max_length=100, unique=True)
-    fullname = models.CharField(max_length=255, default="Unknown")
+    fullname = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     role = models.CharField(max_length=50, choices=ROLE_CHOICES)
     is_active = models.BooleanField(default=True)
@@ -60,47 +63,72 @@ class AdminAccessKey(models.Model):
     def __str__(self):
         return f"Admin Access Key (used: {self.used})"
 
-
 class Duty(models.Model):
+    STATUS_CHOICES = [
+        ("pending", "Pending"),
+        ("ongoing", "Ongoing"),
+        ("completed", "Completed"),
+        ("missed", "Missed"), 
+    ]
+
     staff = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="duties"
     )
     title = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    time_start = models.TimeField()
-    time_end = models.TimeField()
+    
+    time_start = models.DateTimeField()
+    time_end = models.DateTimeField()
+    
     status = models.CharField(
         max_length=20,
-        choices=[("pending", "Pending"), ("completed", "Completed")],
+        choices=STATUS_CHOICES,
         default="pending",
     )
 
     def __str__(self):
-        return f"{self.title} - {self.staff.username}"
-
+        return f"{self.title} - {self.staff.id_number}"
 
 class Attendance(models.Model):
-    STATUS_CHOICES = [
-        ("scheduled", "Scheduled"),
-        ("unscheduled", "Unscheduled")
-    ]
-
+    
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    duty = models.ForeignKey("Duty", on_delete=models.CASCADE, null=True, blank=True)
-    fullname = models.CharField(max_length=255, blank=True)
-    role = models.CharField(max_length=50, blank=True)
+    
+    assigned_duty = models.ForeignKey(
+        "Duty", 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        related_name="attendance_records"
+    )
+
     check_in = models.DateTimeField(default=timezone.now)
     check_out = models.DateTimeField(null=True, blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="unscheduled")
-
-    def save(self, *args, **kwargs):
-        if not self.fullname:
-            self.fullname = self.user.fullname
-        if not self.role:
-            self.role = self.user.role
-        super().save(*args, **kwargs)
 
     def __str__(self):
-        duty_name = f" - {self.duty.title}" if self.duty else ""
-        return f"{self.fullname} ({self.role}){duty_name} - {self.check_in}"
+        duty_name = f" - {self.assigned_duty.title}" if self.assigned_duty else ""
+        return f"{self.user.fullname} ({self.user.role}){duty_name} - {self.check_in}"
+
+class Notification(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        related_name='notifications'
+    )
+    
+    related_duty = models.ForeignKey(
+        'Duty', 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True
+    )
+    
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Notification for {self.user.id_number} at {self.created_at.strftime('%Y-%m-%d %H:%M')}"
+    
+    class Meta:
+        ordering = ['-created_at']
