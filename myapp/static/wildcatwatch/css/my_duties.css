@@ -1,3 +1,8 @@
+@import url('admin_dashboard.css');
+
+/* My Duties Page Specific Styles */
+
+/* Card Layout (Original) */
 .duties-container {
   display: flex;
   justify-content: center;
@@ -32,6 +37,7 @@
   font-size: 14px;
 }
 
+/* Status Badges (Original) */
 .status {
   font-weight: bold;
   color: #fff;
@@ -49,6 +55,7 @@
   background-color: #4caf50;
 }
 
+/* Mark Complete Button (Original) */
 .mark-btn {
   margin-top: 15px;
   display: inline-block;
@@ -77,18 +84,22 @@
   background-color: gray;
 }
 
+/* ===== NEW TABLE STYLES ===== */
 
+/* Override staff_dashboard.css for My Duties page */
 body {
   background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%) !important;
   min-height: 100vh;
 }
 
+/* Main Content */
 .main-content {
   padding: 40px 20px !important;
   max-width: 1400px !important;
   margin: 0 auto !important;
 }
 
+/* Override dashboard padding for table view */
 .dashboard {
   text-align: center !important;
   padding: 40px 20px !important;
@@ -106,6 +117,7 @@ body {
   font-size: 18px !important;
 }
 
+/* Table Container */
 .table-container {
   margin-top: 30px !important;
   background: rgba(255, 255, 255, 0.1) !important;
@@ -115,6 +127,7 @@ body {
   display: block !important;
 }
 
+/* Duties Table */
 .duties-table {
   width: 100% !important;
   border-collapse: collapse !important;
@@ -162,6 +175,7 @@ body {
   background: rgba(255, 255, 255, 0.05);
 }
 
+/* Column Widths */
 .duties-table th:nth-child(1),
 .duty-title {
   width: 15%;
@@ -196,6 +210,7 @@ body {
   text-align: center !important;
 }
 
+/* Status Badge */
 .status-badge {
   display: inline-block !important;
   padding: 6px 12px !important;
@@ -225,6 +240,7 @@ body {
   color: white !important;
 }
 
+/* Status Dropdown */
 .status-form {
   display: inline-block !important;
 }
@@ -258,6 +274,7 @@ body {
   padding: 10px !important;
 }
 
+/* Responsive */
 @media (max-width: 1200px) {
   .duties-table {
     font-size: 13px;
