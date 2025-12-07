@@ -7,6 +7,15 @@ from .models import Attendance, Duty
 from django.http import JsonResponse
 from .models import AdminAccessKey
 import secrets
+import uuid
+from django.shortcuts import render
+from .models import AdminProfile
+from django.views.decorators.http import require_POST
+from django.middleware.csrf import get_token
+from datetime import datetime
+
+
+
 
 User = get_user_model()
 
@@ -162,29 +171,127 @@ def generate_admin_key(request):
 # ---------------------------
 # Profile Pages
 # ---------------------------
-@login_required(login_url="login")
+
+@login_required
 def admin_profile(request):
-    if request.user.role != "admin":
-        messages.error(request, "Access denied.")
-        return redirect("home_page")
+    admin = request.user
+    profile, created = AdminProfile.objects.get_or_create(
+        user=admin,
+        defaults={"fullname": getattr(admin, "fullname", "Not Set")}
+    )
 
     context = {
-        "admin": request.user  # pass admin to template
+        "admin": admin,
+        "profile": profile,
+        "user_id": admin.id,
+        "csrf_token": get_token(request),  # optional for JS
     }
     return render(request, "myapp/admin_profile.html", context)
 
 
-@login_required(login_url="login")
-def staff_profile(request):
-    if request.user.role not in ["security-officer", "supervisor"]:
-        messages.error(request, "Access denied.")
-        return redirect("home_page")
+@login_required
+@require_POST
+def update_admin_profile(request):
+    # Only admins allowed
+    if getattr(request.user, "role", None) != "admin":
+        return JsonResponse({"success": False, "message": "Access denied."}, status=403)
 
-    context = {
-        "staff": request.user  # pass staff to template
-    }
+    # Get or safely create profile
+    try:
+        profile = AdminProfile.objects.get(user=request.user)
+    except AdminProfile.DoesNotExist:
+        profile = AdminProfile(id=uuid.uuid4(), user=request.user)
 
-    return render(request, "myapp/staff_profile.html")
+    # Allowed fields to update
+    allowed_fields = [
+        "fullname", "dob", "age", "gender", "blood_type", "nationality",
+        "phone", "emergency_contact", "address", "work_schedule"
+    ]
+
+    for field in allowed_fields:
+        if field in request.POST:
+            value = request.POST.get(field)
+
+            # DOB
+            if field == "dob":
+                if value and value.strip():
+                    try:
+                        profile.dob = datetime.strptime(value, "%Y-%m-%d").date()
+                    except ValueError:
+                        return JsonResponse({
+                            "success": False,
+                            "message": "Invalid DOB format, use YYYY-MM-DD"
+                        }, status=400)
+                else:
+                    profile.dob = None
+
+            # Age
+            elif field == "age":
+                if value and value.strip():
+                    try:
+                        profile.age = int(value)
+                    except ValueError:
+                        return JsonResponse({"success": False, "message": "Invalid age"}, status=400)
+                else:
+                    profile.age = None
+
+            # Phone - must be 11 digits
+            elif field == "phone":
+                if value and value.strip():
+                    # Remove any whitespace
+                    phone_clean = value.strip().replace(" ", "").replace("-", "")
+                    # Check if it's exactly 11 digits
+                    if not phone_clean.isdigit() or len(phone_clean) != 11:
+                        return JsonResponse({
+                            "success": False,
+                            "message": "Phone number must be exactly 11 digits"
+                        }, status=400)
+                    profile.phone = phone_clean
+                else:
+                    profile.phone = None
+
+            # Emergency Contact - must be 11 digits
+            elif field == "emergency_contact":
+                if value and value.strip():
+                    # Remove any whitespace
+                    contact_clean = value.strip().replace(" ", "").replace("-", "")
+                    # Check if it's exactly 11 digits
+                    if not contact_clean.isdigit() or len(contact_clean) != 11:
+                        return JsonResponse({
+                            "success": False,
+                            "message": "Emergency contact must be exactly 11 digits"
+                        }, status=400)
+                    profile.emergency_contact = contact_clean
+                else:
+                    profile.emergency_contact = None
+
+            # Blood Type - must be valid blood type
+            elif field == "blood_type":
+                if value and value.strip():
+                    valid_blood_types = ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
+                    blood_type_clean = value.strip().upper()
+                    if blood_type_clean not in valid_blood_types:
+                        return JsonResponse({
+                            "success": False,
+                            "message": "Invalid blood type. Valid types: O+, O-, A+, A-, B+, B-, AB+, AB-"
+                        }, status=400)
+                    profile.blood_type = blood_type_clean
+                else:
+                    profile.blood_type = None
+
+            # Other fields
+            else:
+                setattr(profile, field, value if value and value.strip() else None)
+
+    # Save safely
+    try:
+        profile.save()
+    except Exception as e:
+        return JsonResponse({"success": False, "message": f"DB save error: {str(e)}"}, status=500)
+
+    return JsonResponse({"success": True, "message": "Profile updated."})
+
+
 
 
 # ---------------------------
@@ -288,37 +395,6 @@ def reports(request):
 # ---------------------------
 # Attendance Actions
 # ---------------------------
-@login_required
-def check_in(request):
-    user = request.user
-
-    active_shift = Attendance.objects.filter(user=user, check_out__isnull=True).first()
-    if active_shift:
-        messages.error(request, "You are already checked in! Check out first.")
-        return redirect("attendance_dashboard")
-
-    Attendance.objects.create(user=user, check_in=timezone.now())
-    messages.success(request, "Checked in successfully.")
-    return redirect("attendance_dashboard")
-
-
-@login_required
-def check_out(request):
-    user = request.user
-    active_shift = Attendance.objects.filter(user=user, check_out__isnull=True).first()
-
-    if not active_shift:
-        messages.error(request, "You have no active shift to check out.")
-        return redirect("attendance_dashboard")
-
-    active_shift.check_out = timezone.now()
-    active_shift.save()
-
-    messages.success(request, "Checked out successfully.")
-    return redirect("attendance_dashboard")
-
-
-@login_required
 def attendance_action(request):
     if request.method != "POST":
         return JsonResponse({"success": False, "message": "Invalid request method"})
@@ -359,6 +435,7 @@ def attendance_action(request):
 
     return JsonResponse(response)
 
+
 @login_required(login_url="login")
 def remove_duty(request, duty_id):
     if request.user.role != "admin":
@@ -388,84 +465,3 @@ def edit_duty(request, duty_id):
 
     context = {"duty": duty}
     return render(request, "myapp/edit_duty.html", context)
-
-
-@login_required(login_url="login")
-def edit_admin_personal_info(request):
-    if request.user.role != "admin":
-        messages.error(request, "Access denied.")
-        return redirect("home_page")
-
-    admin = request.user
-
-    if request.method == "POST":
-        admin.fullname = request.POST.get("fullname")
-        admin.dob = request.POST.get("dob")
-        admin.age = request.POST.get("age")
-        admin.gender = request.POST.get("gender")
-        admin.nationality = request.POST.get("nationality")
-        admin.blood_type = request.POST.get("blood_type")
-        admin.save()
-        messages.success(request, "Personal information updated successfully!")
-        return redirect("admin_profile")
-
-    return render(request, "myapp/edit_admin_personal_info.html", {"admin": admin})
-
-
-@login_required(login_url="login")
-def edit_admin_contact_info(request):
-    if request.user.role != "admin":
-        messages.error(request, "Access denied.")
-        return redirect("home_page")
-
-    admin = request.user
-
-    if request.method == "POST":
-        admin.email = request.POST.get("email")
-        admin.phone = request.POST.get("phone")
-        admin.emergency_contact = request.POST.get("emergency_contact")
-        admin.address = request.POST.get("address")
-        admin.save()
-        messages.success(request, "Contact information updated successfully!")
-        return redirect("admin_profile")
-
-    return render(request, "myapp/edit_admin_contact_info.html", {"admin": admin})
-
-
-@login_required(login_url="login")
-def edit_admin_employment_info(request):
-    if request.user.role != "admin":
-        messages.error(request, "Access denied.")
-        return redirect("home_page")
-
-    admin = request.user
-
-    if request.method == "POST":
-        admin.staff_id = request.POST.get("staff_id")
-        admin.work_schedule = request.POST.get("work_schedule")
-        admin.save()
-        messages.success(request, "Employment information updated successfully!")
-        return redirect("admin_profile")
-
-    return render(request, "myapp/edit_admin_employment_info.html", {"admin": admin})
-
-
-@login_required(login_url="login")
-def edit_admin_account_security(request):
-    if request.user.role != "admin":
-        messages.error(request, "Access denied.")
-        return redirect("home_page")
-
-    admin = request.user
-
-    if request.method == "POST":
-        admin.username = request.POST.get("username")
-        # For password, hash it
-        password = request.POST.get("password")
-        if password:
-            admin.set_password(password)
-        admin.save()
-        messages.success(request, "Account security updated successfully!")
-        return redirect("admin_profile")
-
-    return render(request, "myapp/edit_admin_account_security.html", {"admin": admin})

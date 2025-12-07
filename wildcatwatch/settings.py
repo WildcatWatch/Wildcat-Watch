@@ -8,19 +8,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Load environment variables from .env
 load_dotenv()
 
+# =========================
 # SECURITY
+# =========================
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "fallback-secret-key")
-#DEBUG = os.environ.get("DJANGO_DEBUG", "False").lower() == "false"
+
+# Debug should be False on Render, but True for local development
 DEBUG = True
-# Allow all hosts temporarily (replace with your domain later)
+
+# Allow all hosts by default (for Render)
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
 CSRF_TRUSTED_ORIGINS = [
     "https://wildcat-watch-hcue.onrender.com",
 ]
 
-
-# Applications
+# =========================
+# APPLICATIONS
+# =========================
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -31,9 +36,15 @@ INSTALLED_APPS = [
     'myapp',
 ]
 
+# =========================
+# MIDDLEWARE
+# =========================
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # for serving static files
+
+    # WhiteNoise for serving static files on Render
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -44,10 +55,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'wildcatwatch.urls'
 
+# =========================
+# TEMPLATE SETTINGS
+# =========================
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates'],   # global templates
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -62,7 +76,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'wildcatwatch.wsgi.application'
 
-# Database
+# =========================
+# DATABASE (Render)
+# =========================
 DATABASES = {
     "default": dj_database_url.config(
         default=os.environ.get("DATABASE_URL"),
@@ -71,9 +87,12 @@ DATABASES = {
     )
 }
 
+# Custom user model
 AUTH_USER_MODEL = 'myapp.CustomUser'
 
-# Password validation
+# =========================
+# PASSWORD VALIDATION
+# =========================
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -81,16 +100,32 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Internationalization
+# =========================
+# INTERNATIONALIZATION
+# =========================
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Manila'
 USE_I18N = True
 USE_TZ = True
 
-# Static files
+# =========================
+# STATIC FILES (Correct Setup)
+# =========================
+
 STATIC_URL = '/static/'
-#STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# IMPORTANT: allow Django to find your JS/CSS files during development
+STATICFILES_DIRS = [
+    BASE_DIR / "static"
+]
+
+# Where static files will be collected (for Render)
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# WhiteNoise optimized static file handling (REQUIRED for Render)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# =========================
+# DEFAULT
+# =========================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

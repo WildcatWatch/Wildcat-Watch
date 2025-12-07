@@ -3,6 +3,8 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth import get_user_model
+import uuid
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, id_number, email, password=None, role='security', fullname="Unknown"):
@@ -104,3 +106,34 @@ class Attendance(models.Model):
     def __str__(self):
         duty_name = f" - {self.duty.title}" if self.duty else ""
         return f"{self.fullname} ({self.role}){duty_name} - {self.check_in}"
+
+    
+
+class AdminProfile(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        db_column='user_id',
+        related_name='admin_profile'
+    )
+    fullname = models.TextField(blank=True, null=True)
+    dob = models.DateField(blank=True, null=True)
+    age = models.IntegerField(blank=True, null=True)
+    gender = models.TextField(blank=True, null=True)
+    blood_type = models.TextField(blank=True, null=True)
+    nationality = models.TextField(blank=True, null=True)
+    phone = models.TextField(blank=True, null=True)
+    emergency_contact = models.TextField(blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
+    work_schedule = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.fullname or f"AdminProfile(user={getattr(self.user, 'id', 'unknown')})"
+
+    class Meta:
+        db_table = "admin_profiles"
+        # set managed=True if you want Django to manage migrations and create/alter the table
+        managed = False
