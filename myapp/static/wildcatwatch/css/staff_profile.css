@@ -1,5 +1,11 @@
 @import url('staff_dashboard.css');
 
+.header-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
 /* ===== Profile Section ===== */
 .profile {
   padding: 40px 20px;

@@ -14,52 +14,46 @@
     <div class="header-container">
       <div class="logo">
         <div class="shield-icon">🛡️</div>
-         <h1>Wildcat Watch</h1>
+        <h1>Wildcat Watch</h1>
       </div>
       <nav class="nav">
         <a href="{% url 'staff_dashboard' %}" class="active">Dashboard</a>
-        <a href="{% url 'staff_profile' %}">Profile</a>
         <a href="{% url 'my_duties' %}">My Duties</a>
         <a href="{% url 'attendance_dashboard' %}">Attendance</a>
-        <a href="#">Notifications</a>
+        <a href="{% url 'notifications_list' %}">Notifications</a>
       </nav>
       <div class="header-actions">
         <a href="{% url 'staff_profile' %}" class="profile-icon">👤</a>
-        <a href="#" class="notification-icon">🔔</a>
+        <a href="{% url 'notifications_list' %}" class="notification-icon">🔔</a>
       </div>
     </div>
   </header>
 
+  <!-- ===== Main Dashboard Content ===== -->
   <main class="main-content">
-    <div class="container notification-alert-container">
-          {% if unread_notifications and unread_notifications|length > 0 %}
-          <div class="alert alert-warning">
-              <span class="alert-icon">🔔</span> 
-              You have {{ unread_notifications|length }} unread shift reminders! 
-              <a href="{% url 'notifications_list' %}" class="btn-view-notes">View Notifications</a>
-          </div>
-          {% endif %}
-    </div>
-    <section class="profile">
-      <div class="container">
-        <h2>My Profile</h2>
-        <p>View and manage your personal information and account details.</p>
+    <div class="container">
 
-        <div class="profile-header">
-          <div class="avatar-section">
-            <div class="avatar-placeholder">
-              <span class="avatar-icon">👤</span>
-            </div>
-            <button class="btn-upload">Upload Photo</button>
-          </div>
-          <div class="profile-summary">
-            <h3 class="profile-name">{{ staff.name|default:"Not Set" }}</h3>
-            <p class="profile-role">{{ staff.role|default:"Not Set" }}</p>
-            <span class="profile-status active">● Active</span>
-          </div>
+      <!-- Notification Alert -->
+      {% if unread_notifications and unread_notifications|length > 0 %}
+      <div class="notification-alert">
+        <span class="alert-icon">🔔</span> 
+        You have {{ unread_notifications|length }} unread shift reminders! 
+        <a href="{% url 'notifications_list' %}" class="btn-view-notes">View Notifications</a>
+      </div>
+      {% endif %}
+
+      <!-- Profile Summary -->
+      <section class="profile-summary-section">
+        <div class="profile-summary">
+          <h3 class="profile-name">{{ staff.name|default:"Not Set" }}</h3>
+          <p class="profile-role">{{ staff.role|default:"Security Officer" }}</p>
+          <span class="profile-status active">● Active</span>
         </div>
+      </section>
 
-        <div class="profile-section-wrapper">
+      <!-- Status Cards -->
+      <section class="status-section">
+        <div class="status-cards">
           
           <div class="status-card active">
             <div class="card-header">
@@ -68,8 +62,8 @@
             </div>
             <div class="card-content">
               <div class="status-info">
-                <p class="status-location">📍 {{ staff.current_location|default:"Front Gate" }}</p>
-                <p class="status-time">Started: {{ staff.shift_start|default:"8:00 AM" }}</p>
+                <p class="status-location">📍 {{ staff.current_location|default:"Not Assigned" }}</p>
+                <p class="status-time">Started: {{ staff.shift_start|default:"—" }}</p>
               </div>
             </div>
           </div>
@@ -77,10 +71,10 @@
           <div class="status-card monitor">
             <div class="card-header">
               <span class="card-title">My Duties Today</span>
-              <span class="badge badge-monitor">{{ duties_completed|default:"3" }}/{{ total_duties|default:"5" }}</span>
+              <span class="badge badge-monitor">{{ duties_completed|default:"0" }}/{{ total_duties|default:"0" }}</span>
             </div>
             <div class="card-content">
-              <div class="big-number">{{ duties_remaining|default:"2" }}</div>
+              <div class="big-number">{{ duties_remaining|default:"0" }}</div>
               <div class="card-subtitle">Remaining</div>
             </div>
           </div>
@@ -90,7 +84,7 @@
               <span class="card-title">Hours Today</span>
             </div>
             <div class="card-content">
-              <div class="big-number">{{ hours_worked|default:"4.5" }}</div>
+              <div class="big-number">{{ hours_worked|default:"0.0" }}</div>
               <div class="card-subtitle">hours worked</div>
             </div>
           </div>
