@@ -1,0 +1,344 @@
+@import url('staff_dashboard.css');
+
+/* ===== Header Actions - Force Match Dashboard ===== */
+.header-actions {
+  display: flex !important;
+  gap: 15px !important;
+  align-items: center !important;
+}
+
+.profile-icon,
+.notification-icon {
+  font-size: 28px !important;
+  text-decoration: none !important;
+  transition: transform 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 40px !important;
+  height: 40px !important;
+  line-height: 1 !important;
+}
+
+.profile-icon:hover,
+.notification-icon:hover {
+  transform: scale(1.1) !important;
+}
+
+/* ===== Main Content ===== */
+.main-content {
+  padding: 40px 20px;
+  min-height: calc(100vh - 80px);
+}
+
+.notifications .container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ===== Notifications Header ===== */
+.notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.notifications-header h2 {
+  font-size: 32px;
+  color: #ffd700;
+  margin: 0;
+}
+
+.notification-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-filter {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-filter:hover,
+.btn-filter.active {
+  background: rgba(255, 215, 0, 0.2);
+  border-color: #ffd700;
+  color: #ffd700;
+}
+
+.btn-mark-all-read {
+  padding: 8px 16px;
+  background: #ffd700;
+  color: #8b4513;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-mark-all-read:hover {
+  background: #ffcc00;
+}
+
+/* ===== Notifications Container ===== */
+.notifications-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* ===== Notification Item ===== */
+.notification-item {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background: rgba(139, 69, 19, 0.6);
+  border-radius: 12px;
+  border-left: 4px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.notification-item:hover {
+  background: rgba(139, 69, 19, 0.7);
+  transform: translateX(5px);
+}
+
+.notification-item.unread {
+  border-left-color: #ffd700;
+  background: rgba(255, 215, 0, 0.15);
+}
+
+.notification-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.notification-icon.shift_reminder {
+  background: rgba(33, 150, 243, 0.2);
+}
+
+.notification-icon.duty_assigned {
+  background: rgba(76, 175, 80, 0.2);
+}
+
+.notification-icon.schedule_change {
+  background: rgba(255, 152, 0, 0.2);
+}
+
+.notification-icon.announcement {
+  background: rgba(156, 39, 176, 0.2);
+}
+
+.notification-icon.approval {
+  background: rgba(76, 175, 80, 0.2);
+}
+
+/* ===== Notification Content ===== */
+.notification-content {
+  flex: 1;
+}
+
+.notification-header-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 15px;
+}
+
+.notification-title {
+  font-size: 18px;
+  color: #ffd700;
+  margin: 0;
+  font-weight: 600;
+}
+
+.notification-time {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+}
+
+.notification-message {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 10px 0;
+  line-height: 1.5;
+}
+
+.notification-action-link {
+  font-size: 14px;
+  color: #ffd700;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.notification-action-link:hover {
+  color: #ffcc00;
+}
+
+/* ===== Notification Controls ===== */
+.notification-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.btn-mark-read,
+.btn-delete {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-mark-read {
+  background: #4CAF50;
+  color: white;
+}
+
+.btn-mark-read:hover {
+  background: #45a049;
+}
+
+.btn-delete {
+  background: #f44336;
+  color: white;
+}
+
+.btn-delete:hover {
+  background: #da190b;
+}
+
+/* ===== Empty State ===== */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+.empty-icon {
+  font-size: 80px;
+  margin-bottom: 20px;
+  opacity: 0.3;
+}
+
+.empty-state h3 {
+  font-size: 24px;
+  color: #ffd700;
+  margin: 0 0 10px 0;
+}
+
+.empty-state p {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+/* ===== Pagination ===== */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 30px;
+  padding: 20px;
+}
+
+.page-link {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffd700;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.page-link:hover {
+  background: rgba(255, 215, 0, 0.2);
+}
+
+.page-current {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 20px 15px;
+  }
+
+  .notifications-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .notifications-header h2 {
+    font-size: 26px;
+  }
+
+  .notification-actions {
+    width: 100%;
+  }
+
+  .btn-filter,
+  .btn-mark-all-read {
+    flex: 1;
+    text-align: center;
+  }
+
+  .notification-item {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .notification-header-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .notification-controls {
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .btn-mark-read,
+  .btn-delete {
+    flex: 1;
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

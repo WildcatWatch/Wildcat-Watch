@@ -1,0 +1,217 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications | Wildcat Watch</title>
+  <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+  <link rel="stylesheet" href="{% static 'wildcatwatch/css/staff_dashboard.css' %}">
+  <link rel="stylesheet" href="{% static 'wildcatwatch/css/notifications.css' %}">
+</head>
+<body>
+  <!-- ===== Staff Header ===== -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <div class="shield-icon">🛡️</div>
+        <h1>Wildcat Watch</h1>
+      </div>
+      <nav class="nav">
+        <a href="{% url 'staff_dashboard' %}">Dashboard</a>
+        <a href="{% url 'my_duties' %}">My Duties</a>
+        <a href="{% url 'attendance_dashboard' %}">Attendance</a>
+        <a href="{% url 'notifications_list' %}" class="active">Notifications</a>
+      </nav>
+      <div class="header-actions">
+        <a href="{% url 'staff_profile' %}" class="profile-icon">👤</a>
+        <a href="{% url 'notifications_list' %}" class="notification-icon">🔔</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Main Notifications Content ===== -->
+  <main class="main-content">
+    <section class="notifications">
+      <div class="container">
+        <div class="notifications-header">
+          <h2>Notifications</h2>
+          <div class="notification-actions">
+            <button class="btn-filter active" data-filter="all">All</button>
+            <button class="btn-filter" data-filter="unread">Unread</button>
+            <button class="btn-filter" data-filter="read">Read</button>
+            <button class="btn-mark-all-read">Mark All as Read</button>
+          </div>
+        </div>
+
+        <!-- Notifications List with Placeholders -->
+        <div class="notifications-container">
+          
+          <!-- Placeholder Notification 1 - Unread -->
+          <div class="notification-item unread">
+            <div class="notification-icon shift_reminder">🕐</div>
+            <div class="notification-content">
+              <div class="notification-header-info">
+                <h4 class="notification-title">Shift Reminder: Tomorrow 8:00 AM</h4>
+                <span class="notification-time">2 hours ago</span>
+              </div>
+              <p class="notification-message">Your shift at Front Gate starts tomorrow at 8:00 AM. Please arrive 10 minutes early for briefing.</p>
+              <a href="#" class="notification-action-link">View Schedule →</a>
+            </div>
+            <div class="notification-controls">
+              <button class="btn-mark-read">Mark as Read</button>
+              <button class="btn-delete">Delete</button>
+            </div>
+          </div>
+
+          <!-- Placeholder Notification 2 - Unread -->
+          <div class="notification-item unread">
+            <div class="notification-icon duty_assigned">📋</div>
+            <div class="notification-content">
+              <div class="notification-header-info">
+                <h4 class="notification-title">New Duty Assigned</h4>
+                <span class="notification-time">5 hours ago</span>
+              </div>
+              <p class="notification-message">You have been assigned to Library patrol from 2:00 PM to 6:00 PM on December 10, 2025.</p>
+              <a href="#" class="notification-action-link">View Duty Details →</a>
+            </div>
+            <div class="notification-controls">
+              <button class="btn-mark-read">Mark as Read</button>
+              <button class="btn-delete">Delete</button>
+            </div>
+          </div>
+
+          <!-- Placeholder Notification 3 - Read -->
+          <div class="notification-item">
+            <div class="notification-icon schedule_change">⚠️</div>
+            <div class="notification-content">
+              <div class="notification-header-info">
+                <h4 class="notification-title">Schedule Change Alert</h4>
+                <span class="notification-time">1 day ago</span>
+              </div>
+              <p class="notification-message">Your December 8th shift has been moved from 10:00 AM to 12:00 PM. Please confirm your availability.</p>
+              <a href="#" class="notification-action-link">Confirm Availability →</a>
+            </div>
+            <div class="notification-controls">
+              <button class="btn-delete">Delete</button>
+            </div>
+          </div>
+
+          <!-- Placeholder Notification 4 - Read -->
+          <div class="notification-item">
+            <div class="notification-icon announcement">📢</div>
+            <div class="notification-content">
+              <div class="notification-header-info">
+                <h4 class="notification-title">Campus Security Meeting</h4>
+                <span class="notification-time">2 days ago</span>
+              </div>
+              <p class="notification-message">Mandatory security briefing scheduled for December 15th at 9:00 AM in the Security Office. All personnel must attend.</p>
+            </div>
+            <div class="notification-controls">
+              <button class="btn-delete">Delete</button>
+            </div>
+          </div>
+
+          <!-- Placeholder Notification 5 - Read -->
+          <div class="notification-item">
+            <div class="notification-icon approval">✅</div>
+            <div class="notification-content">
+              <div class="notification-header-info">
+                <h4 class="notification-title">Time Off Request Approved</h4>
+                <span class="notification-time">3 days ago</span>
+              </div>
+              <p class="notification-message">Your time off request for December 20-22 has been approved by your supervisor.</p>
+            </div>
+            <div class="notification-controls">
+              <button class="btn-delete">Delete</button>
+            </div>
+          </div>
+
+          <!-- Placeholder Notification 6 - Read -->
+          <div class="notification-item">
+            <div class="notification-icon shift_reminder">🕐</div>
+            <div class="notification-content">
+              <div class="notification-header-info">
+                <h4 class="notification-title">Shift Completed</h4>
+                <span class="notification-time">4 days ago</span>
+              </div>
+              <p class="notification-message">Great job! You completed your 8-hour shift at RTL Building. Total hours logged: 8.0 hours.</p>
+            </div>
+            <div class="notification-controls">
+              <button class="btn-delete">Delete</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Pagination Placeholder -->
+        <div class="pagination">
+          <a href="#" class="page-link">← Previous</a>
+          <span class="page-current">Page 1 of 3</span>
+          <a href="#" class="page-link">Next →</a>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- JavaScript for interactions -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Mark single notification as read
+      $('.btn-mark-read').click(function() {
+        const $item = $(this).closest('.notification-item');
+        $item.removeClass('unread');
+        $(this).remove();
+        alert('Marked as read!');
+      });
+
+      // Mark all as read
+      $('.btn-mark-all-read').click(function() {
+        $('.notification-item.unread').removeClass('unread');
+        $('.btn-mark-read').remove();
+        alert('All notifications marked as read!');
+      });
+
+      // Delete notification
+      $('.btn-delete').click(function() {
+        if(confirm('Are you sure you want to delete this notification?')) {
+          $(this).closest('.notification-item').fadeOut(300, function() {
+            $(this).remove();
+            
+            // Check if no notifications left
+            if($('.notification-item').length === 0) {
+              $('.notifications-container').html(`
+                <div class="empty-state">
+                  <div class="empty-icon">🔔</div>
+                  <h3>No Notifications</h3>
+                  <p>You're all caught up! Check back later for updates.</p>
+                </div>
+              `);
+            }
+          });
+        }
+      });
+
+      // Filter notifications
+      $('.btn-filter').click(function() {
+        $('.btn-filter').removeClass('active');
+        $(this).addClass('active');
+        
+        const filter = $(this).data('filter');
+        
+        if(filter === 'all') {
+          $('.notification-item').show();
+        } else if(filter === 'unread') {
+          $('.notification-item').hide();
+          $('.notification-item.unread').show();
+        } else if(filter === 'read') {
+          $('.notification-item').hide();
+          $('.notification-item:not(.unread)').show();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

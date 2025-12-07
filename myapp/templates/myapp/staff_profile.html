@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="{% static 'wildcatwatch/css/staff_profile.css' %}">
 </head>
 <body>
+  <!-- ===== Staff Header ===== -->
   <header class="header">
     <div class="header-container">
       <div class="logo">
@@ -17,12 +18,14 @@
       </div>
       <nav class="nav">
         <a href="{% url 'staff_dashboard' %}">Dashboard</a>
-        <a href="{% url 'staff_profile' %}" class="active">Profile</a>
         <a href="{% url 'my_duties' %}">My Duties</a>
         <a href="{% url 'attendance_dashboard' %}">Attendance</a>
-        <a href="#">Notifications</a>
+        <a href="{% url 'notifications_list' %}">Notifications</a>
       </nav>
-      <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+      <div class="header-actions">
+        <a href="{% url 'staff_profile' %}" class="profile-icon">👤</a>
+        <a href="#" class="notification-icon">🔔</a>
+      </div>
     </div>
   </header>
 
@@ -43,7 +46,7 @@
           </div>
           <div class="profile-summary">
             <h3 class="profile-name">{{ staff.name|default:"Not Set" }}</h3>
-            <p class="profile-role">{{ staff.role|default:"Not Set" }}</p>
+            <p class="profile-role">{{ staff.role|default:"Security Officer" }}</p>
             <span class="profile-status active">● Active</span>
           </div>
         </div>

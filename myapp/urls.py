@@ -16,6 +16,8 @@ urlpatterns = [
     path('reports/', views.reports, name='reports'),
     path('generate-admin-key/', views.generate_admin_key, name='generate_admin_key'),
     path('notifications/', views.notifications_list, name='notifications_list'),
+    path('staff-profile/', views.staff_profile, name='staff_profile'),
+    path('notifications/', views.notifications_list, name='notifications_list'),
 ]
 
 

@@ -552,3 +552,7 @@ def notifications_list(request):
         'notifications': notifications
     }
     return render(request, 'myapp/notifications.html', context)
+
+@login_required(login_url="login")
+def staff_profile(request):
+    return render(request, "myapp/staff_profile.html", {"staff": request.user})
