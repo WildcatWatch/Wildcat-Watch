@@ -1,169 +1,222 @@
-.reports-container {
-    padding: 60px 25px;
+/* reports.css – Clean & Exact Layout You Wanted */
+
+@import url('admin_dashboard.css');
+
+body {
+    background: #8c4a19 !important;
+    background-attachment: fixed;
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+}
+
+.reports-section {
+    padding: 80px 20px;
     text-align: center;
 }
 
-.title {
-    color: #ffd700;
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.reports-section h2 {
     font-size: 34px;
-    margin-bottom: 20px;
-}
-
-.filter-section {
-    background: rgba(107, 52, 17, 0.7);
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 30px;
-}
-
-.filter-row {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.filter-item {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-}
-
-.filter-item label {
     color: #ffd700;
+    margin-bottom: 10px;
     font-weight: 600;
-    margin-bottom: 5px;
 }
 
-.filter-item input,
-.filter-item select {
-    padding: 10px;
-    border-radius: 6px;
-    border: none;
-    width: 180px;
-    background: rgba(255,255,255,0.9);
+.reports-section > .container > p {
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 40px;
+    font-size: 18px;
 }
 
-.btn-filter {
-    background: #ffd700;
-    color: #6b3411;
-    padding: 12px 18px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    font-weight: 700;
-    align-self: end;
-    height: 46px;
-}
-
-.btn-filter:hover {
-    background: #ffcc00;
-}
-
-.summary-boxes {
+/* Stats Row */
+.stats-row {
     display: flex;
     justify-content: center;
-    gap: 25px;
-    margin-top: 30px;
+    gap: 30px;
     flex-wrap: wrap;
+    margin: 40px 0 50px;
 }
 
-.summary-card {
-    background: rgba(107, 52, 17, 0.85);
-    padding: 20px;
-    width: 220px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+.stat-card {
+    background: rgba(107,52,17,0.94);
+    padding: 24px 32px;
+    border-radius: 16px;
+    min-width: 220px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,215,0,0.2);
 }
 
-.summary-card h3 {
+.stat-card .label {
+    display: block;
     color: #ffd700;
-    margin-bottom: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
 }
 
-.summary-card p {
-    font-size: 26px;
+.stat-card .value {
+    font-size: 42px;
     font-weight: 700;
     color: white;
 }
 
-.text-green { color: #4CAF50; }
-.text-orange { color: #FF9800; }
-.text-red { color: #f44336; }
+.stat-card.total .value    { color: #ffd700; }
+.stat-card.completed .value { color: #4CAF50; }
+.stat-card.missed .value   { color: #f44336; }
 
+/* Filter Row */
+.filter-row {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    gap: 24px;
+    flex-wrap: wrap;
+    background: rgba(107,52,17,0.92);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    margin-bottom: 50px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+}
+
+.filter-group label {
+    color: #ffd700;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.filter-group input,
+.filter-group select {
+    padding: 12px 14px;
+    border: 1px solid #ffd700;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+    color: white;
+    font-size: 15px;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+    outline: none;
+    border-color: #ffcc00;
+    box-shadow: 0 0 0 3px rgba(255,215,0,0.2);
+}
+
+.filter-actions {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.btn-generate, .btn-clear {
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.btn-generate {
+    background: #ffd700;
+    color: #6b3411;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-generate:hover { background: #ffcc00; transform: translateY(-2px); }
+
+.btn-clear {
+    background: transparent;
+    color: #ffd700;
+    border: 2px solid #ffd700;
+}
+
+.btn-clear:hover {
+    background: #ffd700;
+    color: #6b3411;
+}
+
+/* Table Title */
+.table-title {
+    text-align: left;
+    font-size: 22px;
+    color: white;
+    margin: 40px 0 16px;
+    font-weight: 600;
+}
+
+.table-title strong {
+    color: #ffd700;
+}
+
+/* Table */
 .table-wrapper {
-    margin-top: 40px;
     overflow-x: auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
 }
 
 .report-table {
     width: 100%;
     border-collapse: collapse;
-    background: rgba(107,52,17,0.85);
-    border-radius: 10px;
+    background: rgba(107,52,17,0.94);
+    border-radius: 16px;
     overflow: hidden;
 }
 
 .report-table th {
-    background: #6b3411;
+    background: rgba(107,52,17,0.98);
     color: #ffd700;
-    padding: 14px;
+    padding: 18px 14px;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.8px;
 }
 
 .report-table td {
-    padding: 12px;
+    padding: 16px 14px;
     color: white;
+    border-bottom: 1px solid rgba(255,215,0,0.15);
 }
 
-.report-table tr:nth-child(even) {
-    background: rgba(0,0,0,0.15);
-}
-
-.report-table tr:hover {
-    background: rgba(255,215,0,0.1);
-}
-
-.empty-row {
-    padding: 20px;
-    color: #ccc;
+.report-table tbody tr:hover {
+    background: rgba(255,215,0,0.15);
 }
 
 .status-badge {
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 30px;
     font-size: 13px;
-    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
-.status-pending { background: #2196F3; }
-.status-ongoing { background: #FF9800; }
+.status-pending   { background: #2196F3; }
+.status-ongoing   { background: #FF9800; color: #000; }
 .status-completed { background: #4CAF50; }
-.status-missed { background: #f44336; }
+.status-missed    { background: #f44336; }
 
+.no-records {
+    text-align: center;
+    padding: 50px;
+    color: rgba(255,255,255,0.6);
+    font-style: italic;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-
-    .filter-row {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .btn-filter {
-        width: 100%;
-    }
-
-    .summary-boxes {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .summary-card {
-        width: 90%;
-    }
-
-    .report-table th,
-    .report-table td {
-        font-size: 14px;
-    }
+    .stats-row, .filter-row { flex-direction: column; align-items: center; }
+    .stat-card { width: 90%; }
+    .filter-group { width: 90%; }
 }

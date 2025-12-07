@@ -2,13 +2,18 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.utils import timezone
 from .models import Attendance, Duty, AdminAccessKey, Notification
 from django.http import JsonResponse
 import secrets
 from datetime import timedelta
-import re
 from django.db.models import Count
+from .models import AdminProfile
+from django.views.decorators.http import require_POST
+from django.middleware.csrf import get_token
+from datetime import datetime
+
 
 User = get_user_model()
 
@@ -555,4 +560,133 @@ def notifications_list(request):
 
 @login_required(login_url="login")
 def staff_profile(request):
+    # Only staff (security/janitor) can access this page
+    if request.user.role not in ["security", "janitor"]:
+        return redirect("admin_profile")
     return render(request, "myapp/staff_profile.html", {"staff": request.user})
+
+
+@login_required(login_url="login")
+def admin_profile(request):
+    # Only admins can access this page
+    if request.user.role != "admin":
+        return redirect("staff_profile")
+    
+    admin = request.user
+    profile, created = AdminProfile.objects.get_or_create(
+        user=admin,
+        defaults={"fullname": getattr(admin, "fullname", "Not Set")}
+    )
+
+    context = {
+        "admin": admin,
+        "profile": profile,
+        "user_id": admin.id,
+        "csrf_token": get_token(request),  # optional for JS
+    }
+    return render(request, "myapp/admin_profile.html", context)
+
+
+@login_required
+@require_POST
+def update_admin_profile(request):
+    # Only admins allowed
+    if getattr(request.user, "role", None) != "admin":
+        return JsonResponse({"success": False, "message": "Access denied."}, status=403)
+
+    # Get or safely create profile
+    try:
+        profile = AdminProfile.objects.get(user=request.user)
+    except AdminProfile.DoesNotExist:
+        profile = AdminProfile(id=uuid.uuid4(), user=request.user)
+
+    # Allowed fields to update
+    allowed_fields = [
+        "fullname", "dob", "age", "gender", "blood_type", "nationality",
+        "phone", "emergency_contact", "address", "work_schedule"
+    ]
+
+    for field in allowed_fields:
+        if field in request.POST:
+            value = request.POST.get(field)
+
+            # DOB
+            if field == "dob":
+                if value and value.strip():
+                    try:
+                        profile.dob = datetime.strptime(value, "%Y-%m-%d").date()
+                    except ValueError:
+                        return JsonResponse({
+                            "success": False,
+                            "message": "Invalid DOB format, use YYYY-MM-DD"
+                        }, status=400)
+                else:
+                    profile.dob = None
+
+            # Age
+            elif field == "age":
+                if value and value.strip():
+                    try:
+                        profile.age = int(value)
+                    except ValueError:
+                        return JsonResponse({"success": False, "message": "Invalid age"}, status=400)
+                else:
+                    profile.age = None
+
+            # Phone - must be 11 digits
+            elif field == "phone":
+                if value and value.strip():
+                    # Remove any whitespace
+                    phone_clean = value.strip().replace(" ", "").replace("-", "")
+                    # Check if it's exactly 11 digits
+                    if not phone_clean.isdigit() or len(phone_clean) != 11:
+                        return JsonResponse({
+                            "success": False,
+                            "message": "Phone number must be exactly 11 digits"
+                        }, status=400)
+                    profile.phone = phone_clean
+                else:
+                    profile.phone = None
+
+            # Emergency Contact - must be 11 digits
+            elif field == "emergency_contact":
+                if value and value.strip():
+                    # Remove any whitespace
+                    contact_clean = value.strip().replace(" ", "").replace("-", "")
+                    # Check if it's exactly 11 digits
+                    if not contact_clean.isdigit() or len(contact_clean) != 11:
+                        return JsonResponse({
+                            "success": False,
+                            "message": "Emergency contact must be exactly 11 digits"
+                        }, status=400)
+                    profile.emergency_contact = contact_clean
+                else:
+                    profile.emergency_contact = None
+
+            # Blood Type - must be valid blood type
+            elif field == "blood_type":
+                if value and value.strip():
+                    valid_blood_types = ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
+                    blood_type_clean = value.strip().upper()
+                    if blood_type_clean not in valid_blood_types:
+                        return JsonResponse({
+                            "success": False,
+                            "message": "Invalid blood type. Valid types: O+, O-, A+, A-, B+, B-, AB+, AB-"
+                        }, status=400)
+                    profile.blood_type = blood_type_clean
+                else:
+                    profile.blood_type = None
+
+            # Other fields
+            else:
+                setattr(profile, field, value if value and value.strip() else None)
+
+    # Save safely
+    try:
+        profile.save()
+    except Exception as e:
+        return JsonResponse({"success": False, "message": f"DB save error: {str(e)}"}, status=500)
+
+    return JsonResponse({"success": True, "message": "Profile updated."})
+
+

@@ -18,6 +18,8 @@ urlpatterns = [
     path('notifications/', views.notifications_list, name='notifications_list'),
     path('staff-profile/', views.staff_profile, name='staff_profile'),
     path('notifications/', views.notifications_list, name='notifications_list'),
+    path('admin-profile/', views.admin_profile, name='admin_profile'),
+    path('admin-profile/update/', views.update_admin_profile, name='update_admin_profile'),
 ]
 
 

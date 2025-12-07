@@ -1,297 +1,172 @@
+/* my_duties.css – FINAL VERSION: Status badges 100% identical to Manage Staff & Reports */
+
 @import url('admin_dashboard.css');
 
-/* My Duties Page Specific Styles */
-
-/* Card Layout (Original) */
-.duties-container {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 30px;
-  padding: 20px;
-}
-
-.duty-card {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  width: 300px;
-  padding: 20px;
-  text-align: left;
-  transition: transform 0.2s ease;
-}
-
-.duty-card:hover {
-  transform: translateY(-5px);
-}
-
-.duty-card h3 {
-  color: #ffd700;
-  margin-bottom: 10px;
-  margin-top: 0;
-}
-
-.duty-card p {
-  margin: 5px 0;
-  color: #fff;
-  font-size: 14px;
-}
-
-/* Status Badges (Original) */
-.status {
-  font-weight: bold;
-  color: #fff;
-  padding: 3px 8px;
-  border-radius: 5px;
-  font-size: 14px;
-  display: inline-block;
-}
-
-.status.pending {
-  background-color: #ff9800;
-}
-
-.status.completed {
-  background-color: #4caf50;
-}
-
-/* Mark Complete Button (Original) */
-.mark-btn {
-  margin-top: 15px;
-  display: inline-block;
-  background-color: #ffd700;
-  color: #8b4513;
-  padding: 8px 16px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.mark-btn:hover {
-  background-color: #ffcc00;
-}
-
-.mark-btn.completed-btn {
-  background-color: gray;
-  color: #fff;
-  cursor: not-allowed;
-}
-
-.mark-btn.completed-btn:hover {
-  background-color: gray;
-}
-
-/* ===== NEW TABLE STYLES ===== */
-
-/* Override staff_dashboard.css for My Duties page */
+/* Same rich brown background as the rest of your admin */
 body {
-  background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%) !important;
-  min-height: 100vh;
+    background: #8c4a19 !important;
+    background-attachment: fixed;
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    color: #fff;
 }
 
-/* Main Content */
-.main-content {
-  padding: 40px 20px !important;
-  max-width: 1400px !important;
-  margin: 0 auto !important;
+/* Main section */
+.duties-section {
+    padding: 80px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    text-align: center;
 }
 
-/* Override dashboard padding for table view */
-.dashboard {
-  text-align: center !important;
-  padding: 40px 20px !important;
+.duties-section h2 {
+    font-size: 34px;
+    color: #ffd700;
+    margin-bottom: 10px;
+    font-weight: 600;
 }
 
-.dashboard h2 {
-  color: #ffd700 !important;
-  margin-bottom: 10px !important;
-  font-size: 32px !important;
+.duties-section p {
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 40px;
+    font-size: 18px;
 }
 
-.dashboard p {
-  color: #fff !important;
-  margin-bottom: 30px !important;
-  font-size: 18px !important;
+/* Table wrapper – matches Reports & Manage Staff */
+.table-wrapper {
+    margin-top: 30px;
+    background: rgba(107,52,17,0.94);
+    border-radius: 16px;
+    padding: 24px;
+    overflow-x: auto;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,215,0,0.2);
 }
 
-/* Table Container */
-.table-container {
-  margin-top: 30px !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-  border-radius: 8px !important;
-  padding: 20px !important;
-  overflow-x: auto !important;
-  display: block !important;
+/* Table – clean and identical to other pages */
+table.duties-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: transparent;
 }
 
-/* Duties Table */
-.duties-table {
-  width: 100% !important;
-  border-collapse: collapse !important;
-  table-layout: fixed !important;
-  display: table !important;
+table.duties-table th {
+    background: rgba(107,52,17,0.98);
+    color: #ffd700;
+    padding: 18px 14px;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.8px;
+    text-align: left;
 }
 
-.duties-table thead {
-  background: rgba(0, 0, 0, 0.3) !important;
-  display: table-header-group !important;
+table.duties-table td {
+    padding: 16px 14px;
+    color: white;
+    border-bottom: 1px solid rgba(255,215,0,0.15);
+    vertical-align: middle;
 }
 
-.duties-table tbody {
-  display: table-row-group !important;
+table.duties-table tbody tr:hover {
+    background: rgba(255,215,0,0.15);
 }
 
-.duties-table tr {
-  display: table-row !important;
+/* CENTERED COLUMNS */
+table.duties-table th:nth-child(2),
+table.duties-table td:nth-child(2),
+table.duties-table th:nth-child(3),
+table.duties-table td:nth-child(3),
+table.duties-table th:nth-child(5),
+table.duties-table td:nth-child(5),
+table.duties-table th:nth-child(6),
+table.duties-table td:nth-child(6) {
+    text-align: center;
 }
 
-.duties-table th {
-  color: #FFD700 !important;
-  font-weight: 600 !important;
-  text-align: left !important;
-  padding: 15px !important;
-  text-transform: uppercase !important;
-  font-size: 14px !important;
-  letter-spacing: 0.5px !important;
-  display: table-cell !important;
-}
-
-.duties-table td {
-  padding: 15px !important;
-  color: #fff !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-  vertical-align: middle !important;
-  display: table-cell !important;
-}
-
-.duties-table tbody tr {
-  transition: background-color 0.2s ease;
-}
-
-.duties-table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-/* Column Widths */
-.duties-table th:nth-child(1),
-.duty-title {
-  width: 15%;
-}
-
-.duties-table th:nth-child(2),
-.duty-time {
-  width: 15%;
-  text-align: center !important;
-}
-
-.duties-table th:nth-child(3),
-.duty-location {
-  width: 12%;
-  text-align: center !important;
-}
-
-.duties-table th:nth-child(4),
-.duty-description {
-  width: 30%;
-}
-
-.duties-table th:nth-child(5),
-.duty-status {
-  width: 13%;
-  text-align: center !important;
-}
-
-.duties-table th:nth-child(6),
-.duty-actions {
-  width: 15%;
-  text-align: center !important;
-}
-
-/* Status Badge */
+/* EXACT SAME STATUS BADGES AS MANAGE STAFF & REPORTS */
 .status-badge {
-  display: inline-block !important;
-  padding: 6px 12px !important;
-  border-radius: 20px !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  text-transform: capitalize !important;
+    display: inline-block !important;
+    min-width: 94px !important;
+    padding: 9px 18px !important;
+    border-radius: 30px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    text-align: center !important;
+    line-height: 1.2 !important;
 }
 
-.status-badge.not_started {
-  background: #f44336 !important;
-  color: white !important;
-}
+/* Colors – perfectly matched */
+.status-badge.not_started   { background: #f44336 !important; color: white !important; }   /* Red */
+.status-badge.ongoing       { background: #FF9800 !important; color: black !important; }   /* Orange */
+.status-badge.completed     { background: #4CAF50 !important; color: white !important; }   /* Green */
+.status-badge.pending       { background: #2196F3 !important; color: white !important; }   /* Blue */
 
-.status-badge.ongoing {
-  background: #ff9800 !important;
-  color: white !important;
-}
-
-.status-badge.completed {
-  background: #4CAF50 !important;
-  color: white !important;
-}
-
-.status-badge.pending {
-  background: #2196F3 !important;
-  color: white !important;
-}
-
-/* Status Dropdown */
-.status-form {
-  display: inline-block !important;
-}
-
+/* Status Dropdown – beautiful gold style */
 .status-dropdown {
-  padding: 8px 12px !important;
-  border: 2px solid #FFD700 !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-  color: #fff !important;
-  border-radius: 6px !important;
-  font-size: 14px !important;
-  cursor: pointer !important;
-  transition: all 0.3s ease !important;
-  min-width: 150px !important;
-}
-
-.status-dropdown:hover {
-  background: rgba(255, 215, 0, 0.2) !important;
-  border-color: #FFF !important;
+    padding: 10px 40px 10px 16px;
+    border: 2px solid #ffd700;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    min-width: 150px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' viewBox='0 0 14 10'%3e%3cpath fill='%23FFD700' d='M1 1l6 6 6-6' stroke='%23FFD700' stroke-width='2' fill='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 12px;
 }
 
 .status-dropdown:focus {
-  outline: none !important;
-  background: rgba(255, 215, 0, 0.3) !important;
-  border-color: #FFF !important;
+    outline: none;
+    border-color: #ffcc00;
+    background-color: rgba(255,255,255,0.15);
+    box-shadow: 0 0 0 3px rgba(255,255,215,0.2);
 }
 
 .status-dropdown option {
-  background: #8B4513 !important;
-  color: #fff !important;
-  padding: 10px !important;
+    background: #2d1b0f;
+    color: white;
+    padding: 12px;
+}
+
+/* Mark Complete Button – gold */
+.mark-btn {
+    padding: 10px 24px;
+    background: #ffd700;
+    color: #6b3411;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.mark-btn:hover {
+    background: #ffcc00;
+    transform: translateY(-2px);
+}
+
+.mark-btn.completed-btn {
+    background: #666;
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.mark-btn.completed-btn:hover {
+    background: #666;
+    transform: none;
 }
 
 /* Responsive */
-@media (max-width: 1200px) {
-  .duties-table {
-    font-size: 13px;
-  }
-  
-  .duties-table th,
-  .duties-table td {
-    padding: 10px !important;
-  }
-}
-
 @media (max-width: 768px) {
-  .table-container {
-    overflow-x: scroll !important;
-  }
-  
-  .duties-table {
-    min-width: 900px !important;
-  }
+    .duties-section { padding: 50px 15px; }
+    table.duties-table th,
+    table.duties-table td { padding: 12px 8px; font-size: 14px; }
+    .status-dropdown { min-width: 120px; font-size: 14px; }
 }

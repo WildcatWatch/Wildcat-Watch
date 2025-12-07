@@ -18,6 +18,7 @@
       </div>
       <nav class="nav">
         <a href="{% url 'staff_dashboard' %}">Dashboard</a>
+        <a href="{% url 'staff_profile' %}" class="active">Profile</a>
         <a href="{% url 'my_duties' %}">My Duties</a>
         <a href="{% url 'attendance_dashboard' %}">Attendance</a>
         <a href="{% url 'notifications_list' %}">Notifications</a>
@@ -25,6 +26,7 @@
       <div class="header-actions">
         <a href="{% url 'staff_profile' %}" class="profile-icon">👤</a>
         <a href="#" class="notification-icon">🔔</a>
+        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
       </div>
     </div>
   </header>
