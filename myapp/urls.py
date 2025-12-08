@@ -17,6 +17,7 @@ urlpatterns = [
     path('generate-admin-key/', views.generate_admin_key, name='generate_admin_key'),
     path('notifications/', views.notifications_list, name='notifications_list'),
     path('staff-profile/', views.staff_profile, name='staff_profile'),
+    path('staff-profile/update/', views.update_staff_profile, name='update_staff_profile'),
     path('notifications/', views.notifications_list, name='notifications_list'),
     path('admin-profile/', views.admin_profile, name='admin_profile'),
     path('admin-profile/update/', views.update_admin_profile, name='update_admin_profile'),

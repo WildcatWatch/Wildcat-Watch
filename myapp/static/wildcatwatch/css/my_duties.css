@@ -153,7 +153,7 @@ table.duties-table td:nth-child(6) {
 }
 
 .mark-btn.completed-btn {
-    background: #666;
+    background: #6b3411;
     color: #ccc;
     cursor: not-allowed;
 }
@@ -170,3 +170,35 @@ table.duties-table td:nth-child(6) {
     table.duties-table td { padding: 12px 8px; font-size: 14px; }
     .status-dropdown { min-width: 120px; font-size: 14px; }
 }
+
+/* MESSAGES – slightly lower and fixed position */
+.messages {
+    width: 100%;
+    max-width: 600px;
+    margin: 80px auto 0 auto; /* moved lower */
+    text-align: center;
+    position: relative;
+    z-index: 999;
+}
+
+.messages .message {
+    border-radius: 8px;
+    padding: 12px 24px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: white;
+    opacity: 1;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* Fading out class */
+.messages .fade-out {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+
+/* Message colors */
+.messages .success { background-color: #4CAF50; } /* green */
+.messages .error   { background-color: #f44336; } /* red */
+.messages .warning { background-color: #FF9800; } /* orange */

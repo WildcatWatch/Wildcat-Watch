@@ -13,6 +13,7 @@ from .models import AdminProfile
 from django.views.decorators.http import require_POST
 from django.middleware.csrf import get_token
 from datetime import datetime
+from .models import StaffProfile
 
 
 User = get_user_model()
@@ -563,7 +564,22 @@ def staff_profile(request):
     # Only staff (security/janitor) can access this page
     if request.user.role not in ["security", "janitor"]:
         return redirect("admin_profile")
-    return render(request, "myapp/staff_profile.html", {"staff": request.user})
+
+    # Get or create staff profile
+    profile, created = StaffProfile.objects.get_or_create(
+        user_id=request.user.id,
+        defaults={
+            "fullname": getattr(request.user, "fullname", "Not Set"),
+            "role": request.user.role
+        }
+    )
+
+    context = {
+        "staff": request.user,
+        "profile": profile
+    }
+
+    return render(request, "myapp/staff_profile.html", context)
 
 
 @login_required(login_url="login")
@@ -688,5 +704,72 @@ def update_admin_profile(request):
         return JsonResponse({"success": False, "message": f"DB save error: {str(e)}"}, status=500)
 
     return JsonResponse({"success": True, "message": "Profile updated."})
+
+@login_required
+@require_POST
+def update_staff_profile(request):
+    # Only staff allowed
+    if getattr(request.user, "role", None) not in ["security", "janitor"]:
+        return JsonResponse({"success": False, "message": "Access denied."}, status=403)
+
+    # Get or create profile
+    profile, created = StaffProfile.objects.get_or_create(user=request.user)
+
+    allowed_fields = [
+        "fullname", "dob", "age", "gender", "blood_type", "nationality",
+        "phone", "emergency_contact", "address",
+        "staff_id", "work_schedule", "role"
+    ]
+
+    for field in allowed_fields:
+        if field in request.POST:
+            value = request.POST.get(field)
+
+            # --- DATE OF BIRTH ---
+            if field == "dob":
+                profile.dob = datetime.strptime(value, "%Y-%m-%d").date() if value else None
+
+            # --- AGE ---
+            elif field == "age":
+                profile.age = int(value) if value else None
+
+            # --- PHONE ---
+            elif field == "phone":
+                clean = value.replace(" ", "").replace("-", "") if value else None
+                if clean and (not clean.isdigit() or len(clean) != 11):
+                    return JsonResponse({"success": False, "message": "Phone must be 11 digits"}, status=400)
+                profile.phone = clean
+
+            # --- EMERGENCY CONTACT ---
+            elif field == "emergency_contact":
+                clean = value.replace(" ", "").replace("-", "") if value else None
+                if clean and (not clean.isdigit() or len(clean) != 11):
+                    return JsonResponse({"success": False, "message": "Emergency contact must be 11 digits"}, status=400)
+                profile.emergency_contact = clean
+
+            # --- BLOOD TYPE ---
+            elif field == "blood_type":
+                valid_blood_types = ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
+                bt = value.strip().upper() if value else None
+                if bt and bt not in valid_blood_types:
+                    return JsonResponse({"success": False, "message": "Invalid blood type"}, status=400)
+                profile.blood_type = bt
+
+            # --- ROLE ---
+            elif field == "role":
+                allowed_roles = ["security", "janitor"]
+                if value and value.lower() not in allowed_roles:
+                    return JsonResponse({"success": False, "message": "Invalid role"}, status=400)
+                profile.role = value.lower() if value else None
+
+            # --- OTHER FIELDS ---
+            else:
+                setattr(profile, field, value if value else None)
+
+    # Save
+    profile.save()
+    return JsonResponse({"success": True, "message": "Staff profile updated successfully."})
+
+
 
 

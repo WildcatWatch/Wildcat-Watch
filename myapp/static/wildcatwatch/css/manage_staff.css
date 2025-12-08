@@ -68,16 +68,18 @@ body {
     align-items: end;
 }
 
+/* ===== Styled Select Dropdowns for Manage Staff ===== */
 .form-container select,
 .form-container input {
     width: 100%;
     padding: 14px 16px;
     border: 1px solid #ffd700;
     border-radius: 10px;
-    background: rgba(255,255,255,0.08);
-    color: #fff;
+    background: rgba(255,255,255,0.08); /* dark transparent background */
+    color: #fff; /* text color white */
     font-size: 15px;
     transition: all 0.3s ease;
+    appearance: none; /* remove default arrow for custom style */
 }
 
 .form-container select:focus,
@@ -87,6 +89,14 @@ body {
     box-shadow: 0 0 0 4px rgba(255,215,0,0.2);
     background: rgba(255,255,255,0.15);
 }
+
+/* Dropdown options styling */
+.form-container select option {
+    background: #2d1b0f; /* dark brown background for options */
+    color: #fff; /* white text */
+    padding: 10px 16px;
+}
+
 
 .datetime-group {
     display: flex;
@@ -260,7 +270,7 @@ body {
 
 .modal-content {
     background: rgba(107,52,17,0.98);
-    margin: 5% auto;
+    margin: 5% auto;          /* Keep top margin smaller so modal starts higher */
     padding: 34px;
     border-radius: 18px;
     width: 90%;
@@ -268,6 +278,8 @@ body {
     box-shadow: 0 15px 40px rgba(0,0,0,0.6);
     border: 1px solid rgba(255,215,0,0.3);
     position: relative;
+    max-height: 90vh;         /* prevent modal from going off screen */
+    overflow-y: auto;         /* allow scrolling if content is too tall */
 }
 
 .close-btn {
@@ -286,6 +298,7 @@ body {
     color: #ffd700;
     margin-top: 0;
     font-size: 26px;
+    text-align: center !important;
 }
 
 .modal-content label {
@@ -302,7 +315,7 @@ body {
     padding: 14px;
     border: 1px solid #ffd700;
     border-radius: 10px;
-    background: rgba(255,255,0.1);
+    background: #6b3411;
     color: #fff;
     font-size: 15px;
 }
@@ -313,8 +326,8 @@ body {
 }
 
 .btn-update {
-    margin-top: 24px auto 0;
     display: block;
+    margin: 24px auto 0; /* 24px top, auto left/right to center, 0 bottom */
     padding: 14px 40px;
     background: #ffd700;
     color: #6b3411;
@@ -323,11 +336,12 @@ body {
     border: none;
     border-radius: 10px;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .btn-update:hover {
     background: #ffcc00;
-    transform: translateY(-3px);
+    transform: translateY(-2px);
 }
 
 /* Responsive */
@@ -345,3 +359,5 @@ body {
 
     .modal-content { margin: 10% auto; padding: 24px; }
 }
+
+

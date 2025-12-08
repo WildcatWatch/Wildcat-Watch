@@ -7,7 +7,7 @@
   <title>My Duties | Wildcat Watch</title>
   <link rel="stylesheet" href="{% static 'wildcatwatch/css/staff_dashboard.css' %}">
   <link rel="stylesheet" href="{% static 'wildcatwatch/css/my_duties.css' %}">
-  </head>
+</head>
 <body>
   <header class="header">
     <div class="header-container">
@@ -27,6 +27,15 @@
       <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
     </div>
   </header>
+
+  <!-- Messages -->
+  <div class="messages">
+    {% for message in messages %}
+      <div class="message {{ message.tags }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
 
   <section class="duties-section">
     <h2>My Assigned Duties</h2>
@@ -62,7 +71,7 @@
                 <select name="status" class="status-dropdown" onchange="this.form.submit()">
                   <option value="" disabled selected>Mark as...</option>
                   <option value="completed">Completed</option>
-                  </select>
+                </select>
               </form>
               {% else %}
               <button class="mark-btn completed-btn" disabled>No Action</button>
