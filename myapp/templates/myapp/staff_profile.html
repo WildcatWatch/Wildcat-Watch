@@ -2,199 +2,161 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Staff Profile | Wildcat Watch</title>
-  <link rel="stylesheet" href="{% static 'wildcatwatch/css/staff_dashboard.css' %}">
-  <link rel="stylesheet" href="{% static 'wildcatwatch/css/staff_profile.css' %}">
+
+  <link rel="stylesheet" href="{% static 'wildcatwatch/css/admin_dashboard.css' %}">
+  <link rel="stylesheet" href="{% static 'wildcatwatch/css/admin_profile.css' %}">
 </head>
-<body>
-  <!-- ===== Staff Header ===== -->
+<body data-staff-id="{{ staff.id }}">
+
+  <!-- ===== Header ===== -->
   <header class="header">
     <div class="header-container">
       <div class="logo">
-        <div class="shield-icon">🛡️</div>
+        <div class="shield-icon">🛡️</div> 
         <h1>Wildcat Watch</h1>
       </div>
       <nav class="nav">
         <a href="{% url 'staff_dashboard' %}">Dashboard</a>
+        <a href="{% url 'staff_profile' %}" class="active">Profile</a>
         <a href="{% url 'my_duties' %}">My Duties</a>
         <a href="{% url 'attendance_dashboard' %}">Attendance</a>
         <a href="{% url 'notifications_list' %}">Notifications</a>
       </nav>
-      <div class="header-actions">
-        <a href="{% url 'staff_profile' %}" class="profile-icon">👤</a>
-        <a href="#" class="notification-icon">🔔</a>
-      </div>
+      <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
     </div>
   </header>
 
-  <!-- ===== Staff Profile Section ===== -->
+  <!-- ===== Main Content ===== -->
   <main class="main-content">
-    <section class="profile">
-      <div class="container">
+    <div class="container">
+      <div class="profile-card">
         <h2>My Profile</h2>
-        <p>View and manage your personal information and account details.</p>
 
-        <!-- ✅ Profile Header with Avatar -->
-        <div class="profile-header">
-          <div class="avatar-section">
-            <div class="avatar-placeholder">
-              <span class="avatar-icon">👤</span>
+        <!-- ====================== DISPLAY MODE ====================== -->
+        <div id="profile-display">
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Full Name</label>
+              <p id="display-fullname-text">{{ profile.fullname|default:"Not Set" }}</p>
             </div>
-            <button class="btn-upload">Upload Photo</button>
+            <div class="info-item">
+              <label>Date of Birth</label>
+              <p id="display-dob-text">{{ profile.dob|date:"F d, Y"|default:"Not Set" }}</p>
+            </div>
+            <div class="info-item">
+              <label>Age</label>
+              <p id="display-age-text">{{ profile.age|default:"Not Set" }}</p>
+            </div>
+            <div class="info-item">
+              <label>Gender</label>
+              <p id="display-gender-text">{{ profile.gender|default:"Not Set" }}</p>
+            </div>
+            <div class="info-item">
+              <label>Blood Type</label>
+              <p id="display-blood_type-text">{{ profile.blood_type|default:"Not Set" }}</p>
+            </div>
+            <div class="info-item">
+              <label>Nationality</label>
+              <p id="display-nationality-text">{{ profile.nationality|default:"Filipino" }}</p>
+            </div>
+            <div class="info-item">
+              <label>Phone</label>
+              <p id="display-phone-text">{{ profile.phone|default:"Not Set" }}</p>
+            </div>
+            <div class="info-item">
+              <label>Emergency Contact</label>
+              <p id="display-emergency_contact-text">{{ profile.emergency_contact|default:"Not Set" }}</p>
+            </div>
+            <div class="info-item full-width">
+              <label>Address</label>
+              <p id="display-address-text">{{ profile.address|default:"Not Set" }}</p>
+            </div>
+            
+            
+            
           </div>
-          <div class="profile-summary">
-            <h3 class="profile-name">{{ staff.name|default:"Not Set" }}</h3>
-            <p class="profile-role">{{ staff.role|default:"Security Officer" }}</p>
-            <span class="profile-status active">● Active</span>
+
+          <div style="text-align:center; margin-top: 2rem;">
+            <button class="edit-btn" onclick="toggleEdit()">Edit Profile</button>
           </div>
         </div>
 
-        <!-- ✅ All Sections in One Box -->
-        <div class="profile-section-wrapper">
-          
-          <!-- Personal Information Subsection -->
-          <div class="subsection">
-            <div class="section-header">
-              <h3>Personal Information</h3>
-              <button class="btn-edit-section">Edit</button>
+        <!-- ====================== EDIT MODE ====================== -->
+        <form id="profile-form" class="edit-form" method="POST">
+          {% csrf_token %}
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Full Name</label>
+              <input type="text" name="fullname" value="{{ profile.fullname|default:'' }}">
             </div>
-            <div class="info-grid">
-              <div class="info-item">
-                <label>Full Name</label>
-                <p class="{% if not staff.name %}empty{% endif %}">
-                  {{ staff.name|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Date of Birth</label>
-                <p class="{% if not staff.dob %}empty{% endif %}">
-                  {{ staff.dob|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Age</label>
-                <p class="{% if not staff.age %}empty{% endif %}">
-                  {{ staff.age|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Gender</label>
-                <p class="{% if not staff.gender %}empty{% endif %}">
-                  {{ staff.gender|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Nationality</label>
-                <p class="{% if not staff.nationality %}empty{% endif %}">
-                  {{ staff.nationality|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Blood Type</label>
-                <p class="{% if not staff.blood_type %}empty{% endif %}">
-                  {{ staff.blood_type|default:"Not provided" }}
-                </p>
-              </div>
+            <div class="info-item">
+              <label>Date of Birth</label>
+              <input type="date" name="dob" value="{{ profile.dob|date:'Y-m-d' }}">
             </div>
+            <div class="info-item">
+              <label>Age</label>
+              <input type="number" name="age" value="{{ profile.age|default:'' }}" readonly>
+            </div>
+            <div class="info-item">
+              <label>Gender</label>
+              <select name="gender">
+                <option value="">-- Select --</option>
+                <option value="Male" {% if profile.gender == "Male" %}selected{% endif %}>Male</option>
+                <option value="Female" {% if profile.gender == "Female" %}selected{% endif %}>Female</option>
+                <option value="Other" {% if profile.gender == "Other" %}selected{% endif %}>Other</option>
+              </select>
+            </div>
+            <div class="info-item">
+              <label>Blood Type</label>
+              <select name="blood_type">
+
+                <option value="">Select Blood Type</option>
+                <option value="O+" {% if profile.blood_type == 'O+' %}selected{% endif %}>O+</option>
+                <option value="O-" {% if profile.blood_type == 'O-' %}selected{% endif %}>O-</option>
+                <option value="A+" {% if profile.blood_type == 'A+' %}selected{% endif %}>A+</option>
+                <option value="A-" {% if profile.blood_type == 'A-' %}selected{% endif %}>A-</option>
+                <option value="B+" {% if profile.blood_type == 'B+' %}selected{% endif %}>B+</option>
+                <option value="B-" {% if profile.blood_type == 'B-' %}selected{% endif %}>B-</option>
+                <option value="AB+" {% if profile.blood_type == 'AB+' %}selected{% endif %}>AB+</option>
+                <option value="AB-" {% if profile.blood_type == 'AB-' %}selected{% endif %}>AB-</option>
+</select>
+            </div>
+            <div class="info-item">
+              <label>Nationality</label>
+              <input type="text" name="nationality" value="{{ profile.nationality|default:'Filipino' }}">
+            </div>
+            <div class="info-item">
+              <label>Phone</label>
+              <input type="text" name="phone" value="{{ profile.phone|default:'' }}" maxlength="11" pattern="[0-9]{11}">
+            </div>
+            <div class="info-item">
+              <label>Emergency Contact</label>
+              <input type="text" name="emergency_contact" value="{{ profile.emergency_contact|default:'' }}" maxlength="11" pattern="[0-9]{11}">
+            </div>
+            <div class="info-item full-width">
+              <label>Address</label>
+              <input type="text" name="address" value="{{ profile.address|default:'' }}">
+            </div>
+            
+            
           </div>
 
-          <!-- Contact Information Subsection -->
-          <div class="subsection">
-            <div class="section-header">
-              <h3>Contact Information</h3>
-              <button class="btn-edit-section">Edit</button>
-            </div>
-            <div class="info-grid">
-              <div class="info-item full-width">
-                <label>Email Address</label>
-                <p class="{% if not staff.email %}empty{% endif %}">
-                  {{ staff.email|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Phone Number</label>
-                <p class="{% if not staff.phone %}empty{% endif %}">
-                  {{ staff.phone|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Emergency Contact</label>
-                <p class="{% if not staff.emergency_contact %}empty{% endif %}">
-                  {{ staff.emergency_contact|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item full-width">
-                <label>Address</label>
-                <p class="{% if not staff.address %}empty{% endif %}">
-                  {{ staff.address|default:"Not provided" }}
-                </p>
-              </div>
-            </div>
+          <div class="form-actions">
+            <button type="submit" class="save-btn">Save Changes</button>
+            <button type="button" class="cancel-btn" onclick="toggleEdit()">Cancel</button>
           </div>
-
-          <!-- Employment Information Subsection -->
-          <div class="subsection">
-            <div class="section-header">
-              <h3>Employment Information</h3>
-              <button class="btn-edit-section">Edit</button>
-            </div>
-            <div class="info-grid">
-              <div class="info-item">
-                <label>Staff ID</label>
-                <p class="{% if not staff.staff_id %}empty{% endif %}">
-                  {{ staff.staff_id|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Work Schedule</label>
-                <p class="{% if not staff.work_schedule %}empty{% endif %}">
-                  {{ staff.work_schedule|default:"Not provided" }}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Account Security Subsection -->
-          <div class="subsection">
-            <div class="section-header">
-              <h3>Account Security</h3>
-              <button class="btn-edit-section">Edit</button>
-            </div>
-            <div class="info-grid">
-              <div class="info-item">
-                <label>Username</label>
-                <p class="{% if not staff.username %}empty{% endif %}">
-                  {{ staff.username|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Password</label>
-                <p>••••••••</p>
-              </div>
-              <div class="info-item">
-                <label>Last Login</label>
-                <p class="{% if not staff.last_login %}empty{% endif %}">
-                  {{ staff.last_login|default:"Not provided" }}
-                </p>
-              </div>
-              <div class="info-item">
-                <label>Account Created</label>
-                <p class="{% if not staff.date_created %}empty{% endif %}">
-                  {{ staff.date_created|default:"Not provided" }}
-                </p>
-              </div>
-            </div>
-            <div class="security-actions">
-              <button class="btn-change-password">Change Password</button>
-              <button class="btn-two-factor">Enable 2FA</button>
-            </div>
-          </div>
-
-        </div>
+        </form>
       </div>
-    </section>
+    </div>
   </main>
+
+  <!-- Pass URL to JS -->
+  <script>
+    const updateProfileUrl = "{% url 'update_staff_profile' %}";
+  </script>
+  <script src="{% static 'wildcatwatch/js/staff_profile.js' %}"></script>
 </body>
 </html>

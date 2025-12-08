@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Duties | Wildcat Watch</title>
   <link rel="stylesheet" href="{% static 'wildcatwatch/css/staff_dashboard.css' %}">
-  <link rel="stylesheet" href="{% static 'wildcatwatch/css/my_duties_table.css' %}">
-  </head>
+  <link rel="stylesheet" href="{% static 'wildcatwatch/css/my_duties.css' %}">
+</head>
 <body>
   <header class="header">
     <div class="header-container">
@@ -17,13 +17,25 @@
       </div>
       <nav class="nav">
         <a href="{% url 'staff_dashboard' %}">Dashboard</a>
+        <a href="{% url 'staff_profile' %}">Profile</a>
         <a href="{% url 'my_duties' %}" class="active">My Duties</a>
         <a href="{% url 'attendance_dashboard' %}">Attendance</a>
         <a href="{% url 'notifications_list' %}">Notifications</a>
       </nav>
+      <a href="{% url 'staff_profile' %}" class="profile-icon">👤</a>
+      <a href="#" class="notification-icon">🔔</a>
       <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
     </div>
   </header>
+
+  <!-- Messages -->
+  <div class="messages">
+    {% for message in messages %}
+      <div class="message {{ message.tags }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
 
   <section class="duties-section">
     <h2>My Assigned Duties</h2>
@@ -59,7 +71,7 @@
                 <select name="status" class="status-dropdown" onchange="this.form.submit()">
                   <option value="" disabled selected>Mark as...</option>
                   <option value="completed">Completed</option>
-                  </select>
+                </select>
               </form>
               {% else %}
               <button class="mark-btn completed-btn" disabled>No Action</button>

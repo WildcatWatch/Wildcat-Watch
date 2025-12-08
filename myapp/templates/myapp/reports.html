@@ -5,116 +5,136 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports | Wildcat Watch</title>
+
     <link rel="stylesheet" href="{% static 'wildcatwatch/css/admin_dashboard.css' %}">
     <link rel="stylesheet" href="{% static 'wildcatwatch/css/reports.css' %}">
 </head>
 <body>
-    <header class="header">
-        <div class="header-container">
-            <div class="logo">
-                <div class="shield-icon">🛡️</div>
-                <h1>Wildcat Watch</h1>
-            </div>
-            <nav class="nav">
-                <a href="{% url 'admin_dashboard' %}">Dashboard</a>
-                <a href="{% url 'reports' %}" class="active">Reports</a>
-                <a href="{% url 'manage_staff' %}">Manage Staff</a>
-                <a href="#">Settings</a>
-            </nav>
-            <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+
+<header class="header">
+    <div class="header-container">
+        <div class="logo">
+            <div class="shield-icon">🛡️</div>
+            <h1>Wildcat Watch</h1>
         </div>
-    </header>
+        <nav class="nav">
+            <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+            <a href="{% url 'admin_profile' %}">Profile</a>
+            <a href="{% url 'reports' %}" class="active">Reports</a>
+            <a href="{% url 'manage_staff' %}">Manage Staff</a>
+            <a href="#">Settings</a>
+        </nav>
+        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </div>
+</header>
 
-    <main class="main-content">
-        <section class="reports-section"> 
-            <div class="container">
-                <h2>Attendance & Duty Reports</h2>
-                <p>Filter records to review staff attendance and duty compliance.</p>
-                
-                {% for message in messages %}
+<main class="main-content">
+    <section class="reports-section">
+        <div class="container">
+
+            <h2>Attendance & Duty Reports</h2>
+            <p>Filter records to review staff attendance and duty compliance.</p>
+
+            {% for message in messages %}
                 <div class="message {{ message.tags }}">{{ message }}</div>
-                {% endfor %}
+            {% endfor %}
 
-                <form method="GET" class="filter-form">
-                    <label for="start_date">From:</label>
-                    <input type="date" name="start_date" id="start_date" value="{{ start_date|default:'' }}">
-                    
-                    <label for="end_date">To:</label>
-                    <input type="date" name="end_date" id="end_date" value="{{ end_date|default:'' }}">
-                    
-                    <label for="staff_role">Role:</label>
-                    <select name="staff_role" id="staff_role">
+            <!-- Stats Row -->
+            <div class="stats-row">
+                <div class="stat-card total">
+                    <span class="label">Total Records</span>
+                    <span class="value">{{ total_records|default:"0" }}</span>
+                </div>
+                <div class="stat-card completed">
+                    <span class="label">Completed Duties</span>
+                    <span class="value">{{ completed_duties|default:"0" }}</span>
+                </div>
+                <div class="stat-card missed">
+                    <span class="label">Missed Duties</span>
+                    <span class="value">{{ missed_duties|default:"0" }}</span>
+                </div>
+            </div>
+
+            <!-- Filter Row -->
+            <form method="GET" class="filter-row">
+                <div class="filter-group">
+                    <label for="start_date">From Date</label>
+                    <input type="date" id="start_date" name="start_date" value="{{ start_date|default:'' }}">
+                </div>
+
+                <div class="filter-group">
+                    <label for="end_date">To Date</label>
+                    <input type="date" id="end_date" name="end_date" value="{{ end_date|default:'' }}">
+                </div>
+
+                <div class="filter-group">
+                    <label for="staff_role">Role</label>
+                    <select id="staff_role" name="staff_role">
                         <option value="all" {% if staff_role == 'all' or not staff_role %}selected{% endif %}>All Staff</option>
                         <option value="security" {% if staff_role == 'security' %}selected{% endif %}>Security Guard</option>
                         <option value="janitor" {% if staff_role == 'janitor' %}selected{% endif %}>Janitor</option>
                     </select>
-                    
-                    <button type="submit" class="btn btn-filter">Generate Report</button>
-                    <a href="{% url 'reports' %}" class="btn btn-clear">Clear Filters</a>
-                </form>
-                
-                <div class="stats-summary-container">
-                    <div class="stat-box-report total-box">
-                        <h4>Total Records</h4>
-                        <p>{{ total_records|default:"0" }}</p>
-                    </div>
-                    <div class="stat-box-report completed-box">
-                        <h4>Completed Duties</h4>
-                        <p>{{ completed_duties|default:"0" }}</p>
-                    </div>
-                    <div class="stat-box-report missed-box">
-                        <h4>Missed Duties</h4>
-                        <p>{{ missed_duties|default:"0" }}</p>
-                    </div>
                 </div>
 
-                <div class="table-container">
-                    <h3>Report Records ({% if report_records %}{{ report_records|length }}{% else %}0{% endif %} found)</h3>
-                    <table class="report-table">
-                        <thead>
-                            <tr>
-                                <th>Staff Name</th>
-                                <th>Role</th>
-                                <th>Duty Assigned</th>
-                                <th>Check-In Time</th>
-                                <th>Check-Out Time</th>
-                                <th>Duration</th>
-                                <th>Duty Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for record in report_records %}
-                            <tr>
-                                <td>{{ record.user.fullname }}</td>
-                                <td>{{ record.user.role|capfirst }}</td>
-                                <td>{{ record.assigned_duty.title|default:"Unscheduled" }}</td>
-                                <td>{{ record.check_in|date:"Y-m-d H:i" }}</td>
-                                <td>{{ record.check_out|default:"—"|date:"Y-m-d H:i" }}</td>
-                                <td>
-                                    {% if record.check_out %}
-                                        {% with duration=record.check_out|timesince:record.check_in %}
-                                            {{ duration }}
-                                        {% endwith %}
-                                    {% else %}
-                                        Ongoing
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if record.assigned_duty %}
-                                        <span class="status-badge status-{{ record.assigned_duty.status }}">{{ record.assigned_duty.status|capfirst }}</span>
-                                    {% else %}
-                                        N/A
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr><td colspan="7">No records found for the current filters.</td></tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="filter-actions">
+                    <button type="submit" class="btn-generate">Generate Report</button>
+                    <a href="{% url 'reports' %}" class="btn-clear">Clear Filters</a>
                 </div>
+            </form>
+
+            <!-- Table Title -->
+            <div class="table-title">
+                Report Records 
+                <strong>({% if report_records %}{{ report_records|length }}{% else %}0{% endif %} found)</strong>
             </div>
-        </section>
-    </main>
+
+            <!-- Responsive Table -->
+            <div class="table-wrapper">
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Staff Name</th>
+                            <th>Role</th>
+                            <th>Duty Assigned</th>
+                            <th>Check-In Time</th>
+                            <th>Check-Out Time</th>
+                            <th>Duration</th>
+                            <th>Duty Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in report_records %}
+                        <tr>
+                            <td data-label="Staff Name">{{ record.user.fullname }}</td>
+                            <td data-label="Role">{{ record.user.role|capfirst }}</td>
+                            <td data-label="Duty">{{ record.assigned_duty.title|default:"Unscheduled" }}</td>
+                            <td data-label="Check-In">{{ record.check_in|date:"M d, Y H:i" }}</td>
+                            <td data-label="Check-Out">{{ record.check_out|default:"—"|date:"M d, Y H:i" }}</td>
+                            <td data-label="Duration">
+                                {% if record.check_out %}
+                                    {{ record.check_out|timesince:record.check_in }}
+                                {% else %}
+                                    <em>Ongoing</em>
+                                {% endif %}
+                            </td>
+                            <td data-label="Status">
+                                <span class="status-badge status-{{ record.assigned_duty.status|default:'pending' }}">
+                                    {{ record.assigned_duty.status|default:'Pending'|capfirst }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="no-records">No records found for the current filters.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </section>
+</main>
+
 </body>
 </html>
