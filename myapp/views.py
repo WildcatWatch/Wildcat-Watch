@@ -644,6 +644,11 @@ def update_admin_profile(request):
                 else:
                     profile.dob = None
 
+            elif field == "fullname":
+                profile.fullname = value or None
+                request.user.fullname = value or None
+                request.user.save()
+
             # --- AGE ---
             elif field == "age":
                 if value:
@@ -735,11 +740,9 @@ def update_admin_profile(request):
 @login_required
 @require_POST
 def update_staff_profile(request):
-    # Only staff allowed
     if getattr(request.user, "role", None) not in ["security", "janitor"]:
         return JsonResponse({"success": False, "message": "Access denied."}, status=403)
 
-    # Get or create profile
     profile, created = StaffProfile.objects.get_or_create(user=request.user)
 
     allowed_fields = [
@@ -752,68 +755,52 @@ def update_staff_profile(request):
         if field in request.POST:
             value = request.POST.get(field)
 
-            # --- DATE OF BIRTH ---
             if field == "dob":
                 profile.dob = datetime.strptime(value, "%Y-%m-%d").date() if value else None
-
-            # --- AGE ---
             elif field == "age":
                 profile.age = int(value) if value else None
-
-            # --- PHONE ---
             elif field == "phone":
                 clean = value.replace(" ", "").replace("-", "") if value else None
-                if clean and (not clean.isdigit() or len(clean) != 11):
-                    return JsonResponse({"success": False, "message": "Phone must be 11 digits"}, status=400)
                 profile.phone = clean
-
-            # --- EMERGENCY CONTACT ---
             elif field == "emergency_contact":
                 clean = value.replace(" ", "").replace("-", "") if value else None
-                if clean and (not clean.isdigit() or len(clean) != 11):
-                    return JsonResponse({"success": False, "message": "Emergency contact must be 11 digits"}, status=400)
                 profile.emergency_contact = clean
-
-            # --- BLOOD TYPE ---
             elif field == "blood_type":
-                valid_blood_types = ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
-                bt = value.strip().upper() if value else None
-                if bt and bt not in valid_blood_types:
-                    return JsonResponse({"success": False, "message": "Invalid blood type"}, status=400)
-                profile.blood_type = bt
-
-            # --- USER ID ---
+                profile.blood_type = value.strip().upper() if value else None
             elif field == "user_id":
-                if value:
-                    if not value.isdigit():
-                        return JsonResponse({
-                            "success": False,
-                            "message": "User ID must be an integer"
-                        }, status=400)
-                    profile.user_id = int(value)
-                else:
-                    profile.user_id = None
-
-            # --- EMAIL ---
+                profile.user_id = int(value) if value else None
             elif field == "email":
-                if value:
-                    if "@" not in value or "." not in value:
-                        return JsonResponse({
-                            "success": False,
-                            "message": "Invalid email format"
-                        }, status=400)
                 profile.email = value or None
-                # Update actual User model as well
-                request.user.email = value or None
+                request.user.email = value or None  # Update User model
                 request.user.save()
-
-            # --- OTHER FIELDS ---
+            elif field == "fullname":
+                profile.fullname = value or None
+                request.user.fullname = value or None  # Update User model
+                request.user.save()
             else:
                 setattr(profile, field, value if value else None)
 
-    # Save
     profile.save()
-    return JsonResponse({"success": True, "message": "Staff profile updated successfully."})
+
+    # Return all updated fields for AJAX frontend
+    return JsonResponse({
+        "success": True,
+        "message": "Staff profile updated successfully.",
+        "fullname": profile.fullname or "",
+        "dob": profile.dob.strftime("%Y-%m-%d") if profile.dob else "",
+        "age": profile.age or "",
+        "gender": profile.gender or "",
+        "blood_type": profile.blood_type or "",
+        "nationality": profile.nationality or "",
+        "phone": profile.phone or "",
+        "emergency_contact": profile.emergency_contact or "",
+        "address": profile.address or "",
+        "staff_id": profile.staff_id or "",
+        "work_schedule": profile.work_schedule or "",
+        "role": profile.role or "",
+        "user_id": profile.user_id or "",
+        "email": profile.email or ""
+    })
 
 
 @login_required
