@@ -330,9 +330,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
+  font-size: 0.7rem;
   font-weight: bold;
+  text-align: center;
+  line-height: 1; 
 }
+
 
 .activity-icon.active { background: #27ae60; }
 .activity-icon.check_in { background: #27ae60; }
@@ -352,43 +355,43 @@ body {
 /* ===== ADMIN KEY GENERATOR SECTION ===== */
 .generate-key-section {
   text-align: center;
-  padding: 40px;
+  padding: 20px 30px;               /* smaller padding */
   background: #6b3411;
-  border-radius: 16px;
-  border: 2px dashed #ffd700;
-  max-width: 600px;
+  border-radius: 12px;
+  border: 2px dashed #e0b700;       /* thinner, softer border */
+  max-width: 500px;                  /* slightly smaller width */
   margin: 0 auto;
 }
 
 .generate-key-section h3 {
   color: #ffd700;
-  font-size: 1.8rem;
-  margin-bottom: 12px;
+  font-size: 1.5rem;                 /* smaller title */
+  margin-bottom: 10px;
 }
 
 .generate-key-section p {
   color: #aaa;
-  margin-bottom: 30px;
-  font-size: 1.1rem;
+  margin-bottom: 20px;
+  font-size: 1rem;       
 }
 
 .btn-generate-key {
   background: #ffd700;
   color: #6b3411;
-  padding: 16px 40px;
-  font-size: 1.2rem;
+  padding: 10px 24px; /* smaller padding */
+  font-size: 1rem;    /* slightly smaller font */
   font-weight: 600;
   border: none;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3); /* smaller shadow */
 }
 
 .btn-generate-key:hover {
   background: #ffec40;
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(255, 215, 0, 0.4);
+  transform: translateY(-2px); /* less movement */
+  box-shadow: 0 6px 16px rgba(255, 215, 0, 0.4);
 }
 
 .messages {
