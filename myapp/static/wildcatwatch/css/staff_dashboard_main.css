@@ -1,62 +1,23 @@
-@import url('staff_dashboard.css');
-
-/* ===== Dashboard Main Layout ===== */
-.dashboard-main {
-  padding: 40px 20px;
-  min-height: calc(100vh - 80px);
-}
-
-.dashboard-main .container {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-/* ===== Header Actions ===== */
-.header-actions {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-}
-
-.profile-icon,
-.notification-icon {
-  font-size: 24px;
-  text-decoration: none;
-  transition: transform 0.2s ease;
-}
-
-.profile-icon:hover,
-.notification-icon:hover {
-  transform: scale(1.1);
-}
-
-/* ===== Section Styling ===== */
-section {
-  margin-bottom: 40px;
-}
-
-section h2 {
-  font-size: 24px;
-  color: #ffd700;
-  margin-bottom: 20px;
-}
-
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-/* ===== Status Cards ===== */
+/* ===== Status Cards Section ===== */
 .status-section {
   margin-bottom: 40px;
 }
+
+.status-cards-wrapper {
+  max-width: 1200px;    /* prevents stretching on wide screens */
+  margin: 0 auto;       /* centers the wrapper */
+  padding: 0 20px;      /* keeps cards away from edges on small screens */
+}
+
 
 .status-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
+  justify-content: center;   /* Centers the cards horizontally */
+  padding: 0 20px;           /* Prevents touching screen edges */
+  max-width: 1200px;         /* Optional: limit max width on large screens */
+  margin: 0 auto;            /* Centers the grid container */
 }
 
 .status-card {
@@ -150,219 +111,7 @@ section h2 {
   margin: 0;
 }
 
-/* Quick Actions */
-.quick-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-}
-
-.action-btn {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.action-btn.check-in {
-  background: #4CAF50;
-  color: white;
-}
-
-.action-btn.check-in:hover {
-  background: #45a049;
-}
-
-.action-btn.check-out {
-  background: #f44336;
-  color: white;
-}
-
-.action-btn.check-out:hover {
-  background: #da190b;
-}
-
-/* ===== Today's Schedule ===== */
-.schedule-section {
-  margin-bottom: 40px;
-}
-
-.schedule-container {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 30px;
-}
-
-.schedule-timeline {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.schedule-item {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  border-left: 4px solid #ffd700;
-  transition: background 0.2s ease;
-}
-
-.schedule-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.schedule-item.completed {
-  border-left-color: #4CAF50;
-  opacity: 0.7;
-}
-
-.schedule-item.ongoing {
-  border-left-color: #2196F3;
-  background: rgba(33, 150, 243, 0.1);
-}
-
-.schedule-time {
-  font-size: 16px;
-  font-weight: 600;
-  color: #ffd700;
-  min-width: 120px;
-}
-
-.schedule-details {
-  flex: 1;
-}
-
-.schedule-details h4 {
-  color: #fff;
-  margin: 0 0 8px 0;
-  font-size: 18px;
-}
-
-.schedule-details p {
-  color: rgba(255, 255, 255, 0.7);
-  margin: 0 0 8px 0;
-  font-size: 14px;
-}
-
-.schedule-status {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 15px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: capitalize;
-}
-
-.schedule-status.completed {
-  background: rgba(76, 175, 80, 0.2);
-  color: #4CAF50;
-}
-
-.schedule-status.ongoing {
-  background: rgba(33, 150, 243, 0.2);
-  color: #2196F3;
-}
-
-.schedule-status.pending {
-  background: rgba(255, 152, 0, 0.2);
-  color: #ff9800;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 40px;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-/* ===== Recent Activity Feed ===== */
-.activity-feed-section {
-  margin-bottom: 40px;
-}
-
-.activity-feed-container {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 30px;
-  min-height: 300px;
-}
-
-.activity-list {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.activity-item {
-  display: flex;
-  gap: 15px;
-  padding: 15px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  border-left: 3px solid rgba(255, 215, 0, 0.5);
-  transition: background 0.2s ease;
-}
-
-.activity-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.activity-item.empty {
-  justify-content: center;
-  border-left: none;
-}
-
-.activity-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-
-.activity-icon.check_in {
-  background: rgba(76, 175, 80, 0.2);
-  color: #4CAF50;
-}
-
-.activity-icon.check_out {
-  background: rgba(244, 67, 54, 0.2);
-  color: #f44336;
-}
-
-.activity-icon.duty_complete {
-  background: rgba(33, 150, 243, 0.2);
-  color: #2196F3;
-}
-
-.activity-details {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.activity-text {
-  color: #fff;
-  font-size: 15px;
-  margin: 0;
-}
-
-.activity-time {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 13px;
-}
-
-/* ===== Responsive Design ===== */
+/* ===== Responsive Adjustments ===== */
 @media (max-width: 1024px) {
   .status-cards {
     grid-template-columns: repeat(2, 1fr);
@@ -370,10 +119,6 @@ section h2 {
 }
 
 @media (max-width: 768px) {
-  .dashboard-main {
-    padding: 20px 15px;
-  }
-
   .status-cards {
     grid-template-columns: 1fr;
   }
@@ -381,65 +126,4 @@ section h2 {
   .big-number {
     font-size: 36px;
   }
-
-  .schedule-item {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .schedule-time {
-    min-width: auto;
-  }
-
-  .header-container {
-    flex-wrap: wrap;
-  }
-
-  .nav {
-    order: 3;
-    width: 100%;
-    justify-content: center;
-    margin-top: 15px;
-  }
-}
-
-/* ===== Profile Summary ===== */
-.profile-summary-section {
-  display: flex;
-  justify-content: center; /* centers horizontally */
-  margin-bottom: 40px;
-}
-
-.profile-summary {
-  text-align: center; /* center text inside */
-  background: rgba(139, 69, 19, 0.6); /* match your status card style */
-  padding: 25px 40px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  min-width: 300px;
-  max-width: 450px;
-}
-
-.profile-summary .profile-name {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #ffd700;
-  margin-bottom: 0.3rem;
-}
-
-.profile-summary .profile-role {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #fff;
-  margin-bottom: 0.3rem;
-}
-
-.profile-summary .profile-status {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #4CAF50; /* green for active */
-}
-
-.profile-summary-section {
-  margin-top: 40px; /* Adjust the number to move it further down */
 }

@@ -112,26 +112,42 @@
     box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
   }
   
-  .password-input {
+.password-input {
     position: relative;
     display: flex;
     align-items: center;
-  }
-  
-  .password-input input {
-    flex: 1;
-    padding-right: 45px;
-  }
-  
-  .toggle-password {
+}
+
+.password-input input {
+    width: 100%;
+    padding-right: 45px; /* Add space for the button */
+}
+
+.toggle-password {
     position: absolute;
-    right: 12px;
+    top: 50%;
+    right: 30px; /* Changed from 12px to 16px for more spacing */
+    transform: translateY(-50%);
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 20px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-password::before {
+    content: "👁";
+    font-size: 20px;
     color: #666;
-  }
+}
+
+.toggle-password:hover::before {
+    color: #333;
+}
   
   .create-account-btn {
     background: #8b4513;
