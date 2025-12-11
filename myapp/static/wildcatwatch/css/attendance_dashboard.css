@@ -1,5 +1,24 @@
 @import url('home_page.css');
 
+.header-actions {
+  display: flex !important;
+  gap: 15px !important;
+  align-items: center !important;
+}
+
+.profile-icon,
+.notification-icon {
+  font-size: 28px !important;
+  text-decoration: none !important;
+  transition: transform 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 40px !important;
+  height: 40px !important;
+  line-height: 1 !important;
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   background: #8c4a19;

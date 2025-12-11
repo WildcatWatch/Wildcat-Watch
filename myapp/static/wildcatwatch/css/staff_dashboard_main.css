@@ -402,3 +402,44 @@ section h2 {
     margin-top: 15px;
   }
 }
+
+/* ===== Profile Summary ===== */
+.profile-summary-section {
+  display: flex;
+  justify-content: center; /* centers horizontally */
+  margin-bottom: 40px;
+}
+
+.profile-summary {
+  text-align: center; /* center text inside */
+  background: rgba(139, 69, 19, 0.6); /* match your status card style */
+  padding: 25px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  min-width: 300px;
+  max-width: 450px;
+}
+
+.profile-summary .profile-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffd700;
+  margin-bottom: 0.3rem;
+}
+
+.profile-summary .profile-role {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 0.3rem;
+}
+
+.profile-summary .profile-status {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #4CAF50; /* green for active */
+}
+
+.profile-summary-section {
+  margin-top: 40px; /* Adjust the number to move it further down */
+}

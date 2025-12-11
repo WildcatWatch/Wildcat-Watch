@@ -771,5 +771,29 @@ def update_staff_profile(request):
     return JsonResponse({"success": True, "message": "Staff profile updated successfully."})
 
 
+@login_required
+def mark_notification_read(request):
+    if request.method == 'POST':
+        notif_id = request.POST.get('id')
+        notif = get_object_or_404(Notification, id=notif_id, user=request.user)
+        notif.is_read = True
+        notif.save()
+        return JsonResponse({'success': True})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
+@login_required
+def mark_all_notifications_read(request):
+    if request.method == 'POST':
+        Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
+        return JsonResponse({'success': True})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+@login_required
+def delete_notification(request):
+    if request.method == 'POST':
+        notif_id = request.POST.get('id')
+        notif = get_object_or_404(Notification, id=notif_id, user=request.user)
+        notif.delete()
+        return JsonResponse({'success': True})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 

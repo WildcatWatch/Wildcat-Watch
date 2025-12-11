@@ -18,10 +18,8 @@
       </div>
       <nav class="nav">
         <a href="{% url 'staff_dashboard' %}" class="active">Dashboard</a>
-        <a href="{% url 'staff_profile' %}">Profile</a>
         <a href="{% url 'my_duties' %}">My Duties</a>
         <a href="{% url 'attendance_dashboard' %}">Attendance</a>
-        <a href="{% url 'notifications_list' %}">Notifications</a>
       </nav>
       <div class="header-actions">
         <a href="{% url 'staff_profile' %}" class="profile-icon">👤</a>
@@ -47,8 +45,8 @@
       <!-- Profile Summary -->
       <section class="profile-summary-section">
         <div class="profile-summary">
-          <h3 class="profile-name">{{ staff.name|default:"Not Set" }}</h3>
-          <p class="profile-role">{{ staff.role|default:"Security Officer" }}</p>
+          <h3 class="profile-name">{{ staff.fullname|default:"Not Set" }}</h3>
+          <p class="profile-role">{{ staff.role|title|default:"Security Officer" }}</p>
           <span class="profile-status active">● Active</span>
         </div>
       </section>
@@ -90,19 +88,6 @@
               <div class="card-subtitle">hours worked</div>
             </div>
           </div>
-
-          <div class="status-card action">
-            <div class="card-header">
-              <span class="card-title">Quick Actions</span>
-            </div>
-            <div class="card-content">
-              <div class="quick-actions">
-                <button class="action-btn check-in">Check In</button>
-                <button class="action-btn check-out">Check Out</button>
-              </div>
-            </div>
-          </div>
-
         </div>
       </section>
 
