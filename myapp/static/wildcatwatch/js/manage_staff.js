@@ -5,6 +5,11 @@
             
             editButtons.forEach(button => {
                 button.addEventListener('click', function() {
+                    if (this.disabled) {
+                        e.preventDefault();
+                        return;
+                    }
+                    
                     const dutyId = this.dataset.dutyId;
                     const staffId = this.dataset.staffId;
                     

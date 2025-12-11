@@ -108,10 +108,12 @@
                                             data-title="{{ duty.title }}"
                                             data-location="{{ duty.location }}"
                                             data-desc="{{ duty.description }}"
-                                            data-start="{{ duty.time_start|date:'Y-m-d\TH:i' }}"
-                                            data-end="{{ duty.time_end|date:'Y-m-d\TH:i' }}">
+                                            data-start="{{ duty.time_start|date:'Y-m-d\\TH:i' }}"
+                                            data-end="{{ duty.time_end|date:'Y-m-d\\TH:i' }}"
+                                            {% if duty.status == "completed" or duty.status == "missed" %}disabled style="opacity:0.5; cursor:not-allowed;"{% endif %}>
                                         Edit
                                     </button>
+
                                     
                                     <form method="POST" style="display: inline;">
                                         {% csrf_token %}
