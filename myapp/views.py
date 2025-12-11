@@ -14,6 +14,9 @@ from django.views.decorators.http import require_POST
 from django.middleware.csrf import get_token
 from datetime import datetime
 from .models import StaffProfile
+from django.utils import timezone
+from django.db.models import Q
+
 
 
 User = get_user_model()
@@ -838,4 +841,51 @@ def delete_notification(request):
         notif.delete()
         return JsonResponse({'success': True})
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+    
+
+
+@login_required(login_url="login")
+def admin_dashboard(request):
+    # Only allow admins
+    if request.user.role != "admin":
+        messages.error(request, "Access denied.")
+        return redirect("home_page")
+
+    now = timezone.localtime()
+    today = now.date()
+
+    # Total staff (security + janitor)
+    total_staff = User.objects.filter(role__in=["security", "janitor"]).count()
+
+    # Duties today
+    duties_today = Duty.objects.filter(time_start__date=today)
+    pending_duties = duties_today.filter(status="pending").count()
+    completed_duties = duties_today.filter(status="completed").count()
+    missing_duties = duties_today.filter(status="missed").count()
+
+    # Staff currently on duty
+    staff_on_duty_now = []
+    active_duties = Duty.objects.filter(
+        time_start__lte=now,
+        time_end__gte=now,
+        status__in=["pending", "ongoing"]
+    ).select_related('staff')
+
+    for duty in active_duties:
+        staff_on_duty_now.append({
+            "fullname": duty.staff.fullname,
+            "current_location": duty.location,
+            "shift_start": duty.time_start.strftime("%H:%M"),
+        })
+
+    context = {
+        "total_staff": total_staff,
+        "pending_duties": pending_duties,
+        "completed_duties": completed_duties,
+        "missing_duties": missing_duties,
+        "staff_on_duty_now": staff_on_duty_now,
+    }
+
+    return render(request, "myapp/admin_dashboard.html", context)
 

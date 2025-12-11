@@ -20,6 +20,7 @@
       </div>
       <nav class="nav">
         <a href="{% url 'admin_dashboard' %}" class="active">Dashboard</a>
+         <a href="{% url 'admin_profile' %}">Profile</a>
         <a href="{% url 'manage_staff' %}">Manage Staff</a>
         <a href="{% url 'reports' %}">Reports</a>
       </nav>
@@ -35,7 +36,7 @@
       <!-- Welcome Message -->
       <section class="profile-summary-section">
         <div class="profile-summary" style="text-align: center; padding: 2rem 0;">
-          <h2>Welcome back, Admin</h2>
+          <h2>Welcome back, {{ request.user.fullname }}</h2>
           <p style="color:#aaa;">System overview and admin tools</p>
         </div>
       </section>
@@ -51,7 +52,7 @@
             </div>
             <div class="card-content">
               <div class="big-number">{{ total_staff }}</div>
-              <div class="card-subtitle">security officers</div>
+              <div class="card-subtitle">Staffs</div>
             </div>
           </div>
 
