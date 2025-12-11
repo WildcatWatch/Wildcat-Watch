@@ -56,14 +56,15 @@
               <label>Gender</label>
               <p id="display-gender-text">{{ profile.gender|default:"Not Set" }}</p>
             </div>
-            <div class="info-item">
-              <label>Blood Type</label>
-              <p id="display-blood_type-text">{{ profile.blood_type|default:"Not Set" }}</p>
+             <div class="info-item">
+              <label>User ID</label>
+              <p id="display-userid-text">{{ request.user.id_number }}</p>
             </div>
             <div class="info-item">
-              <label>Nationality</label>
-              <p id="display-nationality-text">{{ profile.nationality|default:"Filipino" }}</p>
+              <label>Email</label>
+              <p id="display-email-text">{{ request.user.email }}</p>
             </div>
+            
             <div class="info-item">
               <label>Phone</label>
               <p id="display-phone-text">{{ profile.phone|default:"Not Set" }}</p>
@@ -112,24 +113,15 @@
               </select>
             </div>
             <div class="info-item">
-              <label>Blood Type</label>
-              <select name="blood_type">
+             <label>User ID</label>
+             <input type="text" value="{{ request.user.id_number }}" readonly>
+            </div>
 
-                <option value="">Select Blood Type</option>
-                <option value="O+" {% if profile.blood_type == 'O+' %}selected{% endif %}>O+</option>
-                <option value="O-" {% if profile.blood_type == 'O-' %}selected{% endif %}>O-</option>
-                <option value="A+" {% if profile.blood_type == 'A+' %}selected{% endif %}>A+</option>
-                <option value="A-" {% if profile.blood_type == 'A-' %}selected{% endif %}>A-</option>
-                <option value="B+" {% if profile.blood_type == 'B+' %}selected{% endif %}>B+</option>
-                <option value="B-" {% if profile.blood_type == 'B-' %}selected{% endif %}>B-</option>
-                <option value="AB+" {% if profile.blood_type == 'AB+' %}selected{% endif %}>AB+</option>
-                <option value="AB-" {% if profile.blood_type == 'AB-' %}selected{% endif %}>AB-</option>
-</select>
-            </div>
             <div class="info-item">
-              <label>Nationality</label>
-              <input type="text" name="nationality" value="{{ profile.nationality|default:'Filipino' }}">
+              <label>Email</label>
+              <input type="email" name="email" value="{{ request.user.email }}">
             </div>
+            
             <div class="info-item">
               <label>Phone</label>
               <input type="text" name="phone" value="{{ profile.phone|default:'' }}" maxlength="11" pattern="[0-9]{11}">

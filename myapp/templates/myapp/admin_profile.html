@@ -23,7 +23,6 @@
         <a href="{% url 'admin_profile' %}" class="active">Profile</a>
         <a href="{% url 'reports' %}">Reports</a>
         <a href="{% url 'manage_staff' %}">Manage Staff</a>
-        <a href="#">Settings</a>
       </nav>
       <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
     </div>
@@ -59,13 +58,13 @@
             </div>
 
             <div class="info-item">
-              <label>Blood Type</label>
-              <p id="display-blood_type-text">{{ profile.blood_type|default:"Not Set" }}</p>
+              <label>User ID</label>
+              <p id="display-userid-text">{{ request.user.id_number }}</p>
             </div>
 
             <div class="info-item">
-              <label>Nationality</label>
-              <p id="display-nationality-text">{{ profile.nationality|default:"Filipino" }}</p>
+              <label>Email</label>
+              <p id="display-email-text">{{ request.user.email }}</p>
             </div>
 
             <div class="info-item">
@@ -122,23 +121,14 @@
             </div>
 
             <div class="info-item">
-              <label>Blood Type</label>
-              <select name="blood_type">
-                <option value="">Select Blood Type</option>
-                <option value="O+" {% if profile.blood_type == 'O+' %}selected{% endif %}>O+</option>
-                <option value="O-" {% if profile.blood_type == 'O-' %}selected{% endif %}>O-</option>
-                <option value="A+" {% if profile.blood_type == 'A+' %}selected{% endif %}>A+</option>
-                <option value="A-" {% if profile.blood_type == 'A-' %}selected{% endif %}>A-</option>
-                <option value="B+" {% if profile.blood_type == 'B+' %}selected{% endif %}>B+</option>
-                <option value="B-" {% if profile.blood_type == 'B-' %}selected{% endif %}>B-</option>
-                <option value="AB+" {% if profile.blood_type == 'AB+' %}selected{% endif %}>AB+</option>
-                <option value="AB-" {% if profile.blood_type == 'AB-' %}selected{% endif %}>AB-</option>
-              </select>
+             <label>User ID</label>
+             <input type="text" value="{{ request.user.id_number }}" readonly>
             </div>
 
+
             <div class="info-item">
-              <label>Nationality</label>
-              <input type="text" name="nationality" value="{{ profile.nationality|default:'Filipino' }}">
+              <label>Email</label>
+              <input type="email" name="email" value="{{ request.user.email }}">
             </div>
 
             <div class="info-item">

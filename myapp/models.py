@@ -136,60 +136,46 @@ class Notification(models.Model):
 
 
 class AdminProfile(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        db_column='user_id',
-        related_name='admin_profile'
-    )
-    fullname = models.TextField(blank=True, null=True)
-    dob = models.DateField(blank=True, null=True)
-    age = models.IntegerField(blank=True, null=True)
-    gender = models.TextField(blank=True, null=True)
-    blood_type = models.TextField(blank=True, null=True)
-    nationality = models.TextField(blank=True, null=True)
-    phone = models.TextField(blank=True, null=True)
-    emergency_contact = models.TextField(blank=True, null=True)
-    address = models.TextField(blank=True, null=True)
-    work_schedule = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.fullname or f"AdminProfile(user={getattr(self.user, 'id', 'unknown')})"
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    fullname = models.CharField(max_length=255, null=True, blank=True)
+    dob = models.DateField(null=True, blank=True)
+    age = models.IntegerField(null=True, blank=True)
+    gender = models.CharField(max_length=10, null=True, blank=True)
+    blood_type = models.CharField(max_length=3, null=True, blank=True)
+    nationality = models.CharField(max_length=50, null=True, blank=True)
+    phone = models.CharField(max_length=11, null=True, blank=True)
+    emergency_contact = models.CharField(max_length=11, null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    work_schedule = models.TextField(null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
 
     class Meta:
-        db_table = "admin_profiles"
-        # set managed=True if you want Django to manage migrations and create/alter the table
-        managed = False
-        
+        db_table = 'admin_profiles'
+
+    def __str__(self):
+        return self.fullname or getattr(self.user, "email", "No email")
+
 
 class StaffProfile(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        db_column='user_id',
-        related_name='staff_profile'
-    )
-    fullname = models.TextField(blank=True, null=True)
-    dob = models.DateField(blank=True, null=True)
-    age = models.IntegerField(blank=True, null=True)
-    gender = models.TextField(blank=True, null=True)
-    blood_type = models.TextField(blank=True, null=True)
-    nationality = models.TextField(blank=True, null=True)
-    phone = models.TextField(blank=True, null=True)
-    emergency_contact = models.TextField(blank=True, null=True)
-    address = models.TextField(blank=True, null=True)
-    staff_id = models.TextField(blank=True, null=True)
-    work_schedule = models.TextField(blank=True, null=True)
-    role = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) 
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    fullname = models.CharField(max_length=255, null=True, blank=True)
+    role = models.CharField(max_length=50, null=True, blank=True)
+    dob = models.DateField(null=True, blank=True)
+    age = models.IntegerField(null=True, blank=True)
+    gender = models.CharField(max_length=10, null=True, blank=True)
+    blood_type = models.CharField(max_length=3, null=True, blank=True)
+    nationality = models.CharField(max_length=50, null=True, blank=True)
+    phone = models.CharField(max_length=11, null=True, blank=True)
+    emergency_contact = models.CharField(max_length=11, null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    work_schedule = models.TextField(null=True, blank=True)
+    staff_id = models.CharField(max_length=50, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
 
     class Meta:
-        db_table = "staff_profiles"
+        db_table = 'staff_profiles'
 
     def __str__(self):
-        return self.fullname or f"StaffProfile(user={getattr(self.user, 'id', 'unknown')})"
+        return self.fullname or getattr(self.user, "email", "No email")
