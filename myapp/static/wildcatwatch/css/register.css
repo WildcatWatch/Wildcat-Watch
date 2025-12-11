@@ -120,13 +120,13 @@
 
 .password-input input {
     width: 100%;
-    padding-right: 45px; /* Add space for the button */
+    padding-right: 10px; 
 }
 
 .toggle-password {
     position: absolute;
     top: 50%;
-    right: 30px; /* Changed from 12px to 16px for more spacing */
+    right: 5px; /* Changed from 12px to 16px for more spacing */
     transform: translateY(-50%);
     background: none;
     border: none;
@@ -137,12 +137,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.toggle-password::before {
-    content: "👁";
-    font-size: 20px;
-    color: #666;
 }
 
 .toggle-password:hover::before {
