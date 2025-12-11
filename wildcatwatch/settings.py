@@ -14,7 +14,7 @@ load_dotenv()
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "fallback-secret-key")
 
 # Debug should be False on Render, but True for local development
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", "False").lower() == "true"
 
 # Allow all hosts by default (for Render)
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
