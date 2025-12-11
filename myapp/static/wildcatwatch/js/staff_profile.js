@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const dobInput = form.querySelector('[name="dob"]');
     const ageInput = form.querySelector('[name="age"]');
 
-    // Auto-calculate age from DOB
+    // --- Auto-calculate age from DOB ---
     dobInput.addEventListener('change', function() {
         if (dobInput.value) {
             const dob = new Date(dobInput.value);
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Toggle edit/display
+    // --- Toggle edit/display ---
     window.toggleEdit = function() {
         if (form.style.display === 'none' || form.style.display === '') {
             form.style.display = 'block';
@@ -29,14 +29,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // Submit form via AJAX
+    // --- Submit form via AJAX ---
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         const formData = new FormData(form);
 
         try {
-            const response = await fetch(updateProfileUrl, {  // make sure updateProfileUrl points to staff view
+            const response = await fetch(updateProfileUrl, {
                 method: 'POST',
                 headers: { 'X-CSRFToken': csrfToken },
                 body: formData
@@ -53,19 +53,21 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             if (data.success) {
-                // Update display fields
-                const fields = [
-                    'fullname','dob','age','gender','blood_type','nationality',
-                    'phone','emergency_contact','address','staff_id','work_schedule','role'
-                ];
+                // Updated fields returned from backend
+                const fields = ['fullname','dob','age','gender','phone','emergency_contact','address','email'];
+
                 fields.forEach(f => {
-                    const input = form.querySelector(`[name="${f}"]`);
                     const disp = document.getElementById(`display-${f}-text`);
-                    if (input && disp) {
-                        disp.innerText = input.value || 'Not Set';
+                    const input = form.querySelector(`[name="${f}"]`);
+                    if (disp) {
+                        disp.innerText = data[f] !== null && data[f] !== undefined ? data[f] : 'Not Set';
+                    }
+                    if (input && f !== 'age') {
+                        input.value = data[f] !== null && data[f] !== undefined ? data[f] : '';
                     }
                 });
-                toggleEdit();
+
+                toggleEdit(); // hide form, show display
                 alert('Profile updated successfully.');
             } else {
                 alert('Error: ' + data.message);

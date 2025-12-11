@@ -616,19 +616,21 @@ def update_admin_profile(request):
     except AdminProfile.DoesNotExist:
         profile = AdminProfile(id=uuid.uuid4(), user=request.user)
 
-    # Allowed fields to update
+    # Allowed fields (updated)
     allowed_fields = [
-        "fullname", "dob", "age", "gender", "blood_type", "nationality",
-        "phone", "emergency_contact", "address", "work_schedule"
+        "fullname", "dob", "age", "gender",
+        "user_id", "email",         # UPDATED FIELDS
+        "phone", "emergency_contact",
+        "address", "work_schedule"
     ]
 
     for field in allowed_fields:
         if field in request.POST:
-            value = request.POST.get(field)
+            value = request.POST.get(field).strip()
 
-            # DOB
+            # --- DOB ---
             if field == "dob":
-                if value and value.strip():
+                if value:
                     try:
                         profile.dob = datetime.strptime(value, "%Y-%m-%d").date()
                     except ValueError:
@@ -639,63 +641,71 @@ def update_admin_profile(request):
                 else:
                     profile.dob = None
 
-            # Age
+            # --- AGE ---
             elif field == "age":
-                if value and value.strip():
+                if value:
                     try:
                         profile.age = int(value)
                     except ValueError:
-                        return JsonResponse({"success": False, "message": "Invalid age"}, status=400)
+                        return JsonResponse({
+                            "success": False,
+                            "message": "Age must be a number"
+                        }, status=400)
                 else:
                     profile.age = None
 
-            # Phone - must be 11 digits
+            # --- PHONE (11 digits) ---
             elif field == "phone":
-                if value and value.strip():
-                    # Remove any whitespace
-                    phone_clean = value.strip().replace(" ", "").replace("-", "")
-                    # Check if it's exactly 11 digits
-                    if not phone_clean.isdigit() or len(phone_clean) != 11:
-                        return JsonResponse({
-                            "success": False,
-                            "message": "Phone number must be exactly 11 digits"
-                        }, status=400)
-                    profile.phone = phone_clean
-                else:
-                    profile.phone = None
+                phone_clean = value.replace(" ", "").replace("-", "")
+                if phone_clean and (not phone_clean.isdigit() or len(phone_clean) != 11):
+                    return JsonResponse({
+                        "success": False,
+                        "message": "Phone number must be exactly 11 digits"
+                    }, status=400)
+                profile.phone = phone_clean or None
 
-            # Emergency Contact - must be 11 digits
+            # --- EMERGENCY CONTACT (11 digits) ---
             elif field == "emergency_contact":
-                if value and value.strip():
-                    # Remove any whitespace
-                    contact_clean = value.strip().replace(" ", "").replace("-", "")
-                    # Check if it's exactly 11 digits
-                    if not contact_clean.isdigit() or len(contact_clean) != 11:
+                contact_clean = value.replace(" ", "").replace("-", "")
+                if contact_clean and (not contact_clean.isdigit() or len(contact_clean) != 11):
+                    return JsonResponse({
+                        "success": False,
+                        "message": "Emergency contact must be exactly 11 digits"
+                    }, status=400)
+                profile.emergency_contact = contact_clean or None
+
+            # --- USER ID (INT4) ---
+            elif field == "user_id":
+                if value:
+                    if not value.isdigit():
                         return JsonResponse({
                             "success": False,
-                            "message": "Emergency contact must be exactly 11 digits"
+                            "message": "User ID must be an integer"
                         }, status=400)
-                    profile.emergency_contact = contact_clean
+                    profile.user_id = int(value)
                 else:
-                    profile.emergency_contact = None
+                    profile.user_id = None
 
-            # Blood Type - must be valid blood type
-            elif field == "blood_type":
-                if value and value.strip():
-                    valid_blood_types = ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']
-                    blood_type_clean = value.strip().upper()
-                    if blood_type_clean not in valid_blood_types:
+            # --- EMAIL ---
+            elif field == "email":
+                if value:
+
+                    if "@" not in value or "." not in value:
+
                         return JsonResponse({
-                            "success": False,
-                            "message": "Invalid blood type. Valid types: O+, O-, A+, A-, B+, B-, AB+, AB-"
-                        }, status=400)
-                    profile.blood_type = blood_type_clean
-                else:
-                    profile.blood_type = None
 
-            # Other fields
+                            "success": False,
+                            "message": "Invalid email format"
+                        }, status=400)
+                profile.email = value or None
+                # Update actual User model as well
+                request.user.email = value or None
+                request.user.save()
+
+
+            # --- OTHER FIELDS ---
             else:
-                setattr(profile, field, value if value and value.strip() else None)
+                setattr(profile, field, value or None)
 
     # Save safely
     try:
@@ -703,7 +713,21 @@ def update_admin_profile(request):
     except Exception as e:
         return JsonResponse({"success": False, "message": f"DB save error: {str(e)}"}, status=500)
 
-    return JsonResponse({"success": True, "message": "Profile updated."})
+    # Return all updated fields so frontend can update dynamically
+    return JsonResponse({
+        "success": True,
+        "message": "Profile updated.",
+        "fullname": profile.fullname,
+        "dob": profile.dob.strftime("%Y-%m-%d") if profile.dob else '',
+        "age": profile.age,
+        "gender": profile.gender,
+        "phone": profile.phone,
+        "emergency_contact": profile.emergency_contact,
+        "address": profile.address,
+        "email": profile.email
+    })
+
+
 
 @login_required
 @require_POST
@@ -718,7 +742,7 @@ def update_staff_profile(request):
     allowed_fields = [
         "fullname", "dob", "age", "gender", "blood_type", "nationality",
         "phone", "emergency_contact", "address",
-        "staff_id", "work_schedule", "role"
+        "staff_id", "work_schedule", "role", "user_id", "email"
     ]
 
     for field in allowed_fields:
@@ -755,12 +779,30 @@ def update_staff_profile(request):
                     return JsonResponse({"success": False, "message": "Invalid blood type"}, status=400)
                 profile.blood_type = bt
 
-            # --- ROLE ---
-            elif field == "role":
-                allowed_roles = ["security", "janitor"]
-                if value and value.lower() not in allowed_roles:
-                    return JsonResponse({"success": False, "message": "Invalid role"}, status=400)
-                profile.role = value.lower() if value else None
+            # --- USER ID ---
+            elif field == "user_id":
+                if value:
+                    if not value.isdigit():
+                        return JsonResponse({
+                            "success": False,
+                            "message": "User ID must be an integer"
+                        }, status=400)
+                    profile.user_id = int(value)
+                else:
+                    profile.user_id = None
+
+            # --- EMAIL ---
+            elif field == "email":
+                if value:
+                    if "@" not in value or "." not in value:
+                        return JsonResponse({
+                            "success": False,
+                            "message": "Invalid email format"
+                        }, status=400)
+                profile.email = value or None
+                # Update actual User model as well
+                request.user.email = value or None
+                request.user.save()
 
             # --- OTHER FIELDS ---
             else:

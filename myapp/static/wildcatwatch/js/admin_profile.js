@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const dobInput = form.querySelector('[name="dob"]');
     const ageInput = form.querySelector('[name="age"]');
 
-    // Auto-calculate age from DOB
+    // --- Auto-calculate age from DOB ---
     dobInput.addEventListener('change', function() {
         if (dobInput.value) {
             const dob = new Date(dobInput.value);
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Toggle edit/display
+    // --- Toggle edit/display ---
     window.toggleEdit = function() {
         if (form.style.display === 'none' || form.style.display === '') {
             form.style.display = 'block';
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // Submit form via AJAX
+    // --- Submit form via AJAX ---
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -42,10 +42,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: formData
             });
 
-            const text = await response.text(); // always read as text first
+            const text = await response.text();
             let data;
             try {
-                data = JSON.parse(text); // then try parse as JSON
+                data = JSON.parse(text);
             } catch (err) {
                 console.error("Server returned HTML instead of JSON:", text);
                 alert("Server error: see console for details");
@@ -53,16 +53,21 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             if (data.success) {
-                // Update display fields
-                const fields = ['fullname','dob','age','gender','blood_type','nationality','phone','emergency_contact','address','staff_id','work_schedule'];
+                // Updated fields returned from backend
+                const fields = ['fullname','dob','age','gender','phone','emergency_contact','address','email'];
+
                 fields.forEach(f => {
-                    const input = form.querySelector(`[name="${f}"]`);
                     const disp = document.getElementById(`display-${f}-text`);
-                    if (input && disp) {
-                        disp.innerText = input.value || 'Not Set';
+                    const input = form.querySelector(`[name="${f}"]`);
+                    if (disp) {
+                        disp.innerText = data[f] !== null && data[f] !== undefined ? data[f] : 'Not Set';
+                    }
+                    if (input && f !== 'age') {
+                        input.value = data[f] !== null && data[f] !== undefined ? data[f] : '';
                     }
                 });
-                toggleEdit();
+
+                toggleEdit(); // hide form, show display
                 alert('Profile updated successfully.');
             } else {
                 alert('Error: ' + data.message);

@@ -4,10 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Access Key | Wildcat Watch</title>
+  <title>Admin Dashboard | Wildcat Watch</title>
+
+  <!-- ONE SINGLE CSS FILE FOR BOTH STAFF & ADMIN DASHBOARD -->
   <link rel="stylesheet" href="{% static 'wildcatwatch/css/admin_dashboard.css' %}">
 </head>
 <body>
+
+  <!-- ===== Header ===== -->
   <header class="header">
     <div class="header-container">
       <div class="logo">
@@ -16,34 +20,132 @@
       </div>
       <nav class="nav">
         <a href="{% url 'admin_dashboard' %}" class="active">Dashboard</a>
-        <a href="{% url 'staff_profile' %}" >Profile</a>
-        <a href="{% url 'reports' %}">Reports</a>
         <a href="{% url 'manage_staff' %}">Manage Staff</a>
-        <a href="#">Settings</a>
+        <a href="{% url 'reports' %}">Reports</a>
       </nav>
-      <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+      </div>
     </div>
   </header>
 
+  <!-- ===== Main Content ===== -->
   <main class="main-content">
-    <div class="center-wrapper">
-      <div class="generate-key-section">
-        <h3>Admin Access Key</h3>
-        <p>Generate a one-time key for a new admin to register.</p>
+    <div class="container">
 
-        <form method="post" action="{% url 'generate_admin_key' %}">
-          {% csrf_token %}
-          <button type="submit" class="btn-generate-key">Generate Access Key</button>
-        </form>
+      <!-- Welcome Message -->
+      <section class="profile-summary-section">
+        <div class="profile-summary" style="text-align: center; padding: 2rem 0;">
+          <h2>Welcome back, Admin</h2>
+          <p style="color:#aaa;">System overview and admin tools</p>
+        </div>
+      </section>
 
-        {% if messages %}
-          <div class="messages">
-            {% for message in messages %}
-              <p>{{ message }}</p>
+      <!-- Admin Stats Cards -->
+      <section class="status-section">
+        <div class="status-cards">
+
+          <div class="status-card info">
+            <div class="card-header">
+              <span class="card-title">Total Staff</span>
+              <span class="badge badge-info">Registered</span>
+            </div>
+            <div class="card-content">
+              <div class="big-number">{{ total_staff }}</div>
+              <div class="card-subtitle">security officers</div>
+            </div>
+          </div>
+
+          <div class="status-card monitor">
+            <div class="card-header">
+              <span class="card-title">Pending Duties</span>
+              <span class="badge badge-monitor">Today</span>
+            </div>
+            <div class="card-content">
+              <div class="big-number">{{ pending_duties }}</div>
+              <div class="card-subtitle">awaiting action</div>
+            </div>
+          </div>
+
+          <div class="status-card active">
+            <div class="card-header">
+              <span class="card-title">Completed Duties</span>
+              <span class="badge badge-active">Today</span>
+            </div>
+            <div class="card-content">
+              <div class="big-number">{{ completed_duties }}</div>
+              <div class="card-subtitle">done on time</div>
+            </div>
+          </div>
+
+          <div class="status-card" style="border-left: 5px solid #e74c3c;">
+            <div class="card-header">
+              <span class="card-title">Missing Duties</span>
+              <span class="badge" style="background:#e74c3c;color:white;">Critical</span>
+            </div>
+            <div class="card-content">
+              <div class="big-number" style="color:#e74c3c;">{{ missing_duties }}</div>
+              <div class="card-subtitle">overdue / not started</div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Generate Admin Access Key Section -->
+      <section class="schedule-section" style="margin-top: 3rem;">
+        <div class="section-header">
+          <h2>Admin Access Key</h2>
+        </div>
+        <div class="schedule-container">
+          <div class="generate-key-section">
+            <div class="shield-icon" style="font-size: 4.5rem; margin-bottom: 1rem;">Key</div>
+            <h3>Invite New Administrator</h3>
+            <p>Generate a secure one-time access key for a new admin to register and join the system.</p>
+
+            <form method="post" action="{% url 'generate_admin_key' %}">
+              {% csrf_token %}
+              <button type="submit" class="btn-generate-key">
+                Generate Access Key
+              </button>
+            </form>
+
+            {% if messages %}
+              <div class="messages">
+                {% for message in messages %}
+                  <div class="{% if message.tags == 'error' %}error{% else %}success{% endif %}">
+                    <strong>{{ message }}</strong>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </section>
+
+      <!-- Currently On Duty -->
+      <section class="activity-feed-section">
+        <div class="section-header">
+          <h2>Currently On Duty</h2>
+        </div>
+        <div class="activity-feed-container">
+          <div class="activity-list">
+            {% for officer in staff_on_duty_now %}
+              <div class="activity-item">
+                <div class="activity-icon active">Active</div>
+                <div class="activity-details">
+                  <p class="activity-text"><strong>{{ officer.fullname }}</strong> at {{ officer.current_location }}</p>
+                  <span class="activity-time">Since {{ officer.shift_start }}</span>
+                </div>
+              </div>
+            {% empty %}
+              <div class="activity-item empty">
+                <p>No staff currently on duty.</p>
+              </div>
             {% endfor %}
           </div>
-        {% endif %}
-      </div>
+        </div>
+      </section>
+
     </div>
   </main>
 </body>
