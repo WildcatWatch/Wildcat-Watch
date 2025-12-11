@@ -20,7 +20,6 @@
         <a href="{% url 'staff_dashboard' %}" class="active">Dashboard</a>
         <a href="{% url 'my_duties' %}">My Duties</a>
         <a href="{% url 'attendance_dashboard' %}">Attendance</a>
-        
       </nav>
       <div class="header-actions">
         <a href="{% url 'staff_profile' %}" class="profile-icon">👤</a>
@@ -46,7 +45,7 @@
       <!-- Profile Summary -->
       <section class="profile-summary-section">
         <div class="profile-summary">
-          <h3 class="profile-name">{{ staff.fullname|default:"Not Set" }}</h3>
+          <h2>Welcome back, {{ staff.fullname|default:"Staff Member" }}</h2>
           <p class="profile-role">{{ staff.role|title|default:"Security Officer" }}</p>
           <span class="profile-status active">● Active</span>
         </div>
@@ -54,40 +53,43 @@
 
       <!-- Status Cards -->
       <section class="status-section">
-        <div class="status-cards">
-          
-          <div class="status-card active">
-            <div class="card-header">
-              <span class="card-title">Current Status</span>
-              <span class="badge badge-active">{{ staff.current_status|default:"On Duty" }}</span>
-            </div>
-            <div class="card-content">
-              <div class="status-info">
-                <p class="status-location">📍 {{ staff.current_location|default:"Not Assigned" }}</p>
-                <p class="status-time">Started: {{ staff.shift_start|default:"—" }}</p>
+        <div class="status-cards-wrapper">
+          <div class="status-cards">
+            
+            <div class="status-card active">
+              <div class="card-header">
+                <span class="card-title">Current Status</span>
+                <span class="badge badge-active">{{ staff.current_status|default:"On Duty" }}</span>
+              </div>
+              <div class="card-content">
+                <div class="status-info">
+                  <p class="status-location">📍 {{ staff.current_location|default:"Not Assigned" }}</p>
+                  <p class="status-time">Started: {{ staff.shift_start|default:"—" }}</p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="status-card monitor">
-            <div class="card-header">
-              <span class="card-title">My Duties Today</span>
-              <span class="badge badge-monitor">{{ duties_completed|default:"0" }}/{{ total_duties|default:"0" }}</span>
+            <div class="status-card monitor">
+              <div class="card-header">
+                <span class="card-title">My Duties Today</span>
+                <span class="badge badge-monitor">{{ duties_completed|default:"0" }}/{{ total_duties|default:"0" }}</span>
+              </div>
+              <div class="card-content">
+                <div class="big-number">{{ duties_remaining|default:"0" }}</div>
+                <div class="card-subtitle">Remaining</div>
+              </div>
             </div>
-            <div class="card-content">
-              <div class="big-number">{{ duties_remaining|default:"0" }}</div>
-              <div class="card-subtitle">Remaining</div>
-            </div>
-          </div>
 
-          <div class="status-card info">
-            <div class="card-header">
-              <span class="card-title">Hours Today</span>
+            <div class="status-card info">
+              <div class="card-header">
+                <span class="card-title">Hours Today</span>
+              </div>
+              <div class="card-content">
+                <div class="big-number">{{ hours_worked|default:"0.0" }}</div>
+                <div class="card-subtitle">hours worked</div>
+              </div>
             </div>
-            <div class="card-content">
-              <div class="big-number">{{ hours_worked|default:"0.0" }}</div>
-              <div class="card-subtitle">hours worked</div>
-            </div>
+
           </div>
         </div>
       </section>

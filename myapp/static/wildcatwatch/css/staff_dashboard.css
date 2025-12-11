@@ -1,132 +1,294 @@
+/* ========================================
+   WILDCAT WATCH - STAFF DASHBOARD STYLE
+   Matches Admin Dashboard layout & style
+   Functionality remains intact
+   ======================================== */
 
-@import url('home_page.css');
-body {
-  font-family: 'Poppins', sans-serif;
-  background-color: #0b1e2d;
-  color: white;
-  margin: 0;
-  padding: 0;
-}
+/* Import admin dashboard base */
+@import url('admin_dashboard.css');
 
-.header {
-  background-color: #6b3411 !important;
-  padding: 15px 0 !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
+/* ===== Override Staff-Specific Layouts ===== */
 
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 90%;
-  margin: 0 auto;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo h1 {
-  font-size: 1.8rem;
-  color: #ffd700;
-}
-
-.shield-icon {
-  font-size: 2rem;
-}
-
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-
-.nav a {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.nav a:hover {
-  color: #ffd700;
-}
-
-.nav a.active {
-  color: #ffd700;
-  border-bottom: 2px solid #ffd700;
-  padding-bottom: 4px;
-}
-
-.logout-btn {
-  background: #ffd700;
-  color: #6b3411;
-  padding: 8px 16px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background 0.3s ease;
-}
-
-.logout-btn:hover {
-  background: #ffcc00;
-}
-
-.dashboard {
+/* Profile Summary Section */
+.profile-summary-section {
   text-align: center;
-  padding: 80px 20px;
+  margin-bottom: 40px;
 }
 
-.dashboard h2 {
-  font-size: 32px;
+.profile-summary h3.profile-name {
+  font-size: 2.2rem;
   color: #ffd700;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
-.dashboard p {
-  font-size: 18px;
-  color: rgba(255, 255, 255, 0.85);
+.profile-summary p.profile-role {
+  color: #aaa;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
 }
 
-.notification-alert-container {
-    max-width: 1200px; 
-    margin: 20px auto;
-    padding: 0 20px;
+.profile-status.active {
+  color: #4CAF50;
+  font-weight: 600;
 }
 
-.alert {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 15px 25px;
-    border-radius: 8px;
-    font-weight: 600;
-    margin-bottom: 20px;
-}
-
-.alert-warning {
-    background-color: #ffd700; 
-    color: #333; 
-    border-left: 5px solid #ff9800; 
+/* Notification Alert */
+.notification-alert {
+  background: linear-gradient(135deg, #ffd700, #ffb800);
+  color: #333;
+  padding: 16px 24px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+  font-weight: 600;
 }
 
 .alert-icon {
-    font-size: 1.5em;
-    margin-right: 15px;
+  font-size: 1.6rem;
+  margin-right: 12px;
 }
 
 .btn-view-notes {
-    background-color: #6b3411;
-    color: white; 
-    padding: 8px 15px;
-    border-radius: 4px;
-    text-decoration: none;
-    font-size: 0.9em;
-    transition: background-color 0.2s;
+  background: #6b3411;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.3s;
 }
 
 .btn-view-notes:hover {
-    background-color: #8b4513; 
+  background: #8b4513;
+}
+
+/* ===== Status Cards Section ===== */
+.status-section {
+  margin-bottom: 40px;
+}
+
+.status-cards-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.status-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.status-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.status-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* Card border colors to match admin */
+.status-card.active { border-left: 5px solid #4CAF50; }
+.status-card.monitor { border-left: 5px solid #2196F3; }
+.status-card.info { border-left: 5px solid #9C27B0; }
+.status-card.action { border-left: 5px solid #ff9800; }
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.card-title {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge-active { background: #4CAF50; color: white; }
+.badge-monitor { background: #2196F3; color: white; }
+.badge-info { background: #9C27B0; color: white; }
+.badge-action { background: #ff9800; color: white; }
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.big-number {
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.card-subtitle {
+  font-size: 1rem;
+  color: #999;
+}
+
+/* Status Info for location/time */
+.status-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.status-location, .status-time {
+  font-size: 14px;
+  color: #666;
+}
+
+/* ===== Schedule Section ===== */
+.schedule-section {
+  margin-bottom: 50px;
+}
+
+.schedule-container {
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 30px;
+  min-height: 200px;
+}
+
+.schedule-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.schedule-item {
+  background: rgba(255,255,255,0.05);
+  padding: 18px;
+  border-radius: 10px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  border-left: 4px solid #2196F3;
+}
+
+.schedule-item.completed { border-left-color: #4CAF50; }
+.schedule-item.ongoing { border-left-color: #ff9800; }
+.schedule-item.missed { border-left-color: #f44336; }
+
+.schedule-time {
+  font-weight: 600;
+  color: #333;
+  min-width: 140px;
+}
+
+.schedule-details h4 {
+  margin: 0;
+  color: #ffd700;
+}
+
+.schedule-details p {
+  margin: 2px 0;
+  color: #999;
+}
+
+.schedule-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.schedule-status.completed { background: #4CAF50; color: white; }
+.schedule-status.ongoing { background: #ff9800; color: white; }
+.schedule-status.missed { background: #f44336; color: white; }
+.schedule-status.pending { background: #999; color: white; }
+
+/* ===== Activity Feed Section ===== */
+.activity-feed-container {
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 30px;
+  min-height: 200px;
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.activity-item {
+  display: flex;
+  gap: 15px;
+  padding: 15px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  border-left: 3px solid rgba(255,215,0,0.5);
+  transition: background 0.2s ease;
+}
+
+.activity-item:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+.activity-item.empty {
+  justify-content: center;
+  border-left: none;
+}
+
+.activity-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.activity-icon.check_in { background: rgba(76,175,80,0.2); color: #4CAF50; }
+.activity-icon.check_out { background: rgba(244,67,54,0.2); color: #f44336; }
+.activity-icon.duty_complete { background: rgba(33,150,243,0.2); color: #2196F3; }
+.activity-icon.active { background: rgba(76,175,80,0.2); color: #4CAF50; }
+
+.activity-text {
+  color: #fff;
+  font-size: 15px;
+  margin: 0;
+}
+
+.activity-time {
+  color: rgba(255,255,255,0.5);
+  font-size: 13px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1024px) {
+  .status-cards { grid-template-columns: repeat(2, 1fr); }
+  .schedule-timeline { gap: 12px; }
+}
+
+@media (max-width: 768px) {
+  .status-cards { grid-template-columns: 1fr; }
+  .big-number { font-size: 36px; }
+  .schedule-item { flex-direction: column; align-items: flex-start; }
+  .schedule-time { min-width: auto; }
 }
